@@ -8,15 +8,18 @@ import DeliciousPowders from "./pages/DeliciousPowders";
 import MilletsReadytoCook from "./pages/MilletsReadytoCook";
 import ReadytoEat from "./pages/ReadytoEat";
 import OrganicMillets from "./pages/OrganicMillets";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <BrowserRouter>
+      {/* Navbar always visible */}
+      <Navbar />
+
+      {/* App Routes */}
       <Routes>
-        {/* Home Page */}
         <Route path="/" element={<ProductCards />} />
 
-        {/* Product Category Pages */}
         <Route path="/vegetable-pickles" element={<VegetablePickles />} />
         <Route path="/nonveg-pickles" element={<NonVegPickles />} />
         <Route path="/delicious-powders" element={<DeliciousPowders />} />
