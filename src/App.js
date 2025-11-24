@@ -9,6 +9,7 @@ import MilletsReadytoCook from "./pages/MilletsReadytoCook";
 import ReadytoEat from "./pages/ReadytoEat";
 import OrganicMillets from "./pages/OrganicMillets";
 import Navbar from "./components/Navbar";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/ready-to-eat" element={<ReadytoEat />} />
         <Route path="/organic-millets" element={<OrganicMillets />} />
       </Routes>
+      <Dashboard />
     </BrowserRouter>
   );
 }
