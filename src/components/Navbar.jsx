@@ -2,7 +2,7 @@ import React from "react";
 import { Box, TextField, InputAdornment, Button } from "@mui/material";
 import { Search } from "lucide-react";
 
-export default function Navbar() {
+function Navbar() {
   return (
     <Box
       sx={{
@@ -12,6 +12,9 @@ export default function Navbar() {
         alignItems: "center",
         padding: "20px",
         gap: 3,
+        position: "fixed", 
+        top: 0,
+        zIndex: 1000,
       }}
     >
       {/* LOGO */}
@@ -52,7 +55,7 @@ export default function Navbar() {
           }}
         />
       </Box>
-       
+
       {/* RIGHT SIDE BUTTON */}
       <Button
         variant="contained"
@@ -75,3 +78,5 @@ export default function Navbar() {
     </Box>
   );
 }
+
+export default Navbar;
