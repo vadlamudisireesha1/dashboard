@@ -6,17 +6,14 @@ function Navbar() {
   return (
     <Box
       sx={{
-        width: "100%",
+        MaxWidth: "100%",
         backgroundColor: "#3E9517",
         display: "flex",
         alignItems: "center",
         padding: "20px",
         gap: 3,
-        position: "fixed", 
-        top: 0,
-        zIndex: 1000,
-      }}
-    >
+        mb: "10px",
+      }}>
       {/* LOGO */}
       <Box
         component="img"
@@ -71,8 +68,7 @@ function Navbar() {
           "&:hover": {
             backgroundColor: "#e8e8e8",
           },
-        }}
-      >
+        }}>
         Login
       </Button>
     </Box>
