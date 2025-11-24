@@ -85,7 +85,12 @@ export default function ProductCards() {
           <Box
             sx={{
               width: "15%",
-              minWidth: "180px",
+              display: "flex",
+              alignContent: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              minWidth: "190px",
+              minHeight: "130px",
               background: cat.bg,
               borderRadius: "18px",
               padding: "18px",
@@ -114,7 +119,7 @@ export default function ProductCards() {
                 {cat.icon}
               </Box>
 
-              <Typography fontSize={26} fontWeight={700}>
+              <Typography fontSize={35} fontWeight={700}>
                 {cat.count}
               </Typography>
             </Box>
@@ -125,9 +130,9 @@ export default function ProductCards() {
             </Typography>
 
             {/* SUBTITLE */}
-            <Typography fontSize={13} sx={{ opacity: 0.6, mt: 0.5 }}>
+            {/* <Typography fontSize={13} sx={{ opacity: 0.6, mt: 0.5 }}>
               {cat.subtitle}
-            </Typography>
+            </Typography> */}
 
             {/* VIEW LINK (Optional, you can remove this now) */}
             <Typography
