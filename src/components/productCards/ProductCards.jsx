@@ -1,3 +1,4 @@
+// src/components/productCards/ProductCards.jsx
 import React from "react";
 import { Box, Typography, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -18,7 +19,7 @@ const categories = [
     bg: "#eaf2ff",
     count: 248,
     subtitle: "Fresh veggie assortments",
-    link: "/vegetable-pickles",
+    slug: "vegetable", // <-- slug
   },
   {
     label: "Non Veg Pickles",
@@ -27,7 +28,7 @@ const categories = [
     bg: "#ffecec",
     count: 32,
     subtitle: "Most loved spicy picks",
-    link: "/nonveg-pickles",
+    slug: "nonveg", // <-- slug
   },
   {
     label: "Delicious Powders",
@@ -36,7 +37,7 @@ const categories = [
     bg: "#fff7dd",
     count: 67,
     subtitle: "Daily spice essentials",
-    link: "/delicious-powders",
+    slug: "powders",
   },
   {
     label: "Millets Ready to Cook",
@@ -45,7 +46,7 @@ const categories = [
     bg: "#eafff2",
     count: 149,
     subtitle: "Easy cooking options",
-    link: "/millets-ready-to-cook",
+    slug: "millets",
   },
   {
     label: "Ready to Eat",
@@ -54,7 +55,7 @@ const categories = [
     bg: "#fff3dd",
     count: 86,
     subtitle: "Instant tasty food",
-    link: "/ready-to-eat",
+    slug: "readytoeat",
   },
   {
     label: "Organic Millets",
@@ -63,7 +64,7 @@ const categories = [
     bg: "#e8ffe8",
     count: 143,
     subtitle: "100% pure millet variety",
-    link: "/organic-millets",
+    slug: "organic",
   },
 ];
 
@@ -80,7 +81,7 @@ export default function ProductCards() {
       {categories.map((cat, index) => (
         <Link
           key={index}
-          to={cat.link}
+          to={`/category/${cat.slug}`}
           style={{ textDecoration: "none", color: "inherit" }}>
           <Box
             sx={{
@@ -97,13 +98,11 @@ export default function ProductCards() {
               boxShadow: "0px 4px 20px rgba(0,0,0,0.06)",
               transition: "0.3s",
               cursor: "pointer",
-
               "&:hover": {
                 transform: "translateY(-3px)",
                 boxShadow: "0px 8px 30px rgba(0,0,0,0.15)",
               },
             }}>
-            {/* ICON + NUMBER */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "14px" }}>
               <Box
                 sx={{
@@ -124,17 +123,10 @@ export default function ProductCards() {
               </Typography>
             </Box>
 
-            {/* TITLE */}
             <Typography fontSize={15} fontWeight={700} sx={{ mt: 1 }}>
               {cat.label}
             </Typography>
 
-            {/* SUBTITLE */}
-            {/* <Typography fontSize={13} sx={{ opacity: 0.6, mt: 0.5 }}>
-              {cat.subtitle}
-            </Typography> */}
-
-            {/* VIEW LINK (Optional, you can remove this now) */}
             <Typography
               sx={{
                 marginTop: "8px",

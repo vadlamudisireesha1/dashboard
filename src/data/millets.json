@@ -1,0 +1,55 @@
+{
+  "title": "Non Veg Pickles",
+  "items": [
+    {
+      "name": "Chicken Boneless Pickle",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 20,
+        "500 gm": 24,
+        "750 gm": 15,
+        "1000 gm": 10
+      }
+    },
+    {
+      "name": "Gongura Chicken Boneless Pickle",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 14,
+        "500 gm": 18,
+        "750 gm": 9,
+        "1000 gm": 6
+      }
+    },
+    {
+      "name": "Mutton Pickle (Bone)",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 16,
+        "500 gm": 12,
+        "750 gm": 10,
+        "1000 gm": 8
+      }
+    },
+    {
+      "name": "Gongura Mutton Pickle (Bone)",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 10,
+        "500 gm": 10,
+        "750 gm": 5,
+        "1000 gm": 4
+      }
+    },
+    {
+      "name": "Prawns Pickle",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    }
+  ]
+}
