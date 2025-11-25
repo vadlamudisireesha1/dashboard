@@ -33,14 +33,17 @@ export default function GraphView() {
   ];
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div style={{ padding: "20px" }}>
       <Typography
         variant="h5"
         style={{ fontWeight: "bold", marginBottom: "20px" }}>
         📊 Analytics Overview
       </Typography>
 
-      <Grid container spacing={5}>
+      <Grid
+        container
+        spacing={2}
+        style={{ display: "flex", justifyContent: "space-between" }}>
         {/* Category Sales Chart */}
         <Grid item xs={12} md={6}>
           <Card elevation={4} style={{ padding: "16px", borderRadius: "16px" }}>
@@ -49,7 +52,7 @@ export default function GraphView() {
               style={{ marginBottom: "12px", fontWeight: 900 }}>
               Category Sales
             </Typography>
-            <PieChart width={700} height={400}>
+            <PieChart width={680} height={400}>
               <Pie
                 data={categorySales}
                 dataKey="value"
@@ -65,7 +68,6 @@ export default function GraphView() {
           </Card>
         </Grid>
 
-        {/* Monthly Sales Chart */}
         <Grid item xs={12} md={6}>
           <Card elevation={4} style={{ padding: "16px", borderRadius: "16px" }}>
             <Typography
@@ -73,7 +75,7 @@ export default function GraphView() {
               style={{ marginBottom: "12px", fontWeight: 900 }}>
               Monthly Sales
             </Typography>
-            <LineChart width={700} height={400} data={monthlySales}>
+            <LineChart width={680} height={400} data={monthlySales}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />

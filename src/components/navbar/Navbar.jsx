@@ -1,18 +1,18 @@
 import React from "react";
 import { Box, TextField, InputAdornment, Button } from "@mui/material";
 import { Search } from "lucide-react";
+import { UserRoundPen } from "lucide-react";
 
 function Navbar() {
   return (
     <Box
       sx={{
         MaxWidth: "100%",
-        backgroundColor: "#3E9517",
+        backgroundColor: "#3b8917ef",
         display: "flex",
         alignItems: "center",
-        padding: "20px",
+        padding: "10px",
         gap: 3,
-        mb: "10px",
       }}>
       {/* LOGO */}
       <Box
@@ -20,15 +20,15 @@ function Navbar() {
         src="/The_Pickls_logo.webp"
         alt="logo"
         sx={{
-          width: 100,
-          height: 100,
+          width: 70,
+          height: 70,
           borderRadius: "50%",
           objectFit: "contain",
         }}
       />
 
       {/* SEARCH BAR */}
-      <Box sx={{ width: "70%" }}>
+      {/* <Box sx={{ width: "70%" }}>
         <TextField
           placeholder="I'm looking for..."
           variant="outlined"
@@ -51,7 +51,7 @@ function Navbar() {
             ),
           }}
         />
-      </Box>
+      </Box> */}
 
       {/* RIGHT SIDE BUTTON */}
       <Button
@@ -69,7 +69,7 @@ function Navbar() {
             backgroundColor: "#e8e8e8",
           },
         }}>
-        Login
+        <UserRoundPen />
       </Button>
     </Box>
   );
