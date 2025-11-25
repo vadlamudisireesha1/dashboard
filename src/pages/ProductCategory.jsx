@@ -1,5 +1,5 @@
-// src/pages/NonVegPickles.jsx
-import React, { useState } from "react";
+// src/pages/ProductCategory.jsx
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -24,29 +24,72 @@ import {
   Grid as GridIcon,
   List as ListIcon,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-//  Load JSON instead of hardcoded array
+// import all JSONs (so bundler includes them)
 import nonvegData from "../data/nonveg.json";
+import vegetableData from "../data/vegetable.json";
+import powdersData from "../data/powders.json";
+import milletsData from "../data/millets.json";
+import readytoeatData from "../data/readytoeat.json";
+import organicData from "../data/organic.json";
 
-// ROLE -> admin or user
+// ROLE -> admin or user (you can switch as needed)
 const USER_ROLE = "admin";
 
-export default function NonVegPickles() {
+export default function ProductCategory() {
   const navigate = useNavigate();
+  const { type } = useParams(); // slug from URL
 
-  // popup states
+  // view & popup state
   const [open, setOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
-
-  // toggle state
   const [view, setView] = useState("grid");
   const [expanded, setExpanded] = useState(null);
 
-  //  JUST THIS ONE CHANGE: load JSON data
-  const [pickles, setPickles] = useState(nonvegData.items);
+  // load correct JSON based on slug
+  const getDataForType = (slug) => {
+    switch ((slug || "").toLowerCase()) {
+      case "nonveg":
+      case "nonveg-pickles":
+      case "non-veg":
+        return nonvegData;
+      case "vegetable":
+      case "vegetable-pickles":
+      case "veg":
+        return vegetableData;
+      case "powders":
+      case "delicious":
+      case "delicious-powders":
+        return powdersData;
+      case "millets":
+      case "millets-ready-to-cook":
+        return milletsData;
+      case "readytoeat":
+      case "ready-to-eat":
+        return readytoeatData;
+      case "organic":
+      case "organic-millets":
+        return organicData;
+      default:
+        return nonvegData; // fallback
+    }
+  };
 
-  // popup form state
+  const data = getDataForType(type);
+  // initialize pickles from selected JSON
+  const [pickles, setPickles] = useState(data.items || []);
+
+  // when route (type) changes, reload data
+  useEffect(() => {
+    setPickles(getDataForType(type).items || []);
+    // reset UI state
+    setView("grid");
+    setExpanded(null);
+    setOpen(false);
+    setEditIndex(null);
+  }, [type]);
+
   const [form, setForm] = useState({
     name: "",
     bgColor: "#ffffff",
@@ -58,7 +101,6 @@ export default function NonVegPickles() {
     },
   });
 
-  // helpers
   const totalUnits = (w) => Object.values(w).reduce((a, v) => a + Number(v), 0);
 
   const getDotColor = (total) => {
@@ -75,7 +117,13 @@ export default function NonVegPickles() {
 
   const handleSave = () => {
     const updated = [...pickles];
-    updated[editIndex] = form;
+    // if editing existing
+    if (editIndex < pickles.length) {
+      updated[editIndex] = form;
+    } else {
+      // adding new
+      updated.push(form);
+    }
     setPickles(updated);
     setOpen(false);
   };
@@ -85,7 +133,12 @@ export default function NonVegPickles() {
     setForm({
       name: "",
       bgColor: "#ffffff",
-      weights: { "250 gm": 0, "500 gm": 0, "750 gm": 0, "1000 gm": 0 },
+      weights: {
+        "250 gm": 0,
+        "500 gm": 0,
+        "750 gm": 0,
+        "1000 gm": 0,
+      },
     });
     setOpen(true);
   };
@@ -97,8 +150,6 @@ export default function NonVegPickles() {
         maxWidth: "2040px",
         margin: "0 auto",
         minHeight: "100vh",
-
-        // your exact background
         background: "linear-gradient(180deg, #FFF7EC 0%, #FFF1DA 100%)",
         backgroundSize: "100% 100%",
         position: "relative",
@@ -113,10 +164,9 @@ export default function NonVegPickles() {
       <Box
         sx={{ display: "flex", justifyContent: "space-between", mt: 3, mb: 3 }}>
         <Typography variant="h4" fontWeight={700}>
-          {nonvegData.title}
+          {data.title || "Category"}
         </Typography>
 
-        {/* VIEW SWITCH BUTTONS */}
         <ToggleButtonGroup
           value={view}
           exclusive
@@ -135,9 +185,7 @@ export default function NonVegPickles() {
         </ToggleButtonGroup>
       </Box>
 
-      {/* ----------------------------------------------------
-          GRID MODE  (Everything 100% same as your version)
-      ---------------------------------------------------- */}
+      {/* GRID VIEW (exact styles preserved) */}
       {view === "grid" && (
         <Grid container spacing={3}>
           {pickles.map((item, index) => {
@@ -151,8 +199,6 @@ export default function NonVegPickles() {
                     background: item.bgColor,
                     borderRadius: "18px",
                     p: 2,
-
-                    // all   shadows + blur + hover
                     boxShadow: "0px 8px 25px rgba(0,0,0,0.08)",
                     border: "1px solid rgba(255,255,255,0.4)",
                     backdropFilter: "blur(6px)",
@@ -161,14 +207,12 @@ export default function NonVegPickles() {
                       transform: "translateY(-6px)",
                       boxShadow: "0px 12px 30px rgba(0,0,0,0.15)",
                     },
-
                     minHeight: "260px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
                     position: "relative",
                   }}>
-                  {/* Edit Icon */}
                   {USER_ROLE === "admin" && (
                     <IconButton
                       size="small"
@@ -183,6 +227,7 @@ export default function NonVegPickles() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      gap: 1,
                     }}>
                     <Typography fontSize={40} fontWeight={700}>
                       {total}
@@ -193,7 +238,7 @@ export default function NonVegPickles() {
                         width: 14,
                         height: 14,
                         borderRadius: "50%",
-                        background: getDotColor(total),
+                        backgroundColor: getDotColor(total),
                         boxShadow: `0px 0px 8px ${getDotColor(total)}99`,
                       }}
                     />
@@ -215,7 +260,7 @@ export default function NonVegPickles() {
                         alignItems: "center",
                         mb: "4px",
                       }}>
-                      <Box sx={{ width: "70px" }}>{w}</Box>
+                      <Box sx={{ width: "70px", fontWeight: 500 }}>{w}</Box>
                       <Box sx={{ mx: 1 }}>:</Box>
                       <Box
                         sx={{
@@ -248,13 +293,14 @@ export default function NonVegPickles() {
                 background: "rgba(255,255,255,0.6)",
                 borderRadius: "18px",
                 border: "2px dashed #c7c7c7",
+                boxShadow: "0px 6px 20px rgba(0,0,0,0.06)",
                 backdropFilter: "blur(8px)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 flexDirection: "column",
-                cursor: "pointer",
                 transition: "0.25s ease",
+                cursor: "pointer",
                 "&:hover": {
                   background: "rgba(255,255,255,0.8)",
                   border: "2px dashed #b3b3b3",
@@ -268,10 +314,7 @@ export default function NonVegPickles() {
         </Grid>
       )}
 
-      {/* ----------------------------------------------------
-          LIST VIEW (also unchanged)
-      ---------------------------------------------------- */}
-      {/* ---- LIST VIEW (Styled Fancy Version B) ---- */}
+      {/* LIST VIEW (fancy styled, matches grid look) */}
       {view === "list" && (
         <Box sx={{ mt: 2 }}>
           {pickles.map((item, index) => {
@@ -295,7 +338,6 @@ export default function NonVegPickles() {
                     boxShadow: "0px 12px 30px rgba(0,0,0,0.15)",
                   },
                 }}>
-                {/* TOP ROW */}
                 <Box
                   sx={{
                     display: "flex",
@@ -303,18 +345,16 @@ export default function NonVegPickles() {
                     gap: 2,
                     pb: 1,
                   }}>
-                  {/* TOTAL NUMBER */}
                   <Typography
                     sx={{
                       width: "90px",
                       fontSize: "36px",
-                      fontWeight: 800, // BIG + BOLD
+                      fontWeight: 800,
                       color: "#1E293B",
                     }}>
                     {total}
                   </Typography>
 
-                  {/* TITLE */}
                   <Typography
                     sx={{
                       flex: 1,
@@ -325,7 +365,6 @@ export default function NonVegPickles() {
                     {item.name}
                   </Typography>
 
-                  {/* STATUS DOT */}
                   <Box
                     sx={{
                       width: 14,
@@ -336,21 +375,18 @@ export default function NonVegPickles() {
                     }}
                   />
 
-                  {/* ADMIN ONLY EDIT BUTTON */}
                   {USER_ROLE === "admin" && (
                     <IconButton onClick={() => handleEdit(index)}>
                       <Edit size={18} />
                     </IconButton>
                   )}
 
-                  {/* EXPAND BUTTON */}
                   <IconButton
                     onClick={() => setExpanded(isExpanded ? null : index)}>
                     {isExpanded ? <ChevronUp /> : <ChevronDown />}
                   </IconButton>
                 </Box>
 
-                {/* EXPANDED SECTION */}
                 <Collapse in={isExpanded}>
                   <Box sx={{ mt: 2, pl: 1 }}>
                     {Object.entries(item.weights).map(([w, u]) => (
@@ -361,7 +397,6 @@ export default function NonVegPickles() {
                           alignItems: "center",
                           mb: 1.2,
                         }}>
-                        {/* LABEL */}
                         <Box
                           sx={{
                             width: "100px",
@@ -373,7 +408,6 @@ export default function NonVegPickles() {
 
                         <Box sx={{ mx: 1 }}>:</Box>
 
-                        {/* BLUE BADGE LIKE GRID VIEW */}
                         <Box
                           sx={{
                             background: "#EEF2FF",
@@ -399,9 +433,7 @@ export default function NonVegPickles() {
         </Box>
       )}
 
-      {/* ----------------------------------------------------
-          POPUP (unchanged exact styling)
-      ---------------------------------------------------- */}
+      {/* EDIT POPUP (kept exact style) */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -411,26 +443,71 @@ export default function NonVegPickles() {
             p: 2,
             background: "#F6FFF4",
             width: "360px",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+            border: "1px solid #d8efd2",
           },
         }}>
-        <DialogTitle sx={{ textAlign: "center" }}>Edit Pickle</DialogTitle>
+        <DialogTitle
+          sx={{
+            fontWeight: 700,
+            fontSize: "20px",
+            textAlign: "center",
+            pb: 1,
+            color: "#3A6F47",
+          }}>
+          🥒 Edit Pickle
+        </DialogTitle>
 
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
           <TextField
             label="Pickle Name"
+            variant="outlined"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                background: "#fff",
+              },
+            }}
           />
 
-          <Typography>Card Background Color</Typography>
+          <Typography sx={{ fontWeight: 600, color: "#3A6F47", mt: 1 }}>
+            Card Background Color
+          </Typography>
 
-          <input
-            type="color"
-            value={form.bgColor}
-            onChange={(e) => setForm({ ...form, bgColor: e.target.value })}
-            style={{ width: "60px", height: "40px" }}
-          />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: "10px",
+                border: "1px solid #bbb",
+                background: form.bgColor,
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              }}
+            />
+
+            <input
+              type="color"
+              value={form.bgColor}
+              onChange={(e) => setForm({ ...form, bgColor: e.target.value })}
+              style={{
+                width: "60px",
+                height: "40px",
+                padding: 0,
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                cursor: "pointer",
+                background: "transparent",
+              }}
+            />
+          </Box>
+
+          <Typography sx={{ fontWeight: 600, color: "#3A6F47" }}>
+            Weight Units
+          </Typography>
 
           {Object.keys(form.weights).map((key) => (
             <TextField
@@ -444,6 +521,12 @@ export default function NonVegPickles() {
                   weights: { ...form.weights, [key]: e.target.value },
                 })
               }
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px",
+                  background: "#fff",
+                },
+              }}
             />
           ))}
 
@@ -455,15 +538,34 @@ export default function NonVegPickles() {
               const filtered = pickles.filter((_, i) => i !== editIndex);
               setPickles(filtered);
               setOpen(false);
+            }}
+            sx={{
+              mt: 1,
+              borderRadius: "12px",
+              fontWeight: 600,
+              borderWidth: "2px",
+              "&:hover": { borderWidth: "2px", background: "#FFEEEE" },
             }}>
-            Delete
+            Delete Pickle
           </Button>
         </DialogContent>
 
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
+        <DialogActions sx={{ justifyContent: "space-between", px: 3 }}>
+          <Button
+            onClick={() => setOpen(false)}
+            sx={{ borderRadius: "10px", fontWeight: 600, color: "#3A6F47" }}>
+            Cancel
+          </Button>
 
-          <Button variant="contained" onClick={handleSave}>
+          <Button
+            variant="contained"
+            onClick={handleSave}
+            sx={{
+              borderRadius: "12px",
+              background: "#4C8E5A",
+              "&:hover": { background: "#3A6F47" },
+              fontWeight: 600,
+            }}>
             Save
           </Button>
         </DialogActions>
