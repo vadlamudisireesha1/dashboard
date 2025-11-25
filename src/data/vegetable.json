@@ -1,8 +1,8 @@
 {
-  "title": "Non Veg Pickles",
+  "title": "Veg Pickles",
   "items": [
     {
-      "name": "Chicken Boneless Pickle",
+      "name": "Tomato Pickle",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 20,
@@ -12,7 +12,7 @@
       }
     },
     {
-      "name": "Gongura Chicken Boneless Pickle",
+      "name": "Mango Pickle",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 14,
@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "Mutton Pickle (Bone)",
+      "name": "Red Chilli Pickle",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 16,
@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "Gongura Mutton Pickle (Bone)",
+      "name": "Lemon Pickle",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
@@ -42,12 +42,52 @@
       }
     },
     {
-      "name": "Prawns Pickle",
+      "name": "Ginger Pickle",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 18,
         "500 gm": 22,
         "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Gongura Pickle",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 8,
+        "500 gm": 22,
+        "750 gm": 4,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Bitter Gourd Pickle",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 2,
+        "750 gm": 4,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Citron Pickle",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 2,
+        "750 gm": 4,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Gongura Chilli Pickle",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 4,
         "1000 gm": 9
       }
     }

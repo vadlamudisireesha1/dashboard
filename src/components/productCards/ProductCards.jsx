@@ -1,6 +1,6 @@
 // src/components/productCards/ProductCards.jsx
 import React from "react";
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 import {
   Carrot,
@@ -19,7 +19,7 @@ const categories = [
     bg: "#eaf2ff",
     count: 248,
     subtitle: "Fresh veggie assortments",
-    slug: "vegetable", // <-- slug
+    slug: "vegetable",
   },
   {
     label: "Non Veg Pickles",
@@ -28,7 +28,7 @@ const categories = [
     bg: "#ffecec",
     count: 32,
     subtitle: "Most loved spicy picks",
-    slug: "nonveg", // <-- slug
+    slug: "nonveg",
   },
   {
     label: "Delicious Powders",
@@ -70,75 +70,83 @@ const categories = [
 
 export default function ProductCards() {
   return (
-    <Stack
-      direction="row"
+    <Grid
+      container
       spacing={3}
       sx={{
         width: "100%",
         justifyContent: "center",
         mt: 3,
+        px: 2,
       }}>
       {categories.map((cat, index) => (
-        <Link
+        <Grid
+          item
           key={index}
-          to={`/category/${cat.slug}`}
-          style={{ textDecoration: "none", color: "inherit" }}>
-          <Box
-            sx={{
-              width: "15%",
-              display: "flex",
-              alignContent: "center",
-              justifyContent: "center",
-              flexDirection: "column",
-              minWidth: "190px",
-              minHeight: "130px",
-              background: cat.bg,
-              borderRadius: "18px",
-              padding: "18px",
-              boxShadow: "0px 4px 20px rgba(0,0,0,0.06)",
-              transition: "0.3s",
-              cursor: "pointer",
-              "&:hover": {
-                transform: "translateY(-3px)",
-                boxShadow: "0px 8px 30px rgba(0,0,0,0.15)",
-              },
-            }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: "14px" }}>
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: `${cat.color}22`,
-                  borderRadius: "12px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: cat.color,
-                }}>
-                {cat.icon}
+          xs={12} // FULL width on mobile
+          sm={6} // 2 per row on small screens
+          md={4} // 3 per row on tablets / small laptops
+          lg={2} // 6 per row on large screens (your original design)
+          sx={{ display: "flex", justifyContent: "center" }}>
+          <Link
+            to={`/category/${cat.slug}`}
+            style={{ textDecoration: "none", color: "inherit" }}>
+            <Box
+              sx={{
+                width: "190px",
+                minHeight: "130px",
+                background: cat.bg,
+                borderRadius: "18px",
+                padding: "18px",
+                boxShadow: "0px 4px 20px rgba(0,0,0,0.06)",
+                transition: "0.3s",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+
+                "&:hover": {
+                  transform: "translateY(-3px)",
+                  boxShadow: "0px 8px 30px rgba(0,0,0,0.15)",
+                },
+              }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    backgroundColor: `${cat.color}22`,
+                    borderRadius: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: cat.color,
+                  }}>
+                  {cat.icon}
+                </Box>
+
+                <Typography fontSize={35} fontWeight={700}>
+                  {cat.count}
+                </Typography>
               </Box>
 
-              <Typography fontSize={35} fontWeight={700}>
-                {cat.count}
+              <Typography fontSize={15} fontWeight={700} sx={{ mt: 1 }}>
+                {cat.label}
+              </Typography>
+
+              <Typography
+                sx={{
+                  mt: 1,
+                  color: cat.color,
+                  fontWeight: 700,
+                  fontSize: "14px",
+                }}>
+                View →
               </Typography>
             </Box>
-
-            <Typography fontSize={15} fontWeight={700} sx={{ mt: 1 }}>
-              {cat.label}
-            </Typography>
-
-            <Typography
-              sx={{
-                marginTop: "8px",
-                color: cat.color,
-                fontWeight: 700,
-                fontSize: "14px",
-              }}>
-              View →
-            </Typography>
-          </Box>
-        </Link>
+          </Link>
+        </Grid>
       ))}
-    </Stack>
+    </Grid>
   );
 }
