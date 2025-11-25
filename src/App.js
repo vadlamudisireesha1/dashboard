@@ -8,19 +8,28 @@ import DeliciousPowders from "./pages/DeliciousPowders";
 import MilletsReadytoCook from "./pages/MilletsReadytoCook";
 import ReadytoEat from "./pages/ReadytoEat";
 import OrganicMillets from "./pages/OrganicMillets";
-import Navbar from "./components/Navbar";
-import Dashboard from "./components/Dashboard";
+
+import Navbar from "./components/navbar/Navbar";
+import GraphView from "./components/graphs/GraphView";
 
 function App() {
   return (
     <BrowserRouter>
-      {/* Navbar always visible */}
       <Navbar />
 
-      {/* App Routes */}
       <Routes>
-        <Route path="/" element={<ProductCards />} />
+        {/* HOME PAGE → Show Products + Graphs */}
+        <Route
+          path="/"
+          element={
+            <>
+              <ProductCards />
+              <GraphView />
+            </>
+          }
+        />
 
+        {/* OTHER PAGES → Only show product page, NOT graphs */}
         <Route path="/vegetable-pickles" element={<VegetablePickles />} />
         <Route path="/nonveg-pickles" element={<NonVegPickles />} />
         <Route path="/delicious-powders" element={<DeliciousPowders />} />
@@ -28,7 +37,6 @@ function App() {
         <Route path="/ready-to-eat" element={<ReadytoEat />} />
         <Route path="/organic-millets" element={<OrganicMillets />} />
       </Routes>
-      <Dashboard />
     </BrowserRouter>
   );
 }
