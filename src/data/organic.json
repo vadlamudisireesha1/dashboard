@@ -1,8 +1,8 @@
 {
-  "title": "Non Veg Pickles",
+  "title": "Organic Millets",
   "items": [
     {
-      "name": "Chicken Boneless Pickle",
+      "name": "Organic Unpolished Barnyard Millet",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 20,
@@ -12,7 +12,7 @@
       }
     },
     {
-      "name": "Gongura Chicken Boneless Pickle",
+      "name": "Organic Unpolished Browntop Millet",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 14,
@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "Mutton Pickle (Bone)",
+      "name": "Organic Unpolished Finger Millet",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 16,
@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "Gongura Mutton Pickle (Bone)",
+      "name": "Organic Unpolished Foxtail Millet",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
@@ -42,7 +42,47 @@
       }
     },
     {
-      "name": "Prawns Pickle",
+      "name": "Organic Unpolished Jowar Millet",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Organic Unpolished Kodo Millet",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Organic Unpolished Little Millet",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Organic Unpolished Pearl Millet",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Organic Unpolished Proso Millet",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 18,

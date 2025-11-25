@@ -1,8 +1,8 @@
 {
-  "title": "Non Veg Pickles",
+  "title": "Ready to Cook",
   "items": [
     {
-      "name": "Chicken Boneless Pickle",
+      "name": "Millet Dosa Mix",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 20,
@@ -12,7 +12,7 @@
       }
     },
     {
-      "name": "Gongura Chicken Boneless Pickle",
+      "name": "Foxtail Millet Bisi Bele Bath Mix",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 14,
@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "Mutton Pickle (Bone)",
+      "name": "Multi Millet Kichadi Mix",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 16,
@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "Gongura Mutton Pickle (Bone)",
+      "name": "Foxtail Millet Upma Mix",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
@@ -42,7 +42,99 @@
       }
     },
     {
-      "name": "Prawns Pickle",
+      "name": "Millets Pongal Mix",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Foxtail Millet Noodles",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    
+    {
+      "name": "Little Millet Noodles",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    
+    {
+      "name": "Kodo Millet Noodles",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Millet Pasta",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Foxtail Millet Gooseberry Fryums",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Foxtail Millet Ajwain Fryums",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Foxtail Millet Jeera Fryums",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Foxtail Millet Tomato Fryums",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 18,
+        "500 gm": 22,
+        "750 gm": 14,
+        "1000 gm": 9
+      }
+    },
+    {
+      "name": "Foxtail Millet Beetroot Fryums",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 18,

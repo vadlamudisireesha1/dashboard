@@ -1,8 +1,8 @@
 {
-  "title": "Non Veg Pickles",
+  "title": "Ready to Eat",
   "items": [
     {
-      "name": "Chicken Boneless Pickle",
+      "name": "Raagi Jaggery Cookies",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 20,
@@ -12,7 +12,7 @@
       }
     },
     {
-      "name": "Gongura Chicken Boneless Pickle",
+      "name": "Chakodi Muruku",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 14,
@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "Mutton Pickle (Bone)",
+      "name": "Pearl Millet Jaggery Cookies",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 16,
@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "Gongura Mutton Pickle (Bone)",
+      "name": "Multi Millet Ghee Laddu",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
@@ -42,7 +42,7 @@
       }
     },
     {
-      "name": "Prawns Pickle",
+      "name": "Millet NutriBite",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 18,

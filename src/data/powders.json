@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "Bitter Gourd Savory Powder (Kakarakaya Karam)",
+      "name": "Curry Leaves Savory Powder",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 16,
@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "Coconut & Peanut Powder",
+      "name": "Peanut Chutney Powder",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
@@ -42,7 +42,7 @@
       }
     },
     {
-      "name": "Curry Leaves Savory Powder",
+      "name": "Flax Seeds Savory Powder",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 18,
@@ -52,7 +52,7 @@
       }
     },
     {
-      "name": "Flax Seeds Savory Powder",
+      "name": "Rasam Powder",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
@@ -72,7 +72,7 @@
       }
     },
     {
-      "name": "Coconut & Peanut Powder",
+      "name": "Guntur Sambar Powder",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
@@ -82,7 +82,38 @@
       }
     },
     {
-      "name": "Coconut & Peanut Powder",
+      "name": "Bitter Gourd Savory Powder (Kakarakaya Karam)",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 10,
+        "500 gm": 10,
+        "750 gm": 5,
+        "1000 gm": 4
+      }
+    }
+    ,
+    {
+      "name": "Guntur Sambar Karam",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 10,
+        "500 gm": 10,
+        "750 gm": 5,
+        "1000 gm": 4
+      }
+    },
+    {
+      "name": "Guntur Premium Mirchi Powder",
+      "bgColor": "#ffffff",
+      "weights": {
+        "250 gm": 10,
+        "500 gm": 10,
+        "750 gm": 5,
+        "1000 gm": 4
+      }
+    },
+    {
+      "name": "Pigeon Peas Savory Powder (Kandi Podi)",
       "bgColor": "#ffffff",
       "weights": {
         "250 gm": 10,
