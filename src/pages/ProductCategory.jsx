@@ -1,4 +1,3 @@
-// src/pages/ProductCategory.jsx
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -26,7 +25,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
-// import all JSONs (so bundler includes them)
+// import all JSONs
 import nonvegData from "../data/nonveg.json";
 import vegetableData from "../data/vegetable.json";
 import powdersData from "../data/powders.json";
@@ -34,7 +33,7 @@ import milletsData from "../data/millets.json";
 import readytoeatData from "../data/readytoeat.json";
 import organicData from "../data/organic.json";
 
-// ROLE -> admin or user (you can switch as needed)
+// ROLE -> admin or user
 const USER_ROLE = "admin";
 
 export default function ProductCategory() {
@@ -72,7 +71,7 @@ export default function ProductCategory() {
       case "organic-millets":
         return organicData;
       default:
-        return nonvegData; // fallback
+        return nonvegData;
     }
   };
 
@@ -80,10 +79,9 @@ export default function ProductCategory() {
   // initialize pickles from selected JSON
   const [pickles, setPickles] = useState(data.items || []);
 
-  // when route (type) changes, reload data
   useEffect(() => {
     setPickles(getDataForType(type).items || []);
-    // reset UI state
+
     setView("grid");
     setExpanded(null);
     setOpen(false);
@@ -185,7 +183,7 @@ export default function ProductCategory() {
         </ToggleButtonGroup>
       </Box>
 
-      {/* GRID VIEW (exact styles preserved) */}
+      {/* GRID VIEW   */}
       {view === "grid" && (
         <Grid container spacing={3}>
           {pickles.map((item, index) => {
@@ -314,7 +312,7 @@ export default function ProductCategory() {
         </Grid>
       )}
 
-      {/* LIST VIEW (fancy styled, matches grid look) */}
+      {/* LIST VIEW   */}
       {view === "list" && (
         <Box sx={{ mt: 2 }}>
           {pickles.map((item, index) => {
@@ -433,7 +431,7 @@ export default function ProductCategory() {
         </Box>
       )}
 
-      {/* EDIT POPUP (kept exact style) */}
+      {/* EDIT POPUP   */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
