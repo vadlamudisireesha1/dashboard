@@ -27,33 +27,6 @@ function Navbar() {
         }}
       />
 
-      {/* SEARCH BAR */}
-      {/* <Box sx={{ width: "70%" }}>
-        <TextField
-          placeholder="I'm looking for..."
-          variant="outlined"
-          fullWidth
-          sx={{
-            backgroundColor: "white",
-            borderRadius: "50px",
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "50px",
-              paddingLeft: "20px",
-              paddingRight: "20px",
-            },
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end" sx={{ color: "black", pr: 2 }}>
-                <Search size={20} style={{ marginRight: "8px" }} />
-                <span style={{ fontSize: "16px" }}>Search</span>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box> */}
-
-      {/* RIGHT SIDE BUTTON */}
       <Button
         variant="contained"
         sx={{
