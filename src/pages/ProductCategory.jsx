@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Download } from "lucide-react";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
+
 import {
   Box,
   Button,
@@ -18,6 +25,8 @@ import {
 } from "@mui/material";
 
 import {
+  Grid3X3,
+  List,
   Palette,
   Edit,
   Plus,
@@ -85,6 +94,73 @@ export default function ProductCategory() {
     });
     return total;
   };
+  // Convert data into flat rows for export
+  const convertDataForExport = () => {
+    return pickles
+      .map((item) => {
+        const rows = [];
+
+        Object.entries(item.weights).forEach(([gram, { units, price }]) => {
+          rows.push({
+            Name: item.name,
+            Gram: `${gram}g`,
+            Units: units,
+            Price: price,
+            Total: units * price,
+          });
+        });
+
+        return rows;
+      })
+      .flat();
+  };
+
+  // Download Excel
+  const handleDownloadExcel = () => {
+    const exportData = convertDataForExport();
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = {
+      SheetNames: ["Products"],
+      Sheets: { Products: worksheet },
+    };
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    saveAs(
+      new Blob([excelBuffer], { type: "application/octet-stream" }),
+      `${data.title}.xlsx`
+    );
+  };
+
+  // Download PDF
+  const handleDownloadPDF = () => {
+    const exportData = convertDataForExport();
+
+    const doc = new jsPDF();
+
+    doc.text(`${data.title} Report`, 14, 10);
+
+    const columns = ["Name", "Gram", "Units", "Price", "Total"];
+    const rows = exportData.map((r) => [
+      r.Name,
+      r.Gram,
+      r.Units,
+      r.Price,
+      r.Total,
+    ]);
+
+    autoTable(doc, {
+      head: [columns],
+      body: rows,
+      startY: 20,
+    });
+
+    doc.save(`${data.title}.pdf`);
+  };
 
   // TOTAL UNITS
   const getTotalUnits = (weights) =>
@@ -148,6 +224,8 @@ export default function ProductCategory() {
     setOpen(false);
   };
 
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
+
   // delete item
   const handleDelete = () => {
     const filtered = pickles.filter((_, i) => i !== editIndex);
@@ -176,18 +254,91 @@ export default function ProductCategory() {
           </span>
         </Typography>
 
-        <ToggleButtonGroup
-          exclusive
-          value={view}
-          onChange={(e, v) => v && setView(v)}
-          sx={{ background: "#fff", borderRadius: "12px" }}>
-          <ToggleButton value="grid">
-            <GridIcon size={18} />
-          </ToggleButton>
-          <ToggleButton value="list">
-            <ListIcon size={18} />
-          </ToggleButton>
-        </ToggleButtonGroup>
+        {/* Right Header Controls */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Download Button */}
+          <Box sx={{ position: "relative" }}>
+            <IconButton
+              onClick={() => setShowDownloadMenu((prev) => !prev)}
+              sx={{
+                bgcolor: "white",
+
+                borderRadius: 3,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                "&:hover": { bgcolor: "#2e7d32", color: "white" },
+              }}>
+              <Download size={26} />
+            </IconButton>
+
+            {/* Dropdown Menu */}
+            {showDownloadMenu && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50px",
+                  right: 0,
+                  bgcolor: "white",
+                  borderRadius: 2,
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+                  width: 160,
+                  zIndex: 20,
+                  p: 1,
+                }}>
+                <Box
+                  sx={{
+                    p: 1,
+                    borderRadius: 1,
+                    cursor: "pointer",
+                    "&:hover": { bgcolor: "#2e7d32" },
+                  }}
+                  onClick={() => {
+                    setShowDownloadMenu(false);
+                    handleDownloadPDF();
+                  }}>
+                  Download PDF
+                </Box>
+
+                <Box
+                  sx={{
+                    p: 1,
+                    borderRadius: 1,
+                    cursor: "pointer",
+                    "&:hover": { bgcolor: "#2e7d32" },
+                  }}
+                  onClick={() => {
+                    setShowDownloadMenu(false);
+                    handleDownloadExcel();
+                  }}>
+                  Download Excel
+                </Box>
+              </Box>
+            )}
+          </Box>
+
+          {/* Existing Toggle Buttons */}
+          <ToggleButtonGroup
+            value={view}
+            exclusive
+            onChange={(e, v) => v && setView(v)}
+            sx={{
+              bgcolor: "white",
+              borderRadius: 3,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+              "& .MuiToggleButton-root": {
+                border: "none",
+                borderRadius: 3,
+                py: 1.5,
+                "&.Mui-selected": { bgcolor: "#2e7d32", color: "white" },
+              },
+            }}>
+            <ToggleButton value="grid">
+              <Grid3X3 size={20} />
+            </ToggleButton>
+            <ToggleButton value="list">
+              <List size={20} />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
       </Box>
 
       {/* GRID VIEW (unchanged) */}
