@@ -435,9 +435,9 @@ export default function ProductCategory() {
             </Box>
           </Box>
 
-          {/* Right – Download + Toggle (YOUR ORIGINAL FUNCTIONALITY – NO CHANGE) */}
+          {/* Right – Download + Toggle  */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* Download Button – Just Better Look */}
+            {/* Download Button  */}
             <Box sx={{ position: "relative" }}>
               <Button
                 variant="outlined"
@@ -446,17 +446,19 @@ export default function ProductCategory() {
                 sx={{
                   borderRadius: 3,
                   fontWeight: 600,
+                  minWidth: "auto",
+                  padding: "8px 12px",
                   border: "1.5px solid #cbd5e1",
                   color: "#475569",
-                  px: 3,
-                  py: 1.2,
+                  "& .MuiButton-startIcon": {
+                    margin: 0,
+                  },
                   "&:hover": {
-                    borderColor: "#6366f1",
+                    borderColor: "#42961A",
                     bgcolor: "#f8fafc",
                   },
-                }}>
-                Export
-              </Button>
+                }}
+              />
 
               {/* Your Original Dropdown – No Logic Changed */}
               {showDownloadMenu && (
@@ -518,14 +520,16 @@ export default function ProductCategory() {
                 bgcolor: "#f8fafc",
                 borderRadius: 3,
                 overflow: "hidden",
+                border: "1px solid grey",
                 "& .MuiToggleButton-root": {
                   border: "none",
                   px: 3,
                   py: 1.5,
                   "&.Mui-selected": {
-                    bgcolor: "#4f46e5",
+                    bgcolor: "#42961A",
                     color: "white",
-                    "&:hover": { bgcolor: "#4338ca" },
+                    border: "none",
+                    "&:hover": { bgcolor: "" },
                   },
                 },
               }}>
