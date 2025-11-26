@@ -17,11 +17,11 @@ export default function ProductCard({
   item,
   index,
   view = "grid",
-  opened, // This must be controlled by parent using item.id
+  opened,
   totalUnits,
   totalValue,
   onEdit,
-  onToggle, // Must pass item.id or index properly
+  onToggle,
   dotColor,
   isAddNew = false,
 }) {
@@ -126,10 +126,10 @@ export default function ProductCard({
         {/* Value + Count */}
         <Box sx={{ p: 2, pt: 1.5 }}>
           <StyledDetailRow label="Total Value" value={`₹${formattedValue}`} />
-          <StyledDetailRow
+          {/* <StyledDetailRow
             label="Variants"
             value={Object.keys(item.weights || {}).length}
-          />
+          /> */}
         </Box>
 
         {/* Toggle Bar - Clean */}

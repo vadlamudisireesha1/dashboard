@@ -29,7 +29,7 @@ function Navbar() {
         <Stack direction="row" alignItems="center" spacing={2}>
           <Box
             component="img"
-            src="/The_Pickls_logo.webp"
+            src="https://thepickls.com/cdn/shop/files/the_pickls.png?v=1704872288"
             alt="The Pickls"
             sx={{
               width: { xs: 44, sm: 52 },
