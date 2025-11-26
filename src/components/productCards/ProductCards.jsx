@@ -16,7 +16,15 @@ import {
   Trash2,
   ChevronDown,
 } from "lucide-react";
+// IMPORT ALL CATEGORY JSON FILES (AUTO UPDATE COUNTS)
+import nonvegData from "../../data/nonveg.json";
+import vegetableData from "../../data/vegetable.json";
+import powdersData from "../../data/powders.json";
+import milletsData from "../../data/millets.json";
+import readytoeatData from "../../data/readytoeat.json";
+import organicData from "../../data/organic.json";
 
+// ICON MAP
 const iconMap = {
   carrot: <Carrot size={22} />,
   drumstick: <Drumstick size={22} />,
@@ -29,6 +37,27 @@ const iconMap = {
   curry: <CookingPot size={22} />,
   spicy: <Sprout size={22} />,
   sweets: <Carrot size={22} />,
+};
+
+// Map slug → JSON data
+const categoryMap = {
+  nonveg: nonvegData,
+  vegetable: vegetableData,
+  powders: powdersData,
+  millets: milletsData,
+  readytoeat: readytoeatData,
+  organic: organicData,
+};
+
+// Calculate total units dynamically
+const getTotalUnits = (items = []) => {
+  let total = 0;
+  items.forEach((item) => {
+    Object.values(item.weights).forEach((w) => {
+      total += Number(w.units || 0);
+    });
+  });
+  return total;
 };
 
 const LOCAL_KEY = "extraProducts_v1";
@@ -118,8 +147,10 @@ export default function ProductCards() {
                     }}>
                     {iconMap[cat.icon]}
                   </Box>
+
+                  {/* AUTO UPDATED COUNT */}
                   <Typography fontSize={35} fontWeight={700}>
-                    {cat.count}
+                    {getTotalUnits(categoryMap[cat.slug]?.items)}
                   </Typography>
                 </Box>
 
@@ -136,10 +167,10 @@ export default function ProductCards() {
         ))}
       </Grid>
 
-      {/* SPACING BEFORE CUSTOM SECTION (since you chose B) */}
+      {/* SPACING BEFORE CUSTOM SECTION */}
       <Box sx={{ height: "25px" }} />
 
-      {/* CUSTOM SECTION */}
+      {/* CUSTOM PRODUCTS SECTION */}
       <Collapse in={expanded} timeout={450} unmountOnExit>
         <Grid container spacing={3} sx={{ px: 2, mb: 3 }}>
           {customProducts.map((cat) => (
@@ -174,6 +205,7 @@ export default function ProductCards() {
                       }}>
                       {iconMap[cat.icon]}
                     </Box>
+
                     <Typography fontSize={35} fontWeight={700}>
                       {cat.count}
                     </Typography>
@@ -229,7 +261,7 @@ export default function ProductCards() {
         </Grid>
       </Collapse>
 
-      {/* FINAL SEPARATOR ALWAYS AT BOTTOM */}
+      {/* FINAL SEPARATOR */}
       <Box sx={{ width: "100%", position: "relative", mt: 1, mb: 4 }}>
         <Box sx={{ width: "100%", height: "1.5px", backgroundColor: "#ddd" }} />
 
