@@ -1,45 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Download } from "lucide-react";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import autoTable from "jspdf-autotable";
-
 import {
   Box,
   Button,
   Typography,
-  Grid,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Collapse,
   ToggleButton,
-  Stack,
-  alpha,
   ToggleButtonGroup,
 } from "@mui/material";
+import { Download, Grid3X3, List } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
-import {
-  Grid3X3,
-  List,
-  Palette,
-  Edit,
-  Plus,
-  Trash2,
-  ChevronDown,
-  ChevronUp,
-  Grid as GridIcon,
-  List as ListIcon,
-} from "lucide-react";
-
-import { useNavigate, useParams } from "react-router-dom";
-
-// JSON imports
+// Data
 import nonvegData from "../data/nonveg.json";
 import vegetableData from "../data/vegetable.json";
 import powdersData from "../data/powders.json";
@@ -47,9 +22,16 @@ import milletsData from "../data/millets.json";
 import readytoeatData from "../data/readytoeat.json";
 import organicData from "../data/organic.json";
 
+// Components
+import ProductView from "../components/productCategory/ProductView";
+import EditProductModal from "../components/productCategory/EditProductModal";
+
+// Styles
+import { styles } from "../components/productCategory/productView.style";
+
 const USER_ROLE = "admin";
 
-// pick JSON based on slug
+// Pick correct JSON based on slug
 const getDataForType = (slug) => {
   switch ((slug || "").toLowerCase()) {
     case "nonveg":
@@ -78,13 +60,14 @@ export default function ProductCategory() {
   const [pickles, setPickles] = useState(data.items || []);
   const [expanded, setExpanded] = useState(null);
   const [view, setView] = useState("grid");
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
   useEffect(() => {
     setPickles(getDataForType(type).items || []);
     setExpanded(null);
   }, [type]);
 
-  // TOTAL UNITS OF ENTIRE CATEGORY
+  // Category total units
   const getCategoryTotalUnits = () => {
     let total = 0;
     pickles.forEach((item) => {
@@ -94,31 +77,25 @@ export default function ProductCategory() {
     });
     return total;
   };
-  // Convert data into flat rows for export
+
+  // Flatten export rows
   const convertDataForExport = () => {
     return pickles
-      .map((item) => {
-        const rows = [];
-
-        Object.entries(item.weights).forEach(([gram, { units, price }]) => {
-          rows.push({
-            Name: item.name,
-            Gram: `${gram}g`,
-            Units: units,
-            Price: price,
-            Total: units * price,
-          });
-        });
-
-        return rows;
-      })
+      .map((item) =>
+        Object.entries(item.weights).map(([gram, { units, price }]) => ({
+          Name: item.name,
+          Gram: `${gram}g`,
+          Units: units,
+          Price: price,
+          Total: units * price,
+        }))
+      )
       .flat();
   };
 
   // Download Excel
   const handleDownloadExcel = () => {
     const exportData = convertDataForExport();
-
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = {
       SheetNames: ["Products"],
@@ -139,7 +116,6 @@ export default function ProductCategory() {
   // Download PDF
   const handleDownloadPDF = () => {
     const exportData = convertDataForExport();
-
     const doc = new jsPDF();
 
     doc.text(`${data.title} Report`, 14, 10);
@@ -162,11 +138,10 @@ export default function ProductCategory() {
     doc.save(`${data.title}.pdf`);
   };
 
-  // TOTAL UNITS
+  // Helpers
   const getTotalUnits = (weights) =>
     Object.values(weights).reduce((sum, w) => sum + Number(w.units), 0);
 
-  // TOTAL VALUE
   const getTotalValue = (weights) =>
     Object.values(weights).reduce(
       (sum, w) => sum + Number(w.units) * Number(w.price),
@@ -179,6 +154,7 @@ export default function ProductCategory() {
     return "green";
   };
 
+  // Modal states
   const [open, setOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [form, setForm] = useState({
@@ -192,14 +168,12 @@ export default function ProductCategory() {
     },
   });
 
-  // open edit
   const handleEdit = (index) => {
     setEditIndex(index);
     setForm(JSON.parse(JSON.stringify(pickles[index])));
     setOpen(true);
   };
 
-  // open add
   const handleAdd = () => {
     setEditIndex(pickles.length);
     setForm({
@@ -215,7 +189,6 @@ export default function ProductCategory() {
     setOpen(true);
   };
 
-  // save edit/add
   const handleSave = () => {
     const updated = [...pickles];
     if (editIndex < pickles.length) updated[editIndex] = form;
@@ -224,73 +197,42 @@ export default function ProductCategory() {
     setOpen(false);
   };
 
-  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
-
-  // delete item
   const handleDelete = () => {
-    const filtered = pickles.filter((_, i) => i !== editIndex);
-    setPickles(filtered);
+    setPickles(pickles.filter((_, i) => i !== editIndex));
     setOpen(false);
   };
 
   return (
     <Box sx={{ p: 4, background: "#fffbf5ff", minHeight: "100vh" }}>
+      {/* Back Button */}
       <Button variant="contained" onClick={() => navigate(-1)}>
         ← Back
       </Button>
 
-      {/* Title + view */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mt: 3,
-          mb: 3,
-        }}>
+      {/* Header */}
+      <Box sx={styles.headerWrapper}>
         <Typography variant="h4" fontWeight={700}>
           {data.title}{" "}
-          <span style={{ fontSize: "22px", fontWeight: 600, opacity: 0.7 }}>
+          <span style={{ fontSize: "22px", opacity: 0.7 }}>
             ({pickles.length} Products / {getCategoryTotalUnits()} Units)
           </span>
         </Typography>
 
-        {/* Right Header Controls */}
+        {/* Download + Toggle */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           {/* Download Button */}
           <Box sx={{ position: "relative" }}>
             <IconButton
               onClick={() => setShowDownloadMenu((prev) => !prev)}
-              sx={{
-                bgcolor: "white",
-
-                borderRadius: 3,
-                boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-                "&:hover": { bgcolor: "#2e7d32", color: "white" },
-              }}>
+              sx={styles.downloadBtn}>
               <Download size={26} />
             </IconButton>
 
-            {/* Dropdown Menu */}
+            {/* Dropdown */}
             {showDownloadMenu && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: "50px",
-                  right: 0,
-                  bgcolor: "white",
-                  borderRadius: 2,
-                  boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
-                  width: 160,
-                  zIndex: 20,
-                  p: 1,
-                }}>
+              <Box sx={styles.downloadMenu}>
                 <Box
-                  sx={{
-                    p: 1,
-                    borderRadius: 1,
-                    cursor: "pointer",
-                    "&:hover": { bgcolor: "#2e7d32" },
-                  }}
+                  sx={styles.downloadMenuItem}
                   onClick={() => {
                     setShowDownloadMenu(false);
                     handleDownloadPDF();
@@ -299,12 +241,7 @@ export default function ProductCategory() {
                 </Box>
 
                 <Box
-                  sx={{
-                    p: 1,
-                    borderRadius: 1,
-                    cursor: "pointer",
-                    "&:hover": { bgcolor: "#2e7d32" },
-                  }}
+                  sx={styles.downloadMenuItem}
                   onClick={() => {
                     setShowDownloadMenu(false);
                     handleDownloadExcel();
@@ -315,22 +252,12 @@ export default function ProductCategory() {
             )}
           </Box>
 
-          {/* Existing Toggle Buttons */}
+          {/* Grid / List View Toggle */}
           <ToggleButtonGroup
             value={view}
             exclusive
             onChange={(e, v) => v && setView(v)}
-            sx={{
-              bgcolor: "white",
-              borderRadius: 3,
-              boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-              "& .MuiToggleButton-root": {
-                border: "none",
-                borderRadius: 3,
-                py: 1.5,
-                "&.Mui-selected": { bgcolor: "#2e7d32", color: "white" },
-              },
-            }}>
+            sx={styles.toggleButtons}>
             <ToggleButton value="grid">
               <Grid3X3 size={20} />
             </ToggleButton>
@@ -341,495 +268,28 @@ export default function ProductCategory() {
         </Box>
       </Box>
 
-      {/* GRID VIEW (unchanged) */}
-      {view === "grid" && (
-        <Grid container spacing={3}>
-          {pickles.map((item, index) => {
-            const totalUnits = getTotalUnits(item.weights);
-            const totalValue = getTotalValue(item.weights);
-            const opened = expanded === index;
+      {/* Main View (Grid + List) */}
+      <ProductView
+        pickles={pickles}
+        view={view}
+        expanded={expanded}
+        onToggleExpand={(idx) => setExpanded(expanded === idx ? null : idx)}
+        onEdit={handleEdit}
+        onAdd={handleAdd}
+        getTotalUnits={getTotalUnits}
+        getTotalValue={getTotalValue}
+        dotColor={dotColor}
+      />
 
-            return (
-              <Grid item key={index} sx={{ width: "260px" }}>
-                <Box
-                  sx={{
-                    p: 2,
-                    background: item.bgColor,
-                    borderRadius: "18px",
-                    minHeight: "150px",
-                    position: "relative",
-                    boxShadow: "0px 8px 25px rgba(0,0,0,0.08)",
-                    transition: "0.25s ease",
-                  }}>
-                  {USER_ROLE === "admin" && (
-                    <IconButton
-                      size="small"
-                      sx={{ position: "absolute", top: 10, right: 10 }}
-                      onClick={() => handleEdit(index)}>
-                      <Edit size={18} />
-                    </IconButton>
-                  )}
-
-                  {/* TOP ROW  */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      p: 2.5,
-                      background:
-                        "linear-gradient(135deg, #f8fff8 0%, #f0fdf4 100%)",
-                      borderRadius: "16px",
-                      border: "1px solid #bbf7d087",
-                    }}>
-                    <Typography
-                      sx={{ fontSize: 40, fontWeight: 800, color: "#166534" }}>
-                      {totalUnits}
-                    </Typography>
-
-                    <Box
-                      sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                      <Typography
-                        sx={{
-                          fontSize: 26,
-                          fontWeight: 700,
-                          color: "#0b0b0bff",
-                        }}>
-                        ₹{totalValue.toLocaleString("en-IN")}
-                      </Typography>
-                      <Box
-                        sx={{
-                          width: 14,
-                          height: 14,
-                          borderRadius: "50%",
-                          bgcolor: dotColor(totalUnits),
-                          boxShadow:
-                            "0 0 10px 3px " + dotColor(totalUnits) + "60",
-                        }}
-                      />
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ borderBottom: "1px solid #ddd", my: 1 }} />
-                  <Box
-                    sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography fontSize={16} fontWeight={700}>
-                      {item.name}
-                    </Typography>
-                    {/* EXPAND BUTTON */}
-                    <Box
-                      sx={{
-                        textAlign: "center",
-                        cursor: "pointer",
-                        mb: 1,
-                      }}
-                      onClick={() => setExpanded(opened ? null : index)}>
-                      {opened ? <ChevronUp /> : <ChevronDown />}
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ borderBottom: "1px solid #ddd", my: 1 }} />
-
-                  {/* EXPANDED SECTION   */}
-                  <Collapse in={opened}>
-                    <Box sx={{ mt: 1 }}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          fontWeight: 700,
-                          borderBottom: "1px solid #ccc",
-                          mb: 1,
-                          pb: 1,
-                          fontSize: "14px",
-                        }}>
-                        <Box sx={{ width: "60px" }}>Gram</Box>
-                        <Box sx={{ width: "60px" }}>Units</Box>
-                        <Box sx={{ width: "60px" }}>Price</Box>
-                        <Box sx={{ width: "60px" }}>Total</Box>
-                      </Box>
-
-                      {Object.entries(item.weights).map(([gram, obj], i) => (
-                        <Box
-                          key={i}
-                          sx={{
-                            display: "flex",
-                            mb: 1,
-                            fontWeight: 600,
-                            fontSize: "14px",
-                          }}>
-                          <Box sx={{ width: "60px" }}>{gram}g</Box>
-                          <Box sx={{ width: "60px" }}>{obj.units}</Box>
-                          <Box sx={{ width: "60px" }}>₹{obj.price}</Box>
-                          <Box sx={{ width: "60px" }}>
-                            ₹{obj.units * obj.price}
-                          </Box>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Collapse>
-                </Box>
-              </Grid>
-            );
-          })}
-
-          {/* ADD NEW */}
-          <Grid item sx={{ width: "260px" }}>
-            <Box
-              onClick={handleAdd}
-              sx={{
-                width: "240px",
-                minHeight: "180px",
-                border: "2px dashed #c7c7c7",
-                borderRadius: "18px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-              }}>
-              <Plus size={40} />
-              <Typography mt={1}>Add New</Typography>
-            </Box>
-          </Grid>
-        </Grid>
-      )}
-
-      {/* LIST VIEW (restored) */}
-      {view === "list" && (
-        <Box sx={{ mt: 2 }}>
-          {pickles.map((item, index) => {
-            const totalUnits = getTotalUnits(item.weights);
-            const totalValue = getTotalValue(item.weights);
-            const opened = expanded === index;
-
-            return (
-              <Box
-                key={index}
-                sx={{
-                  background: "rgba(255,255,255,0.8)",
-                  borderRadius: "18px",
-                  boxShadow: "0px 8px 25px rgba(0,0,0,0.08)",
-                  p: 2,
-                  mb: 2,
-                  transition: "0.25s ease",
-                }}>
-                {/* HEADER ROW */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    pb: 1,
-                  }}>
-                  <Typography
-                    sx={{
-                      width: "90px",
-                      fontSize: "34px",
-                      fontWeight: 800,
-                    }}>
-                    {totalUnits}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      minWidth: "90px",
-                      fontSize: "18px",
-                      fontWeight: 700,
-                    }}>
-                    ₹{totalValue}
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      flex: 1,
-                      fontSize: "18px",
-                      fontWeight: 700,
-                    }}>
-                    {item.name}
-                  </Typography>
-
-                  <Box
-                    sx={{
-                      width: 14,
-                      height: 14,
-                      borderRadius: "50%",
-                      backgroundColor: dotColor(totalUnits),
-                    }}
-                  />
-
-                  {USER_ROLE === "admin" && (
-                    <IconButton onClick={() => handleEdit(index)}>
-                      <Edit size={18} />
-                    </IconButton>
-                  )}
-
-                  <IconButton
-                    onClick={() => setExpanded(opened ? null : index)}>
-                    {opened ? <ChevronUp /> : <ChevronDown />}
-                  </IconButton>
-                </Box>
-
-                {/* EXPANDED TABLE */}
-                <Collapse in={opened}>
-                  <Box sx={{ mt: 2 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        fontWeight: 700,
-                        borderBottom: "1px solid #ccc",
-                        mb: 1,
-                        pb: 1,
-                        fontSize: "14px",
-                      }}>
-                      <Box sx={{ width: "80px" }}>Gram</Box>
-                      <Box sx={{ width: "80px" }}>Units</Box>
-                      <Box sx={{ width: "80px" }}>Price</Box>
-                      <Box sx={{ width: "80px" }}>Total</Box>
-                    </Box>
-
-                    {Object.entries(item.weights).map(([gram, obj]) => (
-                      <Box
-                        key={gram}
-                        sx={{
-                          display: "flex",
-                          mb: 1,
-                          fontWeight: 600,
-                          fontSize: "14px",
-                        }}>
-                        <Box sx={{ width: "80px" }}>{gram}g</Box>
-                        <Box sx={{ width: "80px" }}>{obj.units}</Box>
-                        <Box sx={{ width: "80px" }}>₹{obj.price}</Box>
-                        <Box sx={{ width: "80px" }}>
-                          ₹{obj.units * obj.price}
-                        </Box>
-                      </Box>
-                    ))}
-                  </Box>
-                </Collapse>
-              </Box>
-            );
-          })}
-
-          {/* ADD NEW IN LIST VIEW */}
-          <Box
-            onClick={handleAdd}
-            sx={{
-              mt: 2,
-              borderRadius: "18px",
-              border: "2px dashed #c7c7c7",
-              padding: 3,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              background: "rgba(255,255,255,0.6)",
-            }}>
-            <Plus size={28} style={{ marginRight: 8 }} />
-            <Typography fontWeight={600}>Add New Product</Typography>
-          </Box>
-        </Box>
-      )}
-
-      {/* EDIT MODAL  */}
-
-      <Dialog
+      {/* Modal */}
+      <EditProductModal
         open={open}
         onClose={() => setOpen(false)}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: "20px",
-            background: "rgba(255, 255, 255, 0.98)",
-            backdropFilter: "blur(20px)",
-            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.15)",
-            m: { xs: 2, sm: 3 },
-          },
-        }}>
-        <DialogTitle
-          sx={{
-            textAlign: "center",
-            fontWeight: 800,
-            fontSize: "1.5rem",
-            color: "#1a1a1a",
-          }}>
-          Edit Details
-        </DialogTitle>
-
-        <DialogContent sx={{ px: { xs: 3, sm: 4 }, pt: 2 }}>
-          {/* Product Name */}
-          <TextField
-            fullWidth
-            label="Product Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            variant="filled"
-            InputProps={{ disableUnderline: true }}
-            sx={{
-              mb: 3,
-              "& .MuiFilledInput-root": {
-                background: "white",
-                borderRadius: "14px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-                fontSize: "1.1rem",
-                fontWeight: 500,
-                "&:hover": { background: "#f8fff8" },
-                "&.Mui-focused": {
-                  background: "white",
-                  boxShadow: "0 0 0 3px rgba(46, 125, 50, 0.2)",
-                },
-              },
-              "& .MuiInputLabel-root": {
-                fontWeight: 600,
-                color: "#444",
-                "&.Mui-focused": { color: "#2e7d32" },
-              },
-            }}
-          />
-
-          {/* Background Color */}
-          <Typography fontWeight={700} gutterBottom color="text.primary">
-            Background Color
-          </Typography>
-          <Box sx={{ mb: 3 }}>
-            <input
-              type="color"
-              value={form.bgColor}
-              onChange={(e) => setForm({ ...form, bgColor: e.target.value })}
-              style={{
-                width: "100%",
-                height: "56px",
-                borderRadius: "14px",
-                border: "none",
-                cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              }}
-            />
-          </Box>
-
-          {/* Weight Table */}
-          <Typography fontWeight={700} gutterBottom color="text.primary">
-            Weight Table (Style B)
-          </Typography>
-
-          <Stack spacing={2}>
-            {/* Header */}
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: {
-                  xs: "80px 1fr 1fr",
-                  sm: "100px 1fr 1fr",
-                },
-                gap: 1.5,
-                fontWeight: 700,
-                color: "#2e7d32",
-                pb: 1,
-                borderBottom: "2px solid #e0e0e0",
-              }}>
-              <Box>Gram</Box>
-              <Box>Units</Box>
-              <Box>Price</Box>
-            </Box>
-
-            {/* Rows */}
-            {Object.entries(form.weights).map(([gram, obj]) => (
-              <Box
-                key={gram}
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: {
-                    xs: "80px 1fr 1fr",
-                    sm: "100px 1fr 1fr",
-                  },
-                  gap: 1.5,
-                  alignItems: "center",
-                }}>
-                <Typography fontWeight={600} color="#1a1a1a">
-                  {gram}g
-                </Typography>
-
-                <TextField
-                  size="small"
-                  type="number"
-                  value={obj.units}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      weights: {
-                        ...form.weights,
-                        [gram]: { ...obj, units: Number(e.target.value) || 0 },
-                      },
-                    })
-                  }
-                  InputProps={{
-                    sx: { borderRadius: "10px", background: "white" },
-                  }}
-                />
-
-                <TextField
-                  size="small"
-                  type="number"
-                  value={obj.price}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      weights: {
-                        ...form.weights,
-                        [gram]: { ...obj, price: Number(e.target.value) || 0 },
-                      },
-                    })
-                  }
-                  InputProps={{
-                    sx: { borderRadius: "10px", background: "white" },
-                  }}
-                />
-              </Box>
-            ))}
-          </Stack>
-
-          {/* Delete Button */}
-          <Button
-            fullWidth
-            variant="outlined"
-            color="error"
-            startIcon={<Trash2 size={20} />}
-            onClick={handleDelete}
-            sx={{
-              mt: 4,
-              py: 1.5,
-              borderRadius: "12px",
-              borderWidth: 2,
-              fontWeight: 600,
-              textTransform: "none",
-              "&:hover": { borderWidth: 2, bgcolor: alpha("#d32f2f", 0.08) },
-            }}>
-            Delete Product
-          </Button>
-        </DialogContent>
-
-        <DialogActions sx={{ justifyContent: "center", pb: 4, gap: 2 }}>
-          <Button
-            onClick={() => setOpen(false)}
-            sx={{ px: 4, py: 1.2, fontWeight: 600, borderRadius: "12px" }}>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleSave}
-            sx={{
-              px: 5,
-              py: 1.4,
-              fontWeight: 700,
-              borderRadius: "12px",
-              bgcolor: "#2e7d32",
-              "&:hover": { bgcolor: "#1b5e20" },
-              boxShadow: "0 6px 16px rgba(46, 125, 50, 0.3)",
-            }}>
-            Save Changes
-          </Button>
-        </DialogActions>
-      </Dialog>
+        form={form}
+        setForm={setForm}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
     </Box>
   );
 }
