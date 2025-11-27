@@ -356,7 +356,7 @@ export default function ProductCategory() {
   return (
     <Box sx={{ p: 4, background: "#fffbf5ff", minHeight: "100vh" }}>
       {/* Header */}
-      {/* PREMIUM TITLE SECTION – DHENKI MACHI BUT 100% SAFE */}
+
       <Box sx={{ mb: 4 }}>
         {/* Back Button */}
         <Button
@@ -372,7 +372,7 @@ export default function ProductCategory() {
           ← Back
         </Button>
 
-        {/* Main Header – Clean & Classy */}
+        {/* Main Header  */}
         <Box
           sx={{
             display: "flex",
@@ -519,7 +519,7 @@ export default function ProductCategory() {
         </Box>
       </Box>
 
-      {/* Main View (Grid + List) */}
+      {/* Main View */}
       <ProductView
         pickles={pickles}
         view={view}

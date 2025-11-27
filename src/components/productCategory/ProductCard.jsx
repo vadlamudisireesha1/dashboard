@@ -2,17 +2,6 @@ import React from "react";
 import { Box, Typography, IconButton, Collapse } from "@mui/material";
 import { Edit, ChevronDown, ChevronUp, PlusCircle } from "lucide-react";
 
-const StyledDetailRow = ({ label, value }) => (
-  <Box sx={{ display: "flex", justifyContent: "space-between", py: 0.35 }}>
-    <Typography variant="body2" color="text.secondary" fontWeight={500}>
-      {label}
-    </Typography>
-    <Typography variant="body2" fontWeight={700} color="text.primary">
-      {value}
-    </Typography>
-  </Box>
-);
-
 export default function ProductCard({
   item,
   index,
@@ -43,36 +32,28 @@ export default function ProductCard({
           justifyContent: "center",
           cursor: "pointer",
           transition: "all 0.2s",
-          "&:hover": {
-            borderColor: "primary.main",
-            bgcolor: "#f1f5f9",
-          },
+          "&:hover": { borderColor: "primary.main", bgcolor: "#f1f5f9" },
         }}>
         <PlusCircle size={44} color="#64748b" />
-        <Typography
-          variant="subtitle1"
-          fontWeight={600}
-          color="text.secondary"
-          mt={1}>
+        <Typography mt={1} fontWeight={600} color="text.secondary">
           Add New Product
         </Typography>
       </Box>
     );
   }
 
-  // COMMON STYLES
   const cardBase = {
     borderRadius: 3,
     bgcolor: "white",
     border: "1px solid #e2e8f0",
-    overflow: "hidden",
+    overflow: "visible",
+    position: "relative",
   };
 
-  // GRID VIEW
   if (view === "grid") {
     return (
       <Box sx={cardBase}>
-        {/* Fixed Height Header - No Jumping */}
+        {/* HEADER */}
         <Box sx={{ p: 2, pb: 1.5, borderBottom: "1px solid #f1f5f9" }}>
           <Box
             sx={{
@@ -81,7 +62,6 @@ export default function ProductCard({
               alignItems: "center",
             }}>
             <Typography
-              variant="subtitle1"
               fontWeight={700}
               sx={{
                 pr: 2,
@@ -92,6 +72,7 @@ export default function ProductCard({
               }}>
               {item.name}
             </Typography>
+
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Box
                 sx={{
@@ -113,7 +94,7 @@ export default function ProductCard({
           </Box>
         </Box>
 
-        {/* Total Units - Big & Clean */}
+        {/* TOTAL UNITS */}
         <Box sx={{ textAlign: "center", py: 2.5, bgcolor: "#f8fafc" }}>
           <Typography variant="h3" fontWeight={900} color={dotColorValue}>
             {totalUnits}
@@ -123,70 +104,119 @@ export default function ProductCard({
           </Typography>
         </Box>
 
-        {/* Value + Count */}
-        <Box sx={{ p: 2, pt: 1.5 }}>
-          <StyledDetailRow label="Total Value" value={`₹${formattedValue}`} />
-          {/* <StyledDetailRow
-            label="Variants"
-            value={Object.keys(item.weights || {}).length}
-          /> */}
-        </Box>
-
-        {/* Toggle Bar - Clean */}
+        {/* TOTAL VALUE + CHEVRON */}
         <Box
-          onClick={onToggle}
           sx={{
-            bgcolor: opened ? "#ecfdf5" : "#f8fafc",
-            borderTop: "1px solid #e2e8f0",
-            p: 1.5,
-            textAlign: "center",
-            cursor: "pointer",
+            p: 2,
+            pt: 1,
+            pb: 1,
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            justifyContent: "center",
-            gap: 1,
-            color: opened ? "success.main" : "text.secondary",
-            fontWeight: 600,
-            fontSize: "0.875rem",
+            cursor: "pointer",
           }}>
-          {opened ? "Hide" : "View"} Breakdown
-          {opened ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          <Typography fontWeight={600} color="text.secondary">
+            Total Value
+          </Typography>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography fontWeight={900}>₹{formattedValue}</Typography>
+
+            <IconButton
+              sx={{ p: 0 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggle();
+              }}>
+              {opened ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </IconButton>
+          </Box>
         </Box>
 
-        {/* Collapse - Max 4 rows, then scroll */}
+        {/* FLOATING DROPDOWN BELOW CARD */}
         <Collapse in={opened}>
           <Box
             sx={{
-              maxHeight: "180px",
-              overflowY: "auto",
-              bgcolor: "#fdfdfd",
-              borderTop: opened ? "1px solid #e2e8f0" : "none",
+              position: "absolute",
+              top: "100%",
+              left: 0,
+              width: "100%",
+              mt: 1,
+              borderRadius: 2,
+              boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
+              bgcolor: "white",
+              border: "1px solid #e2e8f0",
+              zIndex: 20,
             }}>
-            <Box sx={{ p: 2 }}>
+            {/* HEADING ROW */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                p: 1.2,
+                bgcolor: "#f8fafc",
+                borderBottom: "1px solid #e2e8f0",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+              }}>
+              <span>Weight</span>
+              <span>Units</span>
+              <span>Price</span>
+              <span>Total</span>
+            </Box>
+
+            {/* DATA ROWS */}
+            {/* DATA ROWS */}
+            <Box sx={{ maxHeight: "200px", overflowY: "auto" }}>
               {Object.entries(item.weights || {}).map(([gram, data], i) => (
                 <Box
                   key={i}
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    py: 1,
-                    borderBottom:
-                      i < Object.keys(item.weights).length - 1
-                        ? "1px dashed #e2e8f0"
-                        : "none",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                    p: 1.2,
+                    borderBottom: "1px dashed #e2e8f0",
+                    fontSize: "0.9rem",
                   }}>
-                  <Typography fontWeight={600} fontSize="0.95rem">
-                    {gram}g
-                  </Typography>
-                  <Typography fontWeight={500} color="text.secondary">
-                    {data.units} pcs
-                  </Typography>
-                  <Typography fontWeight={600}>₹{data.price}</Typography>
-                  <Typography fontWeight={700} color="success.main">
+                  <span>{gram}g</span>
+                  <span>{data.units} pcs</span>
+                  <span>₹{data.price}</span>
+                  <span style={{ fontWeight: 700, color: "#16a34a" }}>
                     ₹{(data.units * data.price).toLocaleString("en-IN")}
-                  </Typography>
+                  </span>
                 </Box>
               ))}
+
+              {/* TOTAL ROW */}
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                  p: 1.2,
+                  bgcolor: "#606d90ff",
+                  borderTop: "2px solid #e2e8f0",
+                  fontWeight: 700,
+                  fontSize: "0.92rem",
+                }}>
+                <span>Total</span>
+
+                <span>
+                  {Object.values(item.weights || {}).reduce(
+                    (sum, w) => sum + w.units,
+                    0
+                  )}{" "}
+                  pcs
+                </span>
+
+                <span></span>
+
+                <span style={{ color: "#16a34a" }}>
+                  ₹
+                  {Object.values(item.weights || {})
+                    .reduce((sum, w) => sum + w.units * w.price, 0)
+                    .toLocaleString("en-IN")}
+                </span>
+              </Box>
             </Box>
           </Box>
         </Collapse>
@@ -194,82 +224,5 @@ export default function ProductCard({
     );
   }
 
-  // LIST VIEW - Super Clean
-  return (
-    <Box sx={{ ...cardBase, mb: 1.5 }}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          p: 2,
-          cursor: "pointer",
-          backgroundColor: opened ? "#f0fdf4" : "transparent",
-        }}
-        onClick={onToggle}>
-        <Typography sx={{ flex: 3, fontWeight: 600, fontSize: "1rem" }}>
-          {item.name}
-        </Typography>
-        <Typography
-          sx={{
-            flex: 1,
-            textAlign: "center",
-            fontWeight: 800,
-            fontSize: "1.3rem",
-            color: dotColorValue,
-          }}>
-          {totalUnits}
-        </Typography>
-        <Typography sx={{ flex: 1.5, textAlign: "right", fontWeight: 700 }}>
-          ₹{formattedValue}
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-          <Box
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: "50%",
-              bgcolor: dotColorValue,
-            }}
-          />
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(index);
-            }}>
-            <Edit size={16} />
-          </IconButton>
-          {opened ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-        </Box>
-      </Box>
-
-      <Collapse in={opened}>
-        <Box sx={{ borderTop: "1px dashed #d0d7de", bgcolor: "#fafafa" }}>
-          <Box sx={{ p: 2 }}>
-            {Object.entries(item.weights || {}).map(([gram, data], i) => (
-              <Box
-                key={i}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  py: 0.9,
-                  fontSize: "0.95rem",
-                  borderBottom:
-                    i < Object.keys(item.weights).length - 1
-                      ? "1px solid #e2e8f0"
-                      : "none",
-                }}>
-                <span>
-                  <strong>{gram}g</strong> — {data.units} units @ ₹{data.price}
-                </span>
-                <strong style={{ color: "#16a34a" }}>
-                  ₹{(data.units * data.price).toLocaleString("en-IN")}
-                </strong>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-      </Collapse>
-    </Box>
-  );
+  return null;
 }
