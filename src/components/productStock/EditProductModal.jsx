@@ -25,6 +25,14 @@ export default function EditProductModal({
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  /* =======================
+        VALIDATION LOGIC
+     =======================*/
+  const nameError = !form.name?.trim();
+  const skuError = !form.sku?.trim();
+
+  const isFormValid = !nameError && !skuError;
+
   return (
     <Dialog
       open={open}
@@ -52,6 +60,9 @@ export default function EditProductModal({
         <TextField
           fullWidth
           label="Product Name"
+          required
+          error={nameError}
+          helperText={nameError ? "Product name is required" : ""}
           value={form.name || ""}
           onChange={(e) => handleChange("name", e.target.value)}
           sx={{ mb: 2.5 }}
@@ -61,7 +72,13 @@ export default function EditProductModal({
         <TextField
           fullWidth
           label="SKU"
-          helperText="Example: SVBFPLVEG-000008"
+          required
+          error={skuError}
+          helperText={
+            skuError
+              ? "SKU is required (Example: SVBFPLVEG-000008)"
+              : "Example: SVBFPLVEG-000008"
+          }
           value={form.sku || ""}
           onChange={(e) => handleChange("sku", e.target.value)}
           sx={{ mb: 3 }}
@@ -176,7 +193,16 @@ export default function EditProductModal({
 
       <DialogActions sx={{ justifyContent: "center", pb: 3 }}>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={onSave}>
+
+        {/* Save disabled if form is invalid */}
+        <Button
+          variant="contained"
+          onClick={onSave}
+          disabled={!isFormValid}
+          sx={{
+            opacity: isFormValid ? 1 : 0.6,
+            cursor: isFormValid ? "pointer" : "not-allowed",
+          }}>
           Save Changes
         </Button>
       </DialogActions>
