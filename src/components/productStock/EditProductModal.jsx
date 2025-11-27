@@ -21,6 +21,10 @@ export default function EditProductModal({
   onSave,
   onDelete,
 }) {
+  const handleChange = (key, value) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
   return (
     <Dialog
       open={open}
@@ -44,14 +48,26 @@ export default function EditProductModal({
       </DialogTitle>
 
       <DialogContent sx={{ px: 4, pt: 2 }}>
+        {/* Product Name */}
         <TextField
           fullWidth
           label="Product Name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          value={form.name || ""}
+          onChange={(e) => handleChange("name", e.target.value)}
+          sx={{ mb: 2.5 }}
+        />
+
+        {/* SKU */}
+        <TextField
+          fullWidth
+          label="SKU"
+          helperText="Example: SVBFPLVEG-000008"
+          value={form.sku || ""}
+          onChange={(e) => handleChange("sku", e.target.value)}
           sx={{ mb: 3 }}
         />
 
+        {/* Background Color */}
         <Typography fontWeight={700} gutterBottom>
           Background Color
         </Typography>
@@ -59,7 +75,7 @@ export default function EditProductModal({
           <input
             type="color"
             value={form.bgColor}
-            onChange={(e) => setForm({ ...form, bgColor: e.target.value })}
+            onChange={(e) => handleChange("bgColor", e.target.value)}
             style={{
               width: "100%",
               height: "56px",
@@ -70,6 +86,7 @@ export default function EditProductModal({
           />
         </Box>
 
+        {/* Weight Table */}
         <Typography fontWeight={700} gutterBottom>
           Weight Table
         </Typography>
@@ -106,16 +123,16 @@ export default function EditProductModal({
                 type="number"
                 value={obj.units}
                 onChange={(e) =>
-                  setForm({
-                    ...form,
+                  setForm((prev) => ({
+                    ...prev,
                     weights: {
-                      ...form.weights,
+                      ...prev.weights,
                       [gram]: {
                         ...obj,
                         units: Number(e.target.value) || 0,
                       },
                     },
-                  })
+                  }))
                 }
               />
 
@@ -124,16 +141,16 @@ export default function EditProductModal({
                 type="number"
                 value={obj.price}
                 onChange={(e) =>
-                  setForm({
-                    ...form,
+                  setForm((prev) => ({
+                    ...prev,
                     weights: {
-                      ...form.weights,
+                      ...prev.weights,
                       [gram]: {
                         ...obj,
                         price: Number(e.target.value) || 0,
                       },
                     },
-                  })
+                  }))
                 }
               />
             </Box>

@@ -17,9 +17,7 @@ export default function ProductCard({
   const dotColorValue = dotColor(totalUnits);
   const formattedValue = totalValue.toLocaleString("en-IN");
 
-  /* ======================================================
-     ADD NEW CARD
-  ====================================================== */
+  /* ADD NEW CARD */
   if (isAddNew) {
     return (
       <Box
@@ -48,9 +46,6 @@ export default function ProductCard({
     );
   }
 
-  /* ======================================================
-     CARD BASE STYLE
-  ====================================================== */
   const cardBase = {
     borderRadius: 3,
     bgcolor: "white",
@@ -59,17 +54,15 @@ export default function ProductCard({
     position: "relative",
     transition: "0.25s",
     "&:hover": {
-      boxShadow: "0 8px 24px rgba(0,0,0,0.16)",
+      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.16)",
     },
     ...(opened && {
       zIndex: 50,
-      boxShadow: "0 10px 30px rgba(0,0,0,0.20)",
+      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
     }),
   };
 
-  /* ======================================================
-     GRID VIEW
-  ====================================================== */
+  /* GRID VIEW */
   if (view === "grid") {
     return (
       <Box sx={cardBase}>
@@ -87,18 +80,26 @@ export default function ProductCard({
               justifyContent: "space-between",
               alignItems: "center",
             }}>
-            <Typography
-              fontWeight={700}
-              sx={{
-                pr: 2,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                maxWidth: "70%",
-                color: "#1e293b",
-              }}>
-              {item.name}
-            </Typography>
+            <Box sx={{ maxWidth: "70%" }}>
+              <Typography
+                fontWeight={700}
+                sx={{
+                  pr: 2,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  color: "#1e293b",
+                }}>
+                {item.name}
+              </Typography>
+              {item.sku && (
+                <Typography
+                  variant="caption"
+                  sx={{ color: "#64748b", display: "block", mt: 0.3 }}>
+                  SKU: {item.sku}
+                </Typography>
+              )}
+            </Box>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Box
@@ -173,7 +174,7 @@ export default function ProductCard({
               boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
               zIndex: 40,
             }}>
-            {/* PRODUCT NAME (GRID ONLY) */}
+            {/* TITLE */}
             <Box
               sx={{
                 p: 1.4,
@@ -185,6 +186,13 @@ export default function ProductCard({
                 color: "#1e293b",
               }}>
               {item.name}
+              {item.sku && (
+                <Typography
+                  variant="caption"
+                  sx={{ color: "#64748b", display: "block", mt: 0.3 }}>
+                  SKU: {item.sku}
+                </Typography>
+              )}
             </Box>
 
             {/* HEADER ROW */}
@@ -253,9 +261,7 @@ export default function ProductCard({
     );
   }
 
-  /* ======================================================
-     LIST VIEW (NO NAME IN DROPDOWN)
-  ====================================================== */
+  /* LIST VIEW (no name inside dropdown) */
   if (view === "list") {
     return (
       <Box sx={{ ...cardBase, mb: 2, p: 2 }}>
@@ -270,17 +276,25 @@ export default function ProductCard({
             px: 1,
             py: 1,
           }}>
-          <Typography
-            sx={{
-              flex: 3,
-              fontWeight: 700,
-              fontSize: "1rem",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}>
-            {item.name}
-          </Typography>
+          <Box sx={{ flex: 3, minWidth: 0 }}>
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: "1rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}>
+              {item.name}
+            </Typography>
+            {item.sku && (
+              <Typography
+                variant="caption"
+                sx={{ color: "#64748b", display: "block", mt: 0.2 }}>
+                SKU: {item.sku}
+              </Typography>
+            )}
+          </Box>
 
           <Typography
             sx={{
@@ -336,7 +350,7 @@ export default function ProductCard({
               border: "1px solid #e2e8f0",
               bgcolor: "white",
             }}>
-            {/* HEADER ROW (NO NAME HERE) */}
+            {/* HEADER ROW (no name here) */}
             <Box
               sx={{
                 display: "grid",

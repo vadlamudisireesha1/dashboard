@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Box,
   Button,
   Typography,
-  IconButton,
   ToggleButton,
   ToggleButtonGroup,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 
-import { Download, Grid3X3, List } from "lucide-react";
+import { Download, Grid3X3, List, History } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -27,9 +29,6 @@ import organicData from "../data/organic.json";
 import ProductView from "../components/productCategory/ProductView";
 import EditProductModal from "../components/productCategory/EditProductModal";
 
-const USER_ROLE = "admin";
-
-// Pick correct JSON based on slug
 const getDataForType = (slug) => {
   switch ((slug || "").toLowerCase()) {
     case "nonveg":
@@ -49,21 +48,64 @@ const getDataForType = (slug) => {
   }
 };
 
-export default function ProductCategory() {
+export default function StockCategoryPage() {
   const navigate = useNavigate();
   const { type } = useParams();
 
   const data = getDataForType(type);
+  const historyStorageKey = useMemo(
+    () => `stock_history_${type || "default"}`,
+    [type]
+  );
 
   const [pickles, setPickles] = useState(data.items || []);
   const [expanded, setExpanded] = useState(null);
   const [view, setView] = useState("grid");
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
+  // modal state
+  const [open, setOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [form, setForm] = useState({
+    name: "",
+    sku: "",
+    bgColor: "#ffffff",
+    weights: {
+      250: { units: 0, price: 0 },
+      500: { units: 0, price: 0 },
+      750: { units: 0, price: 0 },
+      1000: { units: 0, price: 0 },
+    },
+  });
+
+  // history
+  const [editHistory, setEditHistory] = useState([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  // load data on type change
   useEffect(() => {
     setPickles(getDataForType(type).items || []);
     setExpanded(null);
   }, [type]);
+
+  // load history from localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(historyStorageKey);
+      if (stored) setEditHistory(JSON.parse(stored));
+    } catch (err) {
+      console.error("Failed to load history", err);
+    }
+  }, [historyStorageKey]);
+
+  const persistHistory = (history) => {
+    setEditHistory(history);
+    try {
+      localStorage.setItem(historyStorageKey, JSON.stringify(history));
+    } catch (err) {
+      console.error("Failed to save history", err);
+    }
+  };
 
   // Category total units
   const getCategoryTotalUnits = () => {
@@ -76,7 +118,6 @@ export default function ProductCategory() {
     return total;
   };
 
-  // 1. Date & Time
   const getCurrentDateTime = () => {
     const now = new Date();
     const date = now.toLocaleDateString("en-IN");
@@ -87,7 +128,6 @@ export default function ProductCategory() {
     return { date, time };
   };
 
-  // 2. Export Data
   const convertDataForExport = () => {
     return pickles
       .map((item) =>
@@ -102,7 +142,7 @@ export default function ProductCategory() {
       .flat();
   };
 
-  // 3. Excel Download
+  // Excel Download
   const handleDownloadExcel = () => {
     const exportData = convertDataForExport();
     const { date } = getCurrentDateTime();
@@ -130,7 +170,24 @@ export default function ProductCategory() {
     XLSX.utils.book_append_sheet(wb, ws, "Stock");
     XLSX.writeFile(wb, `${data.title}_Stock_${date.replace(/\//g, "-")}.xlsx`);
   };
-  //
+
+  // Helpers
+  const getTotalUnits = (weights) =>
+    Object.values(weights).reduce((sum, w) => sum + Number(w.units), 0);
+
+  const getTotalValue = (weights) =>
+    Object.values(weights).reduce(
+      (sum, w) => sum + Number(w.units) * Number(w.price),
+      0
+    );
+
+  const dotColor = (units) => {
+    if (units < 10) return "red";
+    if (units < 30) return "orange";
+    return "green";
+  };
+
+  // PDF Download
   const handleDownloadPDF = () => {
     const exportData = convertDataForExport();
     const { date, time } = getCurrentDateTime();
@@ -139,33 +196,22 @@ export default function ProductCategory() {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
 
-    /* -----------------------------
-     LOGO + WATERMARK IMAGES
-  ------------------------------ */
     const logo = "/pickleImage.jpg";
     const watermark = "/pickleImage.jpg";
 
-    // Load images
     const logoImg = new Image();
     logoImg.src = logo;
 
     const watermarkImg = new Image();
     watermarkImg.src = watermark;
 
-    /* -----------------------------
-      TOTAL UNITS & VALUE
-  ------------------------------ */
     const totalUnits = getCategoryTotalUnits();
     const totalValue = pickles.reduce(
       (s, i) => s + getTotalValue(i.weights),
       0
     );
 
-    /* -----------------------------
-      FORMAT DATA
-  ------------------------------ */
     const tableRows = [];
-
     let currentProduct = null;
     let serialNo = 0;
 
@@ -184,13 +230,11 @@ export default function ProductCategory() {
         units: row.Units,
         price: `₹${row.Price}`,
         total: `₹${row.Total.toLocaleString("en-IN")}`,
-        bg: serialNo % 2 === 0 ? "#FFFFFF" : "#FAFAFA", // VERY light grey
+        bg: serialNo % 2 === 0 ? "#FFFFFF" : "#FAFAFA",
       });
     });
 
-    // logo &  watermark
     const addBranding = () => {
-      // Watermark (big, faint)
       doc.setGState(new doc.GState({ opacity: 0.06 }));
       doc.addImage(
         watermarkImg,
@@ -202,10 +246,8 @@ export default function ProductCategory() {
       );
       doc.setGState(new doc.GState({ opacity: 1 }));
 
-      // Logo top-right
       doc.addImage(logoImg, "PNG", pageWidth - 40, 8, 30, 30);
 
-      // Page number
       const pageCount = doc.internal.getNumberOfPages();
       const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
 
@@ -219,7 +261,6 @@ export default function ProductCategory() {
     };
 
     addBranding();
-    // pdf title
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
@@ -240,7 +281,6 @@ export default function ProductCategory() {
       14,
       34
     );
-    // pdf format
 
     autoTable(doc, {
       startY: 42,
@@ -255,7 +295,7 @@ export default function ProductCategory() {
       ]),
       theme: "grid",
       headStyles: {
-        fillColor: "#E5E7EB", // Light grey
+        fillColor: "#E5E7EB",
         textColor: "#000000",
         fontStyle: "bold",
         halign: "center",
@@ -275,7 +315,7 @@ export default function ProductCategory() {
         if (data.section === "body") {
           data.cell.styles.fillColor =
             tableRows[data.row.index].bg === "#FAFAFA"
-              ? [250, 250, 250] // almost white
+              ? [250, 250, 250]
               : [255, 255, 255];
         }
       },
@@ -286,39 +326,81 @@ export default function ProductCategory() {
     doc.save(`${data.title}_Stock_${date.replace(/\//g, "-")}.pdf`);
   };
 
-  // Helpers
-  const getTotalUnits = (weights) =>
-    Object.values(weights).reduce((sum, w) => sum + Number(w.units), 0);
+  /* ========= HISTORY HELPERS ========= */
 
-  const getTotalValue = (weights) =>
-    Object.values(weights).reduce(
-      (sum, w) => sum + Number(w.units) * Number(w.price),
-      0
-    );
+  const buildHistoryEntry = (action, previousItem, nextItem) => {
+    const now = new Date();
+    const changes = [];
 
-  const dotColor = (units) => {
-    if (units < 10) return "red";
-    if (units < 30) return "orange";
-    return "green";
+    if (action === "edited" && previousItem && nextItem) {
+      if (previousItem.name !== nextItem.name) {
+        changes.push({
+          label: "Name",
+          from: previousItem.name || "",
+          to: nextItem.name || "",
+        });
+      }
+      if ((previousItem.sku || "") !== (nextItem.sku || "")) {
+        changes.push({
+          label: "SKU",
+          from: previousItem.sku || "",
+          to: nextItem.sku || "",
+        });
+      }
+
+      const allGrams = new Set([
+        ...Object.keys(previousItem.weights || {}),
+        ...Object.keys(nextItem.weights || {}),
+      ]);
+
+      allGrams.forEach((gram) => {
+        const prevW = previousItem.weights?.[gram] || { units: 0, price: 0 };
+        const nextW = nextItem.weights?.[gram] || { units: 0, price: 0 };
+
+        if (prevW.units !== nextW.units) {
+          changes.push({
+            label: `${gram}g units`,
+            from: prevW.units,
+            to: nextW.units,
+          });
+        }
+        if (prevW.price !== nextW.price) {
+          changes.push({
+            label: `${gram}g price`,
+            from: prevW.price,
+            to: nextW.price,
+          });
+        }
+      });
+    }
+
+    const base = {
+      action,
+      timestamp: now.toISOString(),
+      productName: (nextItem || previousItem)?.name || "",
+      sku: (nextItem || previousItem)?.sku || "",
+      changes,
+    };
+
+    return base;
   };
 
-  // Modal states
-  const [open, setOpen] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
-  const [form, setForm] = useState({
-    name: "",
-    bgColor: "#ffffff",
-    weights: {
-      250: { units: 0, price: 0 },
-      500: { units: 0, price: 0 },
-      750: { units: 0, price: 0 },
-      1000: { units: 0, price: 0 },
-    },
-  });
+  /* ========= MODAL / CRUD ========= */
 
   const handleEdit = (index) => {
     setEditIndex(index);
-    setForm(JSON.parse(JSON.stringify(pickles[index])));
+    const existing = pickles[index];
+    setForm({
+      name: existing.name || "",
+      sku: existing.sku || "",
+      bgColor: existing.bgColor || "#ffffff",
+      weights: existing.weights || {
+        250: { units: 0, price: 0 },
+        500: { units: 0, price: 0 },
+        750: { units: 0, price: 0 },
+        1000: { units: 0, price: 0 },
+      },
+    });
     setOpen(true);
   };
 
@@ -326,6 +408,7 @@ export default function ProductCategory() {
     setEditIndex(pickles.length);
     setForm({
       name: "",
+      sku: "",
       bgColor: "#ffffff",
       weights: {
         250: { units: 0, price: 0 },
@@ -339,21 +422,40 @@ export default function ProductCategory() {
 
   const handleSave = () => {
     const updated = [...pickles];
-    if (editIndex < pickles.length) updated[editIndex] = form;
-    else updated.push(form);
+    const isEdit = editIndex < pickles.length;
+
+    if (isEdit) {
+      const previous = pickles[editIndex];
+      const historyEntry = buildHistoryEntry("edited", previous, form);
+      if (historyEntry.changes.length > 0) {
+        persistHistory([historyEntry, ...editHistory]);
+      }
+      updated[editIndex] = form;
+    } else {
+      const historyEntry = buildHistoryEntry("created", null, form);
+      persistHistory([historyEntry, ...editHistory]);
+      updated.push(form);
+    }
+
     setPickles(updated);
     setOpen(false);
   };
 
   const handleDelete = () => {
+    if (editIndex == null) return;
+    const previous = pickles[editIndex];
+    const historyEntry = buildHistoryEntry("deleted", previous, null);
+    persistHistory([historyEntry, ...editHistory]);
+
     setPickles(pickles.filter((_, i) => i !== editIndex));
     setOpen(false);
   };
 
+  /* ========= RENDER ========= */
+
   return (
     <Box sx={{ p: 4, background: "#fffbf5ff", minHeight: "100vh" }}>
       {/* Header */}
-
       <Box sx={{ mb: 4 }}>
         {/* Back Button */}
         <Button
@@ -361,15 +463,17 @@ export default function ProductCategory() {
           onClick={() => navigate(-1)}
           sx={{
             mb: 2,
-            color: "#64748b",
             fontWeight: 600,
             backgroundColor: "blue",
             color: "white",
+            "&:hover": {
+              backgroundColor: "#1d4ed8",
+            },
           }}>
           ← Back
         </Button>
 
-        {/* Main Header  */}
+        {/* Main Header */}
         <Box
           sx={{
             display: "flex",
@@ -383,10 +487,7 @@ export default function ProductCategory() {
             <Typography
               variant="h3"
               fontWeight={900}
-              sx={{
-                color: "#1e293b",
-                letterSpacing: "-0.5px",
-              }}>
+              sx={{ color: "#1e293b", letterSpacing: "-0.5px" }}>
               {data.title}
             </Typography>
 
@@ -407,9 +508,31 @@ export default function ProductCategory() {
             </Box>
           </Box>
 
-          {/* Right – Download + Toggle  */}
+          {/* Right – History + Download + Toggle */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* Download Button  */}
+            {/* History Button */}
+            <Button
+              variant="outlined"
+              startIcon={<History size={20} />}
+              onClick={() => setHistoryOpen(true)}
+              sx={{
+                borderRadius: 3,
+                fontWeight: 600,
+                minWidth: "auto",
+                padding: "8px 12px",
+                border: "1.5px solid #cbd5e1",
+                color: "#475569",
+                "& .MuiButton-startIcon": {
+                  margin: 0,
+                },
+                "&:hover": {
+                  borderColor: "#0f766e",
+                  bgcolor: "#f0fdfa",
+                },
+              }}
+            />
+
+            {/* Download Button */}
             <Box sx={{ position: "relative" }}>
               <Button
                 variant="outlined"
@@ -432,7 +555,6 @@ export default function ProductCategory() {
                 }}
               />
 
-              {/* Your Original Dropdown – No Logic Changed */}
               {showDownloadMenu && (
                 <Box
                   sx={{
@@ -483,7 +605,7 @@ export default function ProductCategory() {
               )}
             </Box>
 
-            {/* Your Original Toggle – Just Styled Better */}
+            {/* View Toggle */}
             <ToggleButtonGroup
               value={view}
               exclusive
@@ -501,7 +623,7 @@ export default function ProductCategory() {
                     bgcolor: "#42961A",
                     color: "white",
                     border: "none",
-                    "&:hover": { bgcolor: "" },
+                    "&:hover": { bgcolor: "#42961A" },
                   },
                 },
               }}>
@@ -529,7 +651,7 @@ export default function ProductCategory() {
         dotColor={dotColor}
       />
 
-      {/* Modal */}
+      {/* Edit Modal */}
       <EditProductModal
         open={open}
         onClose={() => setOpen(false)}
@@ -538,6 +660,73 @@ export default function ProductCategory() {
         onSave={handleSave}
         onDelete={handleDelete}
       />
+
+      {/* History Modal */}
+      <Dialog
+        open={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        fullWidth
+        maxWidth="md">
+        <DialogTitle>Edit History</DialogTitle>
+        <DialogContent dividers>
+          {editHistory.length === 0 && (
+            <Typography color="text.secondary">
+              No edits recorded yet.
+            </Typography>
+          )}
+
+          {editHistory.map((entry, idx) => {
+            const date = new Date(entry.timestamp);
+            return (
+              <Box
+                key={idx}
+                sx={{
+                  mb: 2.5,
+                  pb: 1.5,
+                  borderBottom: "1px solid #e5e7eb",
+                }}>
+                <Typography fontWeight={700}>
+                  {entry.productName || "Unnamed Product"}
+                </Typography>
+                {entry.sku && (
+                  <Typography variant="caption" sx={{ color: "#64748b" }}>
+                    SKU: {entry.sku}
+                  </Typography>
+                )}
+                <Typography variant="body2" sx={{ mt: 0.5, color: "#6b7280" }}>
+                  Action:{" "}
+                  <strong style={{ textTransform: "capitalize" }}>
+                    {entry.action}
+                  </strong>{" "}
+                  •{" "}
+                  {date.toLocaleString("en-IN", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </Typography>
+
+                {entry.changes && entry.changes.length > 0 && (
+                  <Box sx={{ mt: 1.2, pl: 1.5 }}>
+                    {entry.changes.map((c, i) => (
+                      <Typography
+                        key={i}
+                        variant="body2"
+                        sx={{ color: "#374151" }}>
+                        {c.label}:{" "}
+                        <span style={{ color: "#9ca3af" }}>{c.from}</span> →{" "}
+                        <span style={{ fontWeight: 600 }}>{c.to}</span>
+                      </Typography>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            );
+          })}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setHistoryOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

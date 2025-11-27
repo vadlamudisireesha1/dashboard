@@ -4,6 +4,7 @@
     {
       "name": "Chicken Boneless Pickle",
       "bgColor": "#ffffff",
+      "sku": "SVBFPLVEG-000001",
       "weights": {
         "250": { "units": 20, "price": 0 },
         "500": { "units": 24, "price": 0 },
@@ -14,6 +15,7 @@
     {
       "name": "Gongura Chicken Boneless Pickle",
       "bgColor": "#ffffff",
+      "sku": "SVBFPLVEG-000001",
       "weights": {
         "250": { "units": 14, "price": 0 },
         "500": { "units": 18, "price": 0 },
@@ -24,6 +26,7 @@
     {
       "name": "Mutton Pickle (Bone)",
       "bgColor": "#ffffff",
+      "sku": "SVBFPLVEG-000001",
       "weights": {
         "250": { "units": 16, "price": 0 },
         "500": { "units": 12, "price": 0 },
@@ -34,6 +37,7 @@
     {
       "name": "Gongura Mutton Pickle (Bone)",
       "bgColor": "#ffffff",
+      "sku": "SVBFPLVEG-000001",
       "weights": {
         "250": { "units": 10, "price": 0 },
         "500": { "units": 10, "price": 0 },
@@ -44,6 +48,7 @@
     {
       "name": "Prawns Pickle",
       "bgColor": "#ffffff",
+      "sku": "SVBFPLVEG-000001",
       "weights": {
         "250": { "units": 18, "price": 0 },
         "500": { "units": 22, "price": 0 },
