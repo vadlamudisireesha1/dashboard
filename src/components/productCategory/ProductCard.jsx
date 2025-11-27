@@ -17,6 +17,9 @@ export default function ProductCard({
   const dotColorValue = dotColor(totalUnits);
   const formattedValue = totalValue.toLocaleString("en-IN");
 
+  /* ======================================================
+     ADD NEW CARD
+  ====================================================== */
   if (isAddNew) {
     return (
       <Box
@@ -31,8 +34,11 @@ export default function ProductCard({
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          transition: "all 0.2s",
-          "&:hover": { borderColor: "primary.main", bgcolor: "#f1f5f9" },
+          transition: "0.25s",
+          "&:hover": {
+            borderColor: "primary.main",
+            bgcolor: "#f1f5f9",
+          },
         }}>
         <PlusCircle size={44} color="#64748b" />
         <Typography mt={1} fontWeight={600} color="text.secondary">
@@ -42,19 +48,39 @@ export default function ProductCard({
     );
   }
 
+  /* ======================================================
+     CARD BASE STYLE
+  ====================================================== */
   const cardBase = {
     borderRadius: 3,
     bgcolor: "white",
     border: "1px solid #e2e8f0",
     overflow: "visible",
     position: "relative",
+    transition: "0.25s",
+    "&:hover": {
+      boxShadow: "0 8px 24px rgba(0,0,0,0.16)",
+    },
+    ...(opened && {
+      zIndex: 50,
+      boxShadow: "0 10px 30px rgba(0,0,0,0.20)",
+    }),
   };
 
+  /* ======================================================
+     GRID VIEW
+  ====================================================== */
   if (view === "grid") {
     return (
       <Box sx={cardBase}>
         {/* HEADER */}
-        <Box sx={{ p: 2, pb: 1.5, borderBottom: "1px solid #f1f5f9" }}>
+        <Box
+          sx={{
+            p: 2,
+            pb: 1.5,
+            borderBottom: "1px solid #f1f5f9",
+            background: "linear-gradient(90deg,#f8fafc,#eef2ff)",
+          }}>
           <Box
             sx={{
               display: "flex",
@@ -69,6 +95,7 @@ export default function ProductCard({
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 maxWidth: "70%",
+                color: "#1e293b",
               }}>
               {item.name}
             </Typography>
@@ -80,6 +107,7 @@ export default function ProductCard({
                   height: 10,
                   borderRadius: "50%",
                   bgcolor: dotColorValue,
+                  boxShadow: `0 0 6px ${dotColorValue}`,
                 }}
               />
               <IconButton
@@ -104,7 +132,7 @@ export default function ProductCard({
           </Typography>
         </Box>
 
-        {/* TOTAL VALUE + CHEVRON */}
+        {/* TOTAL VALUE ROW */}
         <Box
           sx={{
             p: 2,
@@ -114,7 +142,9 @@ export default function ProductCard({
             justifyContent: "space-between",
             alignItems: "center",
             cursor: "pointer",
-          }}>
+            "&:hover": { bgcolor: "#f8fafc" },
+          }}
+          onClick={onToggle}>
           <Typography fontWeight={600} color="text.secondary">
             Total Value
           </Typography>
@@ -122,19 +152,14 @@ export default function ProductCard({
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Typography fontWeight={900}>₹{formattedValue}</Typography>
 
-            <IconButton
-              sx={{ p: 0 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggle();
-              }}>
+            <IconButton size="small" sx={{ p: 0 }}>
               {opened ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </IconButton>
           </Box>
         </Box>
 
-        {/* FLOATING DROPDOWN BELOW CARD */}
-        <Collapse in={opened}>
+        {/* GRID DROPDOWN */}
+        <Collapse in={opened} timeout={250}>
           <Box
             sx={{
               position: "absolute",
@@ -143,12 +168,26 @@ export default function ProductCard({
               width: "100%",
               mt: 1,
               borderRadius: 2,
-              boxShadow: "0 4px 18px rgba(0,0,0,0.12)",
               bgcolor: "white",
               border: "1px solid #e2e8f0",
-              zIndex: 20,
+              boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+              zIndex: 40,
             }}>
-            {/* HEADING ROW */}
+            {/* PRODUCT NAME (GRID ONLY) */}
+            <Box
+              sx={{
+                p: 1.4,
+                px: 2,
+                fontWeight: 700,
+                borderBottom: "1px solid #e2e8f0",
+                bgcolor: "#f8fafc",
+                fontSize: "1rem",
+                color: "#1e293b",
+              }}>
+              {item.name}
+            </Box>
+
+            {/* HEADER ROW */}
             <Box
               sx={{
                 display: "grid",
@@ -166,57 +205,196 @@ export default function ProductCard({
             </Box>
 
             {/* DATA ROWS */}
-            {/* DATA ROWS */}
-            <Box sx={{ maxHeight: "200px", overflowY: "auto" }}>
-              {Object.entries(item.weights || {}).map(([gram, data], i) => (
-                <Box
-                  key={i}
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr 1fr 1fr",
-                    p: 1.2,
-                    borderBottom: "1px dashed #e2e8f0",
-                    fontSize: "0.9rem",
-                  }}>
-                  <span>{gram}g</span>
-                  <span>{data.units} pcs</span>
-                  <span>₹{data.price}</span>
-                  <span style={{ fontWeight: 700, color: "#16a34a" }}>
-                    ₹{(data.units * data.price).toLocaleString("en-IN")}
-                  </span>
-                </Box>
-              ))}
-
-              {/* TOTAL ROW */}
+            {Object.entries(item.weights).map(([gram, data], i) => (
               <Box
+                key={i}
                 sx={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr 1fr 1fr",
                   p: 1.2,
-                  bgcolor: "#606d90ff",
-                  borderTop: "2px solid #e2e8f0",
-                  fontWeight: 700,
-                  fontSize: "0.92rem",
+                  borderBottom: "1px dashed #e2e8f0",
+                  fontSize: "0.9rem",
                 }}>
-                <span>Total</span>
-
-                <span>
-                  {Object.values(item.weights || {}).reduce(
-                    (sum, w) => sum + w.units,
-                    0
-                  )}{" "}
-                  pcs
-                </span>
-
-                <span></span>
-
-                <span style={{ color: "#16a34a" }}>
-                  ₹
-                  {Object.values(item.weights || {})
-                    .reduce((sum, w) => sum + w.units * w.price, 0)
-                    .toLocaleString("en-IN")}
+                <span>{gram}g</span>
+                <span>{data.units} pcs</span>
+                <span>₹{data.price}</span>
+                <span style={{ fontWeight: 700, color: "#16a34a" }}>
+                  ₹{(data.units * data.price).toLocaleString("en-IN")}
                 </span>
               </Box>
+            ))}
+
+            {/* TOTAL ROW */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                p: 1.2,
+                bgcolor: "#1e293b",
+                color: "white",
+                fontWeight: 700,
+              }}>
+              <span>Total</span>
+              <span>
+                {Object.values(item.weights).reduce((s, w) => s + w.units, 0)}{" "}
+                pcs
+              </span>
+              <span></span>
+              <span style={{ color: "#4ade80" }}>
+                ₹
+                {Object.values(item.weights)
+                  .reduce((s, w) => s + w.units * w.price, 0)
+                  .toLocaleString("en-IN")}
+              </span>
+            </Box>
+          </Box>
+        </Collapse>
+      </Box>
+    );
+  }
+
+  /* ======================================================
+     LIST VIEW (NO NAME IN DROPDOWN)
+  ====================================================== */
+  if (view === "list") {
+    return (
+      <Box sx={{ ...cardBase, mb: 2, p: 2 }}>
+        {/* TOP ROW */}
+        <Box
+          onClick={onToggle}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            cursor: "pointer",
+            px: 1,
+            py: 1,
+          }}>
+          <Typography
+            sx={{
+              flex: 3,
+              fontWeight: 700,
+              fontSize: "1rem",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}>
+            {item.name}
+          </Typography>
+
+          <Typography
+            sx={{
+              flex: 1,
+              textAlign: "center",
+              fontWeight: 800,
+              fontSize: "1.3rem",
+              color: dotColorValue,
+            }}>
+            {totalUnits}
+          </Typography>
+
+          <Typography
+            sx={{
+              flex: 1.5,
+              textAlign: "right",
+              fontWeight: 700,
+            }}>
+            ₹{formattedValue}
+          </Typography>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                bgcolor: dotColorValue,
+              }}
+            />
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(index);
+              }}>
+              <Edit size={16} />
+            </IconButton>
+
+            <IconButton size="small" sx={{ p: 0 }}>
+              {opened ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </IconButton>
+          </Box>
+        </Box>
+
+        {/* LIST DROPDOWN */}
+        <Collapse in={opened} timeout={250}>
+          <Box
+            sx={{
+              mt: 1,
+              borderRadius: 2,
+              overflow: "hidden",
+              border: "1px solid #e2e8f0",
+              bgcolor: "white",
+            }}>
+            {/* HEADER ROW (NO NAME HERE) */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                p: 1.2,
+                bgcolor: "#eef2ff",
+                borderBottom: "1px solid #e2e8f0",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+              }}>
+              <span>Weight</span>
+              <span>Units</span>
+              <span>Price</span>
+              <span>Total</span>
+            </Box>
+
+            {/* DATA ROWS */}
+            {Object.entries(item.weights).map(([gram, data], i) => (
+              <Box
+                key={i}
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                  p: 1.2,
+                  borderBottom: "1px dashed #e2e8f0",
+                  fontSize: "0.9rem",
+                }}>
+                <span>{gram}g</span>
+                <span>{data.units} pcs</span>
+                <span>₹{data.price}</span>
+                <span style={{ fontWeight: 700, color: "#16a34a" }}>
+                  ₹{(data.units * data.price).toLocaleString("en-IN")}
+                </span>
+              </Box>
+            ))}
+
+            {/* TOTAL ROW */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr 1fr",
+                p: 1.2,
+                bgcolor: "#1e293b",
+                color: "white",
+                fontWeight: 700,
+              }}>
+              <span>Total</span>
+              <span>
+                {Object.values(item.weights).reduce((s, w) => s + w.units, 0)}{" "}
+                pcs
+              </span>
+              <span></span>
+              <span style={{ color: "#4ade80" }}>
+                ₹
+                {Object.values(item.weights)
+                  .reduce((s, w) => s + w.units * w.price, 0)
+                  .toLocaleString("en-IN")}
+              </span>
             </Box>
           </Box>
         </Collapse>

@@ -27,9 +27,6 @@ import organicData from "../data/organic.json";
 import ProductView from "../components/productCategory/ProductView";
 import EditProductModal from "../components/productCategory/EditProductModal";
 
-// Styles
-import { styles } from "../components/productCategory/productView.style";
-
 const USER_ROLE = "admin";
 
 // Pick correct JSON based on slug
