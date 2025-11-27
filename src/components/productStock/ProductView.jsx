@@ -14,7 +14,7 @@ export default function ProductView({
   dotColor,
 }) {
   return (
-    <Box sx={{ mt: 3 }}>
+    <Box sx={{ mt: 3, minHeight: "100vh" }}>
       {/* GRID VIEW */}
       {view === "grid" && (
         <Grid container spacing={3}>
