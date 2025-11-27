@@ -7,6 +7,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
+
 import { Download, Grid3X3, List } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -141,114 +142,112 @@ export default function ProductCategory() {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
 
-    const logoUrl =
-      "https://thepickls.com/cdn/shop/files/the_pickls.png?v=1704872288";
-    const logoImg = new Image();
-    logoImg.crossOrigin = "anonymous";
-    logoImg.src = logoUrl + "&width=400";
+    /* -----------------------------
+     LOGO + WATERMARK IMAGES
+  ------------------------------ */
+    const logo = "/pickleImage.jpg";
+    const watermark = "/pickleImage.jpg";
 
+    // Load images
+    const logoImg = new Image();
+    logoImg.src = logo;
+
+    const watermarkImg = new Image();
+    watermarkImg.src = watermark;
+
+    /* -----------------------------
+      TOTAL UNITS & VALUE
+  ------------------------------ */
     const totalUnits = getCategoryTotalUnits();
     const totalValue = pickles.reduce(
       (s, i) => s + getTotalValue(i.weights),
       0
     );
 
-    const colors = [
-      [34, 197, 94], // Green
-      [59, 130, 246], // Blue
-      [168, 85, 247], // Purple
-      [251, 146, 60], // Orange
-    ];
-
-    // Table rows
+    /* -----------------------------
+      FORMAT DATA
+  ------------------------------ */
     const tableRows = [];
+
     let currentProduct = null;
     let serialNo = 0;
-    let colorIdx = 0;
 
     exportData.forEach((row, i) => {
       if (row.Name !== currentProduct) {
         currentProduct = row.Name;
         serialNo++;
-        colorIdx = (serialNo - 1) % 4;
       }
-      const isFirst = exportData.findIndex((r) => r.Name === row.Name) === i;
+
+      const isTitleRow = exportData.findIndex((r) => r.Name === row.Name) === i;
 
       tableRows.push({
-        sno: isFirst ? serialNo : "",
+        sno: isTitleRow ? serialNo : "",
         name: row.Name,
         gram: row.Gram,
         units: row.Units,
         price: `₹${row.Price}`,
         total: `₹${row.Total.toLocaleString("en-IN")}`,
-        color: colors[colorIdx],
+        bg: serialNo % 2 === 0 ? "#FFFFFF" : "#FAFAFA", // VERY light grey
       });
     });
 
-    // Function to add background + logo on every page
+    // logo &  watermark
     const addBranding = () => {
-      // 1. Light full-page watermark (center)
-      if (logoImg.complete && logoImg.naturalWidth !== 0) {
-        doc.setGState(new doc.GState({ opacity: 0.04 }));
-        doc.addImage(
-          logoImg,
-          "PNG",
-          pageWidth / 2 - 45,
-          pageHeight / 2 - 45,
-          90,
-          90
-        ); // center
-        doc.setGState(new doc.GState({ opacity: 1 }));
-      }
+      // Watermark (big, faint)
+      doc.setGState(new doc.GState({ opacity: 0.06 }));
+      doc.addImage(
+        watermarkImg,
+        "PNG",
+        pageWidth / 2 - 50,
+        pageHeight / 2 - 50,
+        100,
+        100
+      );
+      doc.setGState(new doc.GState({ opacity: 1 }));
 
-      // 2. Clear logo in top-right corner — with proper margin (not touching edge)
-      if (logoImg.complete && logoImg.naturalWidth !== 0) {
-        doc.addImage(logoImg, "PNG", pageWidth - 58, 10, 38, 38); // 20mm from right, 10mm from top
-      }
+      // Logo top-right
+      doc.addImage(logoImg, "PNG", pageWidth - 40, 8, 30, 30);
 
-      // 3. Page number bottom-right
+      // Page number
       const pageCount = doc.internal.getNumberOfPages();
       const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+
       doc.setFontSize(9);
       doc.setTextColor(120);
       doc.text(
         `Page ${currentPage} of ${pageCount}`,
-        pageWidth - 35,
-        pageHeight - 10
+        pageWidth - 30,
+        pageHeight - 8
       );
     };
 
-    // Add branding on first page
     addBranding();
+    // pdf title
 
-    // Title (thoda left shift so logo ke saath clash na ho)
-    doc.setFontSize(19);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(31, 41, 55);
-    doc.text(`${data.title} Stock Report`, 14, 22);
+    doc.setFontSize(18);
+    doc.text(`${data.title} Stock Report`, 14, 18);
 
-    // Date & Time
-    doc.setFontSize(9.5);
-    doc.setTextColor(100, 116, 139);
-    doc.text(`Generated: ${date} | ${time}`, 14, 30);
+    doc.setFontSize(10);
+    doc.setTextColor(90);
+    doc.text(`Generated: ${date} | ${time}`, 14, 26);
 
-    // Summary
-    doc.setFontSize(10.5);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(34, 197, 94);
+    doc.setTextColor(50);
     doc.text(
       `Products: ${
         pickles.length
-      } • Units: ${totalUnits} • Value: ₹${totalValue.toLocaleString("en-IN")}`,
+      }  |  Units: ${totalUnits}  |  Value: ₹${totalValue.toLocaleString(
+        "en-IN"
+      )}`,
       14,
-      38
+      34
     );
+    // pdf format
 
-    // Table
     autoTable(doc, {
-      head: [
-        ["S.No.", "Product Name", "Weight", "Units", "Price", "Total Value"],
-      ],
+      startY: 42,
+      head: [["S.No", "Product Name", "Weight", "Units", "Price", "Total"]],
       body: tableRows.map((r) => [
         r.sno,
         r.name,
@@ -257,58 +256,34 @@ export default function ProductCategory() {
         r.price,
         r.total,
       ]),
-      startY: 46,
       theme: "grid",
       headStyles: {
-        fillColor: [34, 197, 94],
-        textColor: [255, 255, 255],
+        fillColor: "#E5E7EB", // Light grey
+        textColor: "#000000",
         fontStyle: "bold",
-        fontSize: 10.5,
         halign: "center",
-        cellPadding: 7,
+        fontSize: 10,
       },
       styles: {
-        fontSize: 10.2,
-        cellPadding: 7,
+        fontSize: 10,
+        cellPadding: 4,
         lineColor: [200, 200, 200],
         lineWidth: 0.3,
+        textColor: "#000000",
       },
-      alternateRowStyles: { fillColor: [250, 252, 255] },
-      columnStyles: {
-        0: {
-          cellWidth: 16,
-          halign: "center",
-          fontStyle: "bold",
-          textColor: [0, 0, 0],
-        },
-        1: { cellWidth: 70 },
-        2: { cellWidth: 25, halign: "center" },
-        3: { cellWidth: 22, halign: "center" },
-        4: { cellWidth: 25, halign: "right" },
-        5: {
-          cellWidth: 40,
-          halign: "right",
-          fontStyle: "bold",
-          textColor: [34, 197, 94],
-        },
+      alternateRowStyles: {
+        fillColor: "#FFFFFF",
       },
       didParseCell: (data) => {
-        if (data.section === "body" && data.column.index === 1) {
-          data.cell.styles.textColor = tableRows[data.row.index].color;
-          data.cell.styles.fontStyle = "bold";
-        }
-        if (
-          data.section === "body" &&
-          data.column.index === 0 &&
-          !data.cell.text[0]
-        ) {
-          data.cell.text = [""];
+        if (data.section === "body") {
+          data.cell.styles.fillColor =
+            tableRows[data.row.index].bg === "#FAFAFA"
+              ? [250, 250, 250] // almost white
+              : [255, 255, 255];
         }
       },
-      margin: { top: 46, bottom: 40, left: 14, right: 14 },
-      willDrawPage: () => {
-        addBranding();
-      },
+      willDrawPage: addBranding,
+      margin: { top: 42, bottom: 14, left: 14, right: 14 },
     });
 
     doc.save(`${data.title}_Stock_${date.replace(/\//g, "-")}.pdf`);
