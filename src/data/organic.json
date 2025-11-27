@@ -2,93 +2,92 @@
   "title": "Organic Millets",
   "items": [
     {
-      "name": "Organic Unpolished Barnyard Millet",
+      "id": "ORG-000001",
+      "sku": "ORG-000001",
+      "category": "organic",
+      "name": "Organic Jaggery Powder",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 20, "price": 0 },
-        "500": { "units": 24, "price": 0 },
-        "750": { "units": 15, "price": 0 },
-        "1000": { "units": 10, "price": 0 }
+      "weights": [
+        { "gram": 200, "units": 38, "price": 45 },
+        { "gram": 400, "units": 26, "price": 80 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 14, "revenue": 630 },
+        { "date": "2025-01-22", "unitsSold": 10, "revenue": 450 },
+        { "date": "2025-01-26", "unitsSold": 12, "revenue": 540 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-05", "unitsAdded": 60 },
+        { "date": "2025-01-23", "unitsAdded": 40 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 36,
+        "revenue": 1620,
+        "averageOrderValue": 135
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 132,
+        "revenue": 5700
       }
     },
+
     {
-      "name": "Organic Unpolished Browntop Millet",
+      "id": "ORG-000002",
+      "sku": "ORG-000002",
+      "category": "organic",
+      "name": "Organic Turmeric Powder",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 14, "price": 0 },
-        "500": { "units": 18, "price": 0 },
-        "750": { "units": 9, "price": 0 },
-        "1000": { "units": 6, "price": 0 }
+      "weights": [
+        { "gram": 200, "units": 42, "price": 55 },
+        { "gram": 400, "units": 30, "price": 100 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 11, "revenue": 605 },
+        { "date": "2025-01-21", "unitsSold": 8, "revenue": 440 },
+        { "date": "2025-01-25", "unitsSold": 10, "revenue": 550 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-09", "unitsAdded": 75 },
+        { "date": "2025-01-24", "unitsAdded": 50 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 29,
+        "revenue": 1595,
+        "averageOrderValue": 110
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 118,
+        "revenue": 6350
       }
     },
+
     {
-      "name": "Organic Unpolished Finger Millet",
+      "id": "ORG-000003",
+      "sku": "ORG-000003",
+      "category": "organic",
+      "name": "Organic Red Chilli Flakes",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 16, "price": 0 },
-        "500": { "units": 12, "price": 0 },
-        "750": { "units": 10, "price": 0 },
-        "1000": { "units": 8, "price": 0 }
-      }
-    },
-    {
-      "name": "Organic Unpolished Foxtail Millet",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 10, "price": 0 },
-        "500": { "units": 10, "price": 0 },
-        "750": { "units": 5, "price": 0 },
-        "1000": { "units": 4, "price": 0 }
-      }
-    },
-    {
-      "name": "Organic Unpolished Jowar Millet",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 14, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
-      }
-    },
-    {
-      "name": "Organic Unpolished Kodo Millet",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 14, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
-      }
-    },
-    {
-      "name": "Organic Unpolished Little Millet",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 14, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
-      }
-    },
-    {
-      "name": "Organic Unpolished Pearl Millet",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 14, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
-      }
-    },
-    {
-      "name": "Organic Unpolished Proso Millet",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 14, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
+      "weights": [
+        { "gram": 200, "units": 36, "price": 70 },
+        { "gram": 400, "units": 22, "price": 130 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 10, "revenue": 700 },
+        { "date": "2025-01-23", "unitsSold": 8, "revenue": 560 },
+        { "date": "2025-01-29", "unitsSold": 11, "revenue": 770 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-08", "unitsAdded": 68 },
+        { "date": "2025-01-27", "unitsAdded": 45 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 29,
+        "revenue": 2030,
+        "averageOrderValue": 140
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 122,
+        "revenue": 7800
       }
     }
   ]

@@ -2,53 +2,95 @@
   "title": "Ready to Eat",
   "items": [
     {
-      "name": "Raagi Jaggery Cookies",
+      "id": "RTE-000001",
+      "sku": "RTE-000001",
+      "category": "readytoeat",
+      "name": "Mixed Veg Upma Mix",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 20, "price": 0 },
-        "500": { "units": 24, "price": 0 },
-        "750": { "units": 15, "price": 0 },
-        "1000": { "units": 10, "price": 0 }
+      "weights": [
+        { "gram": 80, "units": 50, "price": 30 },
+        { "gram": 150, "units": 35, "price": 50 },
+        { "gram": 300, "units": 20, "price": 90 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 18, "revenue": 540 },
+        { "date": "2025-01-21", "unitsSold": 12, "revenue": 360 },
+        { "date": "2025-01-25", "unitsSold": 15, "revenue": 450 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-08", "unitsAdded": 90 },
+        { "date": "2025-01-27", "unitsAdded": 60 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 45,
+        "revenue": 1350,
+        "averageOrderValue": 100
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 180,
+        "revenue": 5400
       }
     },
+
     {
-      "name": "Chakodi Muruku",
+      "id": "RTE-000002",
+      "sku": "RTE-000002",
+      "category": "readytoeat",
+      "name": "Rava Kesari Mix",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 14, "price": 0 },
-        "500": { "units": 18, "price": 0 },
-        "750": { "units": 9, "price": 0 },
-        "1000": { "units": 6, "price": 0 }
+      "weights": [
+        { "gram": 80, "units": 44, "price": 28 },
+        { "gram": 150, "units": 32, "price": 48 },
+        { "gram": 300, "units": 18, "price": 88 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 15, "revenue": 420 },
+        { "date": "2025-01-23", "unitsSold": 11, "revenue": 308 },
+        { "date": "2025-01-29", "unitsSold": 9, "revenue": 252 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-10", "unitsAdded": 85 },
+        { "date": "2025-01-26", "unitsAdded": 55 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 35,
+        "revenue": 980,
+        "averageOrderValue": 89
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 156,
+        "revenue": 4320
       }
     },
+
     {
-      "name": "Pearl Millet Jaggery Cookies",
+      "id": "RTE-000003",
+      "sku": "RTE-000003",
+      "category": "readytoeat",
+      "name": "Vermicelli Upma Mix",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 16, "price": 0 },
-        "500": { "units": 12, "price": 0 },
-        "750": { "units": 10, "price": 0 },
-        "1000": { "units": 8, "price": 0 }
-      }
-    },
-    {
-      "name": "Multi Millet Ghee Laddu",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 10, "price": 0 },
-        "500": { "units": 10, "price": 0 },
-        "750": { "units": 5, "price": 0 },
-        "1000": { "units": 4, "price": 0 }
-      }
-    },
-    {
-      "name": "Millet NutriBite",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 14, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
+      "weights": [
+        { "gram": 80, "units": 48, "price": 32 },
+        { "gram": 150, "units": 30, "price": 52 },
+        { "gram": 300, "units": 22, "price": 95 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 17, "revenue": 544 },
+        { "date": "2025-01-22", "unitsSold": 12, "revenue": 384 },
+        { "date": "2025-01-28", "unitsSold": 14, "revenue": 448 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-06", "unitsAdded": 92 },
+        { "date": "2025-01-24", "unitsAdded": 63 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 43,
+        "revenue": 1376,
+        "averageOrderValue": 91
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 170,
+        "revenue": 5440
       }
     }
   ]
