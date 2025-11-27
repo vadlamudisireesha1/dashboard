@@ -26,8 +26,8 @@ import readytoeatData from "../data/readytoeat.json";
 import organicData from "../data/organic.json";
 
 // Components
-import ProductView from "../components/productCategory/ProductView";
-import EditProductModal from "../components/productCategory/EditProductModal";
+import ProductView from "../components/productStock/ProductView";
+import EditProductModal from "../components/productStock/EditProductModal";
 
 const getDataForType = (slug) => {
   switch ((slug || "").toLowerCase()) {
