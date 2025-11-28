@@ -30,25 +30,46 @@ export default function GraphDashboardpage() {
   );
 
   return (
-    <Box sx={{ p: 4, background: "#fefcf7", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        p: 4,
+        background: "#f8fafc",
+        minHeight: "100vh",
+      }}>
+      {/* Page Title */}
       <h1
         style={{
           marginTop: 0,
-          marginBottom: 12,
-          fontSize: 26,
+          marginBottom: 22,
+          fontSize: 30,
           fontWeight: 900,
           color: "#0f172a",
         }}>
-        📊 Stock Analytics
+        📊 Stock Analytics Dashboard
       </h1>
 
-      <GraphsHeader items={allItems} />
+      {/* Summary Header Cards */}
+      <Box sx={{ mb: 4 }}>
+        <GraphsHeader items={allItems} />
+      </Box>
 
-      <CategoryTrendGraph items={allItems} />
+      {/* 1. Multi Category Sales */}
+      <Box sx={{ mb: 4 }}>
+        <CategoryTrendGraph items={allItems} />
+      </Box>
 
-      <SalesLineGraph items={allItems} />
+      {/* 2. Stock vs Sales */}
+      <Box sx={{ mb: 4 }}>
+        <StockVsSalesBarChart items={allItems} />
+      </Box>
 
-      <Grid container spacing={3}>
+      {/* 3. Sales Trend */}
+      <Box sx={{ mb: 4 }}>
+        <SalesLineGraph items={allItems} />
+      </Box>
+
+      {/* 4. Pie Chart + Speedometer (50% each) */}
+      <Grid container spacing={4} sx={{ mb: 4 }}>
         <Grid item xs={12} md={6}>
           <PieChartGraph items={allItems} />
         </Grid>
@@ -57,8 +78,6 @@ export default function GraphDashboardpage() {
           <StockSpeedometerGraph items={allItems} />
         </Grid>
       </Grid>
-
-      <StockVsSalesBarChart items={allItems} />
     </Box>
   );
 }
