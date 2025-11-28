@@ -4,8 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import ProductCards from "./components/productCards/ProductCards";
 import StockCategoryPage from "./pages/StockCategoryPage";
-import AnalyticsDashboard from "./components/analytics/AnalyticsDashboard";
-
+import GraphsDashboardPage from "./pages/GraphDashboardpage";
 function App() {
   return (
     <BrowserRouter>
@@ -18,7 +17,7 @@ function App() {
           element={
             <>
               <ProductCards />
-              <AnalyticsDashboard />
+              <GraphsDashboardPage />
             </>
           }
         />
