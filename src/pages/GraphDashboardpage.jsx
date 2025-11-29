@@ -1,6 +1,6 @@
-// src/pages/GraphDashboardpage.jsx
 import React, { useState } from "react";
 import { Box, Grid } from "@mui/material";
+import { BarChart3 } from "lucide-react";
 
 import GraphsHeader from "../components/graphs/GraphsHeader";
 import CategoryTrendGraph from "../components/graphs/CategoryTrendGraph";
@@ -33,7 +33,6 @@ export default function GraphDashboardpage() {
     organic
   );
 
-  // Keep global category filter, but graphs still have their own filters too
   const [globalCategory, setGlobalCategory] = useState("all");
   const filteredItems = filterItemsByCategory(allItems, globalCategory);
 
@@ -71,7 +70,7 @@ export default function GraphDashboardpage() {
               justifyContent: "center",
               boxShadow: "0 12px 30px rgba(15,23,42,0.3)",
             }}>
-            <span style={{ fontSize: 22 }}>📊</span>
+            <BarChart3 size={22} color="#ffffff" strokeWidth={2.2} />
           </div>
 
           <div>
@@ -98,7 +97,7 @@ export default function GraphDashboardpage() {
           </div>
         </Box>
 
-        {/* Global Filters Bar (still there, but styled like a premium control) */}
+        {/* Global Filter Bar */}
         <Box sx={{ mb: 3 }}>
           <GraphsFilterBar
             category={globalCategory}
@@ -126,7 +125,7 @@ export default function GraphDashboardpage() {
           <SalesLineGraph items={filteredItems} />
         </Box>
 
-        {/* 4. Pie Chart + Speedometer (50/50) */}
+        {/* 4. Pie + Meter */}
         <Grid container spacing={4} sx={{ mb: 2 }}>
           <Grid item xs={12} md={6}>
             <PieChartGraph items={filteredItems} />

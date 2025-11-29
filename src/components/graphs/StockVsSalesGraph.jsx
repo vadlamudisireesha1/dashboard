@@ -1,4 +1,3 @@
-// src/components/graphs/StockVsSalesBarChart.jsx
 import React, { useState } from "react";
 import {
   BarChart,
@@ -10,6 +9,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { BarChart3 } from "lucide-react";
 import { getStockVsSalesByCategory } from "./graphUtils";
 
 export default function StockVsSalesBarChart({ items }) {
@@ -56,7 +56,8 @@ export default function StockVsSalesBarChart({ items }) {
               alignItems: "center",
               gap: 8,
             }}>
-            🧊 Stock vs Sales by Category
+            <BarChart3 size={18} strokeWidth={2.2} />
+            <span>Stock vs Sales by Category</span>
           </h2>
           <p
             style={{

@@ -1,4 +1,3 @@
-// src/components/graphs/SalesLineGraph.jsx
 import React, { useState } from "react";
 import {
   LineChart,
@@ -9,6 +8,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { LineChart as LineChartIcon } from "lucide-react";
 import {
   CATEGORY_KEYS,
   CATEGORY_LABELS,
@@ -53,7 +53,21 @@ export default function SalesLineGraph({ items }) {
             alignItems: "center",
             gap: 8,
           }}>
-          📊 Sales Trend Over Time
+          <LineChartIcon size={18} strokeWidth={2.2} />
+          <span>Sales Trend</span>
+
+          {/* Active Category Label */}
+          <span
+            style={{
+              fontSize: 12,
+              background: "#e2e8f0",
+              padding: "4px 10px",
+              borderRadius: 50,
+              marginLeft: 10,
+              color: "#334155",
+            }}>
+            {category === "all" ? "All Categories" : CATEGORY_LABELS[category]}
+          </span>
         </h2>
 
         <button

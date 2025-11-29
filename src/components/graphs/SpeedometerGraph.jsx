@@ -1,11 +1,10 @@
-// src/components/graphs/StockSpeedometerGraph.jsx
 import React from "react";
+import { Gauge } from "lucide-react";
 import { calculateStockValue } from "./graphUtils";
 
 export default function StockSpeedometerGraph({ items }) {
   const totalValue = calculateStockValue(items);
-  const maxValue = totalValue * 1.3;
-
+  const maxValue = totalValue * 1.3 || 1000;
   const percentage = (totalValue / maxValue) * 100;
 
   return (
@@ -13,9 +12,11 @@ export default function StockSpeedometerGraph({ items }) {
       style={{
         background: "#ffffff",
         borderRadius: 28,
-        padding: "30px 30px 24px",
+        padding: "28px 30px 20px",
         boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
         height: "100%",
+        display: "flex",
+        flexDirection: "column",
       }}>
       <h2
         style={{
@@ -26,12 +27,13 @@ export default function StockSpeedometerGraph({ items }) {
           alignItems: "center",
           gap: 8,
         }}>
-        💹 Stock Value Meter
+        <Gauge size={18} strokeWidth={2.2} />
+        <span>Stock Value Meter</span>
       </h2>
 
       <p
         style={{
-          margin: "6px 0 20px 0",
+          margin: "6px 0 18px 0",
           color: "#64748b",
           fontSize: 13,
         }}>
@@ -71,7 +73,7 @@ export default function StockSpeedometerGraph({ items }) {
             style={{ transition: "stroke-dashoffset 0.8s ease" }}
           />
 
-          {/* Gradient for arc */}
+          {/* Gradient */}
           <defs>
             <linearGradient id="grad">
               <stop offset="0%" stopColor="#22c55e" />
@@ -97,7 +99,6 @@ export default function StockSpeedometerGraph({ items }) {
           }}></div>
       </div>
 
-      {/* Value */}
       <div
         style={{
           textAlign: "center",

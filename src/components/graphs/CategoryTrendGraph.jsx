@@ -1,4 +1,3 @@
-// src/components/graphs/CategoryTrendGraph.jsx
 import React, { useState } from "react";
 import {
   LineChart,
@@ -10,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { LineChart as LineChartIcon } from "lucide-react";
 import {
   CATEGORY_KEYS,
   CATEGORY_LABELS,
@@ -68,7 +68,8 @@ export default function CategoryTrendGraph({ items }) {
               alignItems: "center",
               gap: 8,
             }}>
-            📈 Multi-Category Sales Comparison
+            <LineChartIcon size={18} strokeWidth={2.2} />
+            <span>Multi-Category Sales Comparison</span>
           </h2>
           <p style={{ margin: 0, color: "#64748b", fontSize: 13 }}>
             Compare trends across all product groups.

@@ -1,8 +1,8 @@
-// src/components/graphs/GraphsHeader.jsx
 import React, { useState } from "react";
+import { Package, Boxes, CircleDollarSign } from "lucide-react";
 import { calculateStockValue, getTotalUnits } from "./graphUtils";
 
-function StatCard({ label, value, accent, icon }) {
+function StatCard({ label, value, accent, Icon }) {
   const [hovered, setHovered] = useState(false);
 
   const baseStyle = {
@@ -43,7 +43,6 @@ function StatCard({ label, value, accent, icon }) {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: 18,
   };
 
   return (
@@ -56,7 +55,15 @@ function StatCard({ label, value, accent, icon }) {
           <div style={labelStyle}>{label}</div>
           <div style={valueStyle}>{value}</div>
         </div>
-        <div style={iconWrapStyle}>{icon}</div>
+        <div style={iconWrapStyle}>
+          {Icon && (
+            <Icon
+              size={18}
+              strokeWidth={2.2}
+              color={accent.iconColor || "#0f172a"}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -77,8 +84,9 @@ export default function GraphsHeader({ items }) {
         labelColor: "#1d4ed8",
         valueColor: "#0f172a",
         iconBg: "rgba(59,130,246,0.15)",
+        iconColor: "#1d4ed8",
       },
-      icon: "📦",
+      Icon: Package,
     },
     {
       label: "Total Units",
@@ -89,8 +97,9 @@ export default function GraphsHeader({ items }) {
         labelColor: "#047857",
         valueColor: "#022c22",
         iconBg: "rgba(16,185,129,0.18)",
+        iconColor: "#047857",
       },
-      icon: "📈",
+      Icon: Boxes,
     },
     {
       label: "Stock Value",
@@ -101,8 +110,9 @@ export default function GraphsHeader({ items }) {
         labelColor: "#c2410c",
         valueColor: "#431407",
         iconBg: "rgba(249,115,22,0.18)",
+        iconColor: "#c2410c",
       },
-      icon: "💰",
+      Icon: CircleDollarSign,
     },
   ];
 
@@ -119,7 +129,7 @@ export default function GraphsHeader({ items }) {
           label={card.label}
           value={card.value}
           accent={card.accent}
-          icon={card.icon}
+          Icon={card.Icon}
         />
       ))}
     </div>
