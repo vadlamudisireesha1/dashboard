@@ -5,8 +5,8 @@ import {
   Line,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
+  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
 import {
@@ -21,6 +21,7 @@ export default function SalesLineGraph({ items }) {
   const [openFilters, setOpenFilters] = useState(true);
   const [category, setCategory] = useState("all");
   const [range, setRange] = useState(30);
+  const [smooth, setSmooth] = useState(true);
 
   const filtered = filterItemsByCategory(items, category);
   const data = getSalesTrend(filtered, range);
@@ -28,73 +29,67 @@ export default function SalesLineGraph({ items }) {
   return (
     <div
       style={{
-        background: "#ffffff",
-        borderRadius: 24,
-        padding: 24,
-        boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
-        marginBottom: 32,
+        background: "white",
+        borderRadius: 28,
+        padding: 28,
+        boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
       }}>
-      {/* Title + filter toggle */}
+      {/* Header */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
+          marginBottom: 16,
           alignItems: "center",
-          marginBottom: 10,
+          flexWrap: "wrap",
+          gap: 12,
         }}>
-        <div>
-          <h2
-            style={{
-              margin: 0,
-              fontSize: 22,
-              fontWeight: 800,
-              color: "#0f172a",
-            }}>
-            Sales Trend
-          </h2>
-          <p style={{ margin: 0, color: "#64748b", marginTop: 4 }}>
-            View overall units sold over time.
-          </p>
-        </div>
+        <h2
+          style={{
+            margin: 0,
+            fontSize: 22,
+            fontWeight: 800,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}>
+          📊 Sales Trend Over Time
+        </h2>
 
         <button
-          onClick={() => setOpenFilters((prev) => !prev)}
+          onClick={() => setOpenFilters((p) => !p)}
           style={{
-            border: "none",
-            background: "#f1f5f9",
-            borderRadius: 999,
             padding: "6px 12px",
+            background: "#f1f5f9",
+            borderRadius: 50,
+            border: "1px solid #e2e8f0",
             cursor: "pointer",
             fontSize: 12,
           }}>
-          ⚙ Filters {openFilters ? "▲" : "▼"}
+          {openFilters ? "Hide Filters ▲" : "Show Filters ▼"}
         </button>
       </div>
 
-      {/* Collapsible filters */}
       {openFilters && (
         <div
           style={{
             display: "flex",
-            gap: 12,
+            gap: 18,
             flexWrap: "wrap",
-            marginBottom: 14,
+            marginBottom: 16,
           }}>
-          {/* Category filter */}
+          {/* Category */}
           <div>
-            <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>
-              Category
-            </div>
+            <div style={{ fontSize: 12, color: "#6b7280" }}>Category</div>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               style={{
-                padding: "7px 12px",
-                borderRadius: 999,
+                padding: "8px 14px",
+                borderRadius: 50,
                 border: "1px solid #e2e8f0",
-                fontSize: 13,
               }}>
-              <option value="all">All categories</option>
+              <option value="all">All</option>
               {CATEGORY_KEYS.map((key) => (
                 <option key={key} value={key}>
                   {CATEGORY_LABELS[key]}
@@ -103,11 +98,9 @@ export default function SalesLineGraph({ items }) {
             </select>
           </div>
 
-          {/* Range filter */}
+          {/* Range */}
           <div>
-            <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 4 }}>
-              Date Range
-            </div>
+            <div style={{ fontSize: 12, color: "#6b7280" }}>Date Range</div>
             <div style={{ display: "flex", gap: 6 }}>
               {[7, 30, 90].map((r) => (
                 <button
@@ -115,21 +108,52 @@ export default function SalesLineGraph({ items }) {
                   onClick={() => setRange(r)}
                   style={{
                     padding: "6px 10px",
-                    borderRadius: 999,
+                    borderRadius: 50,
                     border: "1px solid #e2e8f0",
+                    background: range === r ? "#0ea5e9" : "#f1f5f9",
+                    color: range === r ? "white" : "#0f172a",
                     fontSize: 12,
-                    cursor: "pointer",
-                    background: range === r ? "#0ea5e9" : "#f8fafc",
-                    color: range === r ? "#ffffff" : "#0f172a",
                   }}>
-                  Last {r} days
+                  {r} days
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Line Style */}
+          <div>
+            <div style={{ fontSize: 12, color: "#6b7280" }}>Line Style</div>
+            <div style={{ display: "flex", gap: 6 }}>
+              <button
+                onClick={() => setSmooth(true)}
+                style={{
+                  padding: "6px 10px",
+                  borderRadius: 50,
+                  border: "1px solid #e2e8f0",
+                  background: smooth ? "#0ea5e9" : "#f1f5f9",
+                  color: smooth ? "white" : "#0f172a",
+                  fontSize: 12,
+                }}>
+                Smooth
+              </button>
+              <button
+                onClick={() => setSmooth(false)}
+                style={{
+                  padding: "6px 10px",
+                  borderRadius: 50,
+                  border: "1px solid #e2e8f0",
+                  background: !smooth ? "#0ea5e9" : "#f1f5f9",
+                  color: !smooth ? "white" : "#0f172a",
+                  fontSize: 12,
+                }}>
+                Straight
+              </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Chart */}
       <div style={{ width: "100%", height: 320 }}>
         <ResponsiveContainer>
           <LineChart data={data}>
@@ -138,14 +162,13 @@ export default function SalesLineGraph({ items }) {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
             <Line
-              type="monotone"
+              type={smooth ? "monotone" : "linear"}
               dataKey="units"
-              stroke={CATEGORY_COLORS[category] || "#0f766e"}
+              stroke={CATEGORY_COLORS[category] || "#0ea5e9"}
               strokeWidth={2.5}
               dot={false}
-              activeDot={{ r: 4 }}
-              animationDuration={800}
-              animationEasing="ease-out"
+              activeDot={{ r: 5 }}
+              animationDuration={1100}
             />
           </LineChart>
         </ResponsiveContainer>

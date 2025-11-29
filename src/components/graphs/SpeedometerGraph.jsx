@@ -1,71 +1,112 @@
 // src/components/graphs/StockSpeedometerGraph.jsx
 import React from "react";
-import { RadialBarChart, RadialBar, ResponsiveContainer } from "recharts";
 import { calculateStockValue } from "./graphUtils";
 
 export default function StockSpeedometerGraph({ items }) {
   const totalValue = calculateStockValue(items);
-  const safeMax = totalValue * 1.3 || 1000;
+  const maxValue = totalValue * 1.3;
 
-  const data = [
-    {
-      name: "Stock Value",
-      value: totalValue,
-      fill: "#22c55e",
-    },
-  ];
+  const percentage = (totalValue / maxValue) * 100;
 
   return (
     <div
       style={{
         background: "#ffffff",
-        borderRadius: 24,
-        padding: 24,
-        boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
+        borderRadius: 28,
+        padding: "30px 30px 24px",
+        boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
         height: "100%",
       }}>
       <h2
         style={{
           margin: 0,
-          fontSize: 20,
+          fontSize: 22,
           fontWeight: 800,
-          color: "#0f172a",
-          marginBottom: 8,
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
         }}>
-        Stock Value Meter
+        💹 Stock Value Meter
       </h2>
-      <p style={{ margin: 0, color: "#64748b", marginBottom: 12 }}>
-        ₹ {totalValue.toLocaleString("en-IN")}
+
+      <p
+        style={{
+          margin: "6px 0 20px 0",
+          color: "#64748b",
+          fontSize: 13,
+        }}>
+        Current stock worth:{" "}
+        <strong>₹ {totalValue.toLocaleString("en-IN")}</strong>
       </p>
 
-      <div style={{ width: "100%", height: 260 }}>
-        <ResponsiveContainer>
-          <RadialBarChart
-            startAngle={180}
-            endAngle={0}
-            innerRadius="70%"
-            outerRadius="100%"
-            data={data}>
-            <RadialBar
-              minAngle={15}
-              dataKey="value"
-              clockWise
-              cornerRadius={999}
-              fill="#22c55e"
-              background={{ fill: "#e5e7eb" }}
-            />
-          </RadialBarChart>
-        </ResponsiveContainer>
+      {/* Gauge Container */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: 210,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-end",
+        }}>
+        {/* Background Arc */}
+        <svg width="220" height="120">
+          <path
+            d="M 10 110 A 100 100 0 0 1 210 110"
+            stroke="#e5e7eb"
+            strokeWidth="18"
+            fill="none"
+            strokeLinecap="round"
+          />
+
+          {/* Foreground Animated Arc */}
+          <path
+            d="M 10 110 A 100 100 0 0 1 210 110"
+            stroke="url(#grad)"
+            strokeWidth="18"
+            fill="none"
+            strokeLinecap="round"
+            strokeDasharray="314"
+            strokeDashoffset={314 - (314 * percentage) / 100}
+            style={{ transition: "stroke-dashoffset 0.8s ease" }}
+          />
+
+          {/* Gradient for arc */}
+          <defs>
+            <linearGradient id="grad">
+              <stop offset="0%" stopColor="#22c55e" />
+              <stop offset="100%" stopColor="#16a34a" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Needle */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: "50%",
+            width: 4,
+            height: 80,
+            background: "#0f172a",
+            transformOrigin: "bottom",
+            transform: `translateX(-50%) rotate(${percentage * 1.8 - 90}deg)`,
+            borderRadius: 2,
+            transition: "0.8s ease",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+          }}></div>
       </div>
 
+      {/* Value */}
       <div
         style={{
           textAlign: "center",
-          marginTop: -24,
+          marginTop: 8,
           fontSize: 12,
           color: "#6b7280",
         }}>
-        Approx. capacity: ₹ {Math.round(safeMax).toLocaleString("en-IN")}
+        Max Capacity:{" "}
+        <strong>₹ {Math.round(maxValue).toLocaleString("en-IN")}</strong>
       </div>
     </div>
   );
