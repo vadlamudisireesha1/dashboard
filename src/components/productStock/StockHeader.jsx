@@ -35,13 +35,13 @@ export default function StockHeader({
         sx={{
           mb: 2,
           fontWeight: 600,
-          backgroundColor: "blue",
+          backgroundColor: "#ec2727ff",
           color: "white",
           "&:hover": {
-            backgroundColor: "#1d4ed8",
+            backgroundColor: "#d8491dff",
           },
         }}>
-        ← Back
+        ← HOME
       </Button>
 
       {/* Main Header */}
@@ -70,19 +70,60 @@ export default function StockHeader({
               mt: 1.5,
               flexWrap: "wrap",
             }}>
-            <Typography variant="h6" color="text.secondary" fontWeight={600}>
-              {productCount} Products
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              fontWeight={700}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+              Products :{" "}
+              <Typography
+                fontWeight={700}
+                variant="h5"
+                sx={{ paddingLeft: "6px", color: "blue" }}>
+                {productCount}
+              </Typography>
             </Typography>
 
-            <Typography variant="h6" color="#ee8f3bff" fontWeight={800}>
-              {totalUnits} Units
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              fontWeight={800}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+              Units :
+              <Typography
+                fontWeight={700}
+                variant="h5"
+                sx={{ paddingLeft: "6px", color: "#ee8f3bff" }}>
+                {totalUnits}
+              </Typography>
             </Typography>
-            <Typography variant="h6" fontWeight={800} sx={{ color: "#16a34a" }}>
-              ₹
-              {pickles
-                .reduce((sum, item) => sum + getTotalValue(item.weights), 0)
-                .toLocaleString("en-IN")}{" "}
-              Total Value
+            <Typography
+              variant="h6"
+              fontWeight={800}
+              color="text.secondary"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+              Total Value :
+              <Typography
+                variant="h6"
+                fontWeight={800}
+                sx={{ color: "#16a34a", paddingLeft: "8px" }}>
+                ₹{" "}
+                {pickles
+                  .reduce((sum, item) => sum + getTotalValue(item.weights), 0)
+                  .toLocaleString("en-IN")}{" "}
+              </Typography>
             </Typography>
           </Box>
         </Box>

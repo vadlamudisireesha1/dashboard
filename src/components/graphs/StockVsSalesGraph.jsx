@@ -1,118 +1,224 @@
 import React, { useState } from "react";
 import {
+  Box,
+  Paper,
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+  Button,
+  TextField,
+  Fade,
+} from "@mui/material";
+import {
   BarChart,
-  Bar,
+  CartesianGrid,
   XAxis,
   YAxis,
   Tooltip,
   Legend,
+  Bar,
   ResponsiveContainer,
-  CartesianGrid,
 } from "recharts";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Calendar } from "lucide-react";
 import { getStockVsSalesByCategory } from "./graphUtils";
 
-export default function StockVsSalesBarChart({ items }) {
-  const [sortBy, setSortBy] = useState("name"); // name | stock | sold
-  const [sortDir, setSortDir] = useState("desc"); // asc | desc
+const HIGHLIGHT_BLUE = "#0098FF";
 
-  const rawData = getStockVsSalesByCategory(items);
+export default function StockVsSalesGraph({ items }) {
+  const [range, setRange] = useState("all");
+  const [customOpen, setCustomOpen] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
-  const sortedData = [...rawData].sort((a, b) => {
-    if (sortBy === "name") {
-      return sortDir === "asc"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name);
-    }
-    const diff = (a[sortBy] || 0) - (b[sortBy] || 0);
-    return sortDir === "asc" ? diff : -diff;
-  });
+  // NOTE: no date in this data, so range does NOT change numbers.
+  const baseData = getStockVsSalesByCategory(items);
+  const filteredData = baseData || [];
+
+  const applyCustomRange = () => {
+    if (!fromDate || !toDate) return;
+    setRange("custom");
+    setCustomOpen(false);
+  };
+
+  const cancelCustom = () => {
+    setFromDate("");
+    setToDate("");
+    setCustomOpen(false);
+  };
 
   return (
-    <div
-      style={{
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3.5,
+        borderRadius: 4,
         background: "white",
-        borderRadius: 28,
-        padding: 28,
-        boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
+        boxShadow: "0 12px 40px rgba(0,0,0,0.06)",
+        position: "relative",
       }}>
-      {/* Header + Sort Controls */}
-      <div
-        style={{
+      {/* HEADER */}
+      <Typography
+        variant="h6"
+        sx={{
+          fontSize: 22,
+          fontWeight: 800,
           display: "flex",
-          justifyContent: "space-between",
-          gap: 16,
           alignItems: "center",
-          marginBottom: 16,
-          flexWrap: "wrap",
+          gap: 1,
         }}>
-        <div>
-          <h2
-            style={{
-              margin: 0,
-              fontSize: 20,
-              fontWeight: 800,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}>
-            <BarChart3 size={18} strokeWidth={2.2} />
-            <span>Stock vs Sales by Category</span>
-          </h2>
-          <p
-            style={{
-              margin: 0,
-              color: "#64748b",
-              fontSize: 13,
-              marginTop: 4,
-            }}>
-            Compare how much you still have in stock vs total sold units.
-          </p>
-        </div>
+        <BarChart3 size={20} />
+        Stock vs Sales Comparison
+      </Typography>
+      <Typography sx={{ color: "#64748b", fontSize: 13, mb: 1 }}>
+        Compare total stock units vs total units sold for each category.
+      </Typography>
 
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}>
-          <span style={{ fontSize: 12, color: "#6b7280" }}>Sort by:</span>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={{
-              padding: "6px 12px",
-              borderRadius: 50,
-              border: "1px solid #e2e8f0",
-              fontSize: 12,
-            }}>
-            <option value="name">Category Name</option>
-            <option value="stock">Stock Units</option>
-            <option value="sold">Sold Units</option>
-          </select>
-
-          <button
-            onClick={() =>
-              setSortDir((prev) => (prev === "asc" ? "desc" : "asc"))
+      {/* FILTER ROW (UI ONLY, same style as other graphs) */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: 1.5,
+          flexWrap: "wrap",
+          mt: 1,
+          mb: 2,
+        }}>
+        <ToggleButtonGroup
+          exclusive
+          value={range}
+          onChange={(_, v) => {
+            if (v) {
+              setRange(v);
+              setCustomOpen(false);
             }
-            style={{
-              padding: "6px 12px",
-              borderRadius: 50,
-              border: "1px solid #e2e8f0",
-              fontSize: 12,
-              cursor: "pointer",
-              background: "#f1f5f9",
-            }}>
-            {sortDir === "asc" ? "↑ Asc" : "↓ Desc"}
-          </button>
-        </div>
-      </div>
+          }}
+          sx={{
+            display: "flex",
+            gap: "11px",
+            "& .MuiToggleButton-root": {
+              height: 32,
+              px: 1.2,
+              borderRadius: "999px",
+              border: "1px solid #dce1e8 !important",
+              background: "white",
+              textTransform: "none",
+              fontSize: "13px",
+              color: "#0f172a",
+              "&.Mui-selected": {
+                background: HIGHLIGHT_BLUE + " !important",
+                color: "white !important",
+                borderColor: HIGHLIGHT_BLUE + " !important",
+              },
+              "&:hover": {
+                background: "#f1f5f9",
+              },
+            },
+          }}>
+          <ToggleButton value="all">All</ToggleButton>
+          <ToggleButton value="7">Last 7 days</ToggleButton>
+          <ToggleButton value="15">Last 15 days</ToggleButton>
+          <ToggleButton value="30">Last 30 days</ToggleButton>
+        </ToggleButtonGroup>
 
-      {/* Chart */}
-      <div style={{ width: "100%", height: 320 }}>
+        <Button
+          onClick={() => setCustomOpen((p) => !p)}
+          sx={{
+            height: 32,
+            px: 2,
+            borderRadius: "999px",
+            border: "1px solid #dce1e8",
+            background: range === "custom" ? HIGHLIGHT_BLUE : "white",
+            color: range === "custom" ? "white" : "#0f172a",
+            fontSize: "13px",
+            textTransform: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            "&:hover": {
+              background: range === "custom" ? "#0284c7" : "#f1f5f9",
+            },
+          }}>
+          <Calendar size={16} />
+          Custom
+        </Button>
+      </Box>
+
+      <Fade in={customOpen}>
+        <Paper
+          elevation={4}
+          sx={{
+            position: "absolute",
+            right: 28,
+            top: 110,
+            p: 2.2,
+            borderRadius: 3,
+            width: 280,
+            boxShadow: "0 16px 40px rgba(15,23,42,0.18)",
+            border: "1px solid #e2e8f0",
+            background: "rgba(255,255,255,0.98)",
+            backdropFilter: "blur(10px)",
+            zIndex: 20,
+          }}>
+          <Typography
+            sx={{ fontSize: 14, fontWeight: 600, mb: 1.5, color: "#0f172a" }}>
+            Custom Date Range
+          </Typography>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            <TextField
+              label="From"
+              type="date"
+              size="small"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              label="To"
+              type="date"
+              size="small"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mt: 2,
+            }}>
+            <Button
+              variant="outlined"
+              onClick={cancelCustom}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontSize: 13,
+              }}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={applyCustomRange}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontSize: 13,
+                background: HIGHLIGHT_BLUE,
+                "&:hover": { background: "#0284c7" },
+              }}>
+              Apply
+            </Button>
+          </Box>
+        </Paper>
+      </Fade>
+
+      {/* CHART */}
+      <Box sx={{ width: "100%", height: 320, mt: 1 }}>
         <ResponsiveContainer>
-          <BarChart data={sortedData}>
+          <BarChart data={filteredData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
@@ -121,18 +227,18 @@ export default function StockVsSalesBarChart({ items }) {
             <Bar
               dataKey="stock"
               name="Stock Units"
-              fill="#3b82f6"
+              fill="#0ea5e9"
               radius={[6, 6, 0, 0]}
             />
             <Bar
               dataKey="sold"
               name="Sold Units"
-              fill="#f97316"
+              fill="#6366f1"
               radius={[6, 6, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>
-      </div>
-    </div>
+      </Box>
+    </Paper>
   );
 }

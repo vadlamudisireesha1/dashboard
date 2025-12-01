@@ -243,10 +243,10 @@ export default function ProductCard({
                 fontSize: "0.85rem",
                 color: "#6b7280",
                 textTransform: "uppercase",
-                letterSpacing: "0.06em",
+                letterSpacing: "0.04em",
               }}>
-              <span>Weight</span>
-              <span>Units</span>
+              <span>Weight </span>
+              <span style={{ paddingLeft: "6px" }}> Units</span>
               <span>Price</span>
               <span>Total</span>
             </Box>
@@ -263,7 +263,7 @@ export default function ProductCard({
                   fontSize: "0.9rem",
                 }}>
                 <span>{gram}g</span>
-                <span>{data.units} pcs</span>
+                <span>{data.units}Pcs</span>
                 <span>₹{data.price}</span>
                 <span style={{ fontWeight: 700, color: "#16a34a" }}>
                   ₹{(data.units * data.price).toLocaleString("en-IN")}
