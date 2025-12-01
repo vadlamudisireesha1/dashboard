@@ -1,54 +1,96 @@
 {
-  "title": "Non Veg Pickles",
+  "title": "Non-Veg Pickles",
   "items": [
     {
+      "id": "NON-000001",
+      "sku": "NON-000001",
+      "category": "nonveg",
       "name": "Chicken Boneless Pickle",
       "bgColor": "#ffffff",
-      "weights": {
-        "250 gm": 20,
-        "500 gm": 24,
-        "750 gm": 15,
-        "1000 gm": 10
+      "weights": [
+        { "gram": 250, "units": 32, "price": 150 },
+        { "gram": 500, "units": 20, "price": 260 },
+        { "gram": 1000, "units": 12, "price": 480 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 7, "revenue": 1050 },
+        { "date": "2025-01-22", "unitsSold": 9, "revenue": 1350 },
+        { "date": "2025-01-27", "unitsSold": 6, "revenue": 900 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-10", "unitsAdded": 40 },
+        { "date": "2025-01-25", "unitsAdded": 60 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 28,
+        "revenue": 4300,
+        "averageOrderValue": 153
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 112,
+        "revenue": 16850
       }
     },
+
     {
-      "name": "Gongura Chicken Boneless Pickle",
+      "id": "NON-000002",
+      "sku": "NON-000002",
+      "category": "nonveg",
+      "name": "Fish Pickle",
       "bgColor": "#ffffff",
-      "weights": {
-        "250 gm": 14,
-        "500 gm": 18,
-        "750 gm": 9,
-        "1000 gm": 6
+      "weights": [
+        { "gram": 250, "units": 28, "price": 140 },
+        { "gram": 500, "units": 18, "price": 240 },
+        { "gram": 1000, "units": 10, "price": 420 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-21", "unitsSold": 5, "revenue": 700 },
+        { "date": "2025-01-23", "unitsSold": 8, "revenue": 1120 },
+        { "date": "2025-01-29", "unitsSold": 3, "revenue": 420 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-08", "unitsAdded": 50 },
+        { "date": "2025-01-19", "unitsAdded": 30 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 21,
+        "revenue": 3200,
+        "averageOrderValue": 152
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 89,
+        "revenue": 13200
       }
     },
+
     {
-      "name": "Mutton Pickle (Bone)",
+      "id": "NON-000003",
+      "sku": "NON-000003",
+      "category": "nonveg",
+      "name": "Prawn Pickle",
       "bgColor": "#ffffff",
-      "weights": {
-        "250 gm": 16,
-        "500 gm": 12,
-        "750 gm": 10,
-        "1000 gm": 8
-      }
-    },
-    {
-      "name": "Gongura Mutton Pickle (Bone)",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250 gm": 10,
-        "500 gm": 10,
-        "750 gm": 5,
-        "1000 gm": 4
-      }
-    },
-    {
-      "name": "Prawns Pickle",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250 gm": 18,
-        "500 gm": 22,
-        "750 gm": 14,
-        "1000 gm": 9
+      "weights": [
+        { "gram": 250, "units": 20, "price": 180 },
+        { "gram": 500, "units": 14, "price": 320 },
+        { "gram": 1000, "units": 8, "price": 600 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 4, "revenue": 720 },
+        { "date": "2025-01-24", "unitsSold": 7, "revenue": 1260 },
+        { "date": "2025-01-28", "unitsSold": 6, "revenue": 1080 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-12", "unitsAdded": 35 },
+        { "date": "2025-01-26", "unitsAdded": 45 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 25,
+        "revenue": 4060,
+        "averageOrderValue": 162
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 95,
+        "revenue": 14880
       }
     }
   ]
