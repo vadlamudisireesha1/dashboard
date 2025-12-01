@@ -17,7 +17,7 @@ export default function PieChartGraph({ items }) {
       style={{
         background: "#ffffff",
         borderRadius: 28,
-        padding: "28px 28px 18px",
+        padding: "28px 28px 0px",
         boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
         height: "100%",
         display: "flex",
@@ -159,23 +159,79 @@ export default function PieChartGraph({ items }) {
           minHeight: 56,
         }}>
         {activeSlice ? (
-          <div>
-            <div style={{ fontWeight: 700, marginBottom: 4 }}>
+          <div
+            style={{
+              padding: "12px 16px",
+              borderRadius: "14px",
+              background: "rgba(255, 255, 255, 0.75)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255, 255, 255, 0.5)",
+              // boxShadow: "0 6px 18px rgba(15, 23, 42, 0.12)",
+              minWidth: "180px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "6px",
+              animation: "fadeIn 0.25s ease",
+            }}>
+            {/* TITLE ROW */}
+            <div
+              style={{
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                fontSize: "14px",
+                color: "#111827",
+              }}>
+              <span
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  background: activeSlice.color,
+                  display: "inline-block",
+                  marginRight: "8px",
+                }}
+              />
               {activeSlice.name}
             </div>
-            <div>
-              Units:{" "}
-              <strong>{activeSlice.value.toLocaleString("en-IN")}</strong>
+
+            {/* UNITS */}
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#334155",
+                display: "flex",
+                marginTop: "2px",
+                gap: "12px",
+                fontSize: "20px",
+              }}>
+              Units:
+              <strong style={{ color: "#111827" }}>
+                {activeSlice.value.toLocaleString("en-IN")}
+              </strong>
             </div>
-            <div>
-              Percentage:{" "}
-              <strong>
+
+            {/* PERCENTAGE */}
+            <div
+              style={{
+                fontSize: "13px",
+                color: "#334155",
+                display: "flex",
+                gap: "12px",
+                fontSize: "20px",
+              }}>
+              Percentage:
+              <strong style={{ color: "#111827" }}>
                 {((activeSlice.value / totalUnits) * 100).toFixed(1)}%
               </strong>
             </div>
           </div>
         ) : (
-          <span style={{ color: "#9ca3af" }}>
+          <span
+            style={{
+              color: "#9ca3af",
+              fontSize: "13px",
+            }}>
             Hover or click a slice to view category details.
           </span>
         )}

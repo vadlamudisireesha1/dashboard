@@ -2,8 +2,9 @@
   {
     "label": "Vegetable Pickles",
     "icon": "carrot",
-    "color": "#4C8BF5",
-    "bg": "#eaf2ff",
+    "color": "#1e88e5",
+    "text": "#0d3a68",
+    "bg": "linear-gradient(135deg, #d9eaff, #b3d4ff)",
     "count": 248,
     "subtitle": "Fresh veggie assortments",
     "slug": "vegetable"
@@ -11,8 +12,9 @@
   {
     "label": "Non Veg Pickles",
     "icon": "drumstick",
-    "color": "#FF4C4C",
-    "bg": "#ffecec",
+    "color": "#e53935",
+    "text": "#5c1614",
+    "bg": "linear-gradient(135deg, #ffd4d4, #ffb3b3)",
     "count": 32,
     "subtitle": "Most loved spicy picks",
     "slug": "nonveg"
@@ -20,8 +22,9 @@
   {
     "label": "Delicious Powders",
     "icon": "soup",
-    "color": "#F6C137",
-    "bg": "#fff7dd",
+    "color": "#f9a825",
+    "text": "#6a4e00",
+    "bg": "linear-gradient(135deg, #fff3cd, #ffe49b)",
     "count": 67,
     "subtitle": "Daily spice essentials",
     "slug": "powders"
@@ -29,8 +32,9 @@
   {
     "label": "Millets Ready to Cook",
     "icon": "cookingpot",
-    "color": "#34C759",
-    "bg": "#eafff2",
+    "color": "#00c853",
+    "text": "#0a5a2f",
+    "bg": "linear-gradient(135deg, #ddffe8, #b7ffcf)",
     "count": 149,
     "subtitle": "Easy cooking options",
     "slug": "millets"
@@ -38,8 +42,9 @@
   {
     "label": "Ready to Eat",
     "icon": "utensils",
-    "color": "#FFB545",
-    "bg": "#fff3dd",
+    "color": "#8e24aa",
+    "text": "#3d1650",
+    "bg": "linear-gradient(135deg, #eed6ff, #d9a6fa)",
     "count": 86,
     "subtitle": "Instant tasty food",
     "slug": "readytoeat"
@@ -47,8 +52,9 @@
   {
     "label": "Organic Millets",
     "icon": "sprout",
-    "color": "#22C55E",
-    "bg": "#e8ffe8",
+    "color": "#2e7d32",
+    "text": "#18441a",
+    "bg": "linear-gradient(135deg, #e3ffe7, #c6facc)",
     "count": 143,
     "subtitle": "100% pure millet variety",
     "slug": "organic"

@@ -16,7 +16,6 @@ const ICON_OPTIONS = [
   "cookingpot",
   "utensils",
   "sprout",
-
   "snack",
   "curry",
   "spicy",
@@ -51,7 +50,6 @@ export default function AddNewProductModal({ open, onClose, onAdd }) {
 
   const handleSubmit = () => {
     if (!form.label || !form.slug) {
-      // if slug empty, auto-generate from label
       setForm((s) => ({
         ...s,
         slug:
