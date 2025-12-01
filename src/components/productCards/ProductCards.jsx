@@ -112,7 +112,16 @@ export default function ProductCards() {
       />
 
       {/* DEFAULT PRODUCTS */}
-      <Grid container spacing={3} sx={{ mt: 3, px: 2 }}>
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          mt: 3,
+          px: 2,
+          paddingInline: "20px",
+          display: "flex",
+          justifyContent: "center",
+        }}>
         {initialProducts.map((cat, i) => (
           <Grid item key={i} xs={12} sm={6} md={4} lg={2}>
             <Link
@@ -120,7 +129,7 @@ export default function ProductCards() {
               style={{ textDecoration: "none", color: "inherit" }}>
               <Box
                 sx={{
-                  width: "190px",
+                  width: "177px",
                   minHeight: "130px",
                   background: cat.bg,
                   borderRadius: "18px",
@@ -178,7 +187,7 @@ export default function ProductCards() {
               <Box sx={{ position: "relative" }}>
                 <Box
                   sx={{
-                    width: "190px",
+                    width: "180px",
                     minHeight: "130px",
                     background: cat.bg,
                     borderRadius: "18px",
@@ -235,11 +244,17 @@ export default function ProductCards() {
           ))}
 
           {/* ADD NEW PRODUCT */}
-          <Grid item xs={12} sm={6} md={4} lg={2}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={2}
+            sx={{ paddingInline: "40px" }}>
             <Box
               onClick={() => setOpenModal(true)}
               sx={{
-                width: "190px",
+                width: "170px",
                 minHeight: "130px",
                 background: "#f0f0f0",
                 borderRadius: "18px",
