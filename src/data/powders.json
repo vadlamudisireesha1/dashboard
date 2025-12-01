@@ -2,53 +2,95 @@
   "title": "Delicious Powders",
   "items": [
     {
-      "name": "Drumstick Leaves Savory Powder",
+      "id": "POW-000001",
+      "sku": "POW-000001",
+      "category": "powders",
+      "name": "Sambar Powder",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 20, "price": 10 },
-        "500": { "units": 24, "price": 20 },
-        "750": { "units": 15, "price": 30 },
-        "1000": { "units": 10, "price": 40 }
+      "weights": [
+        { "gram": 100, "units": 60, "price": 45 },
+        { "gram": 250, "units": 45, "price": 95 },
+        { "gram": 500, "units": 25, "price": 180 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 14, "revenue": 630 },
+        { "date": "2025-01-21", "unitsSold": 10, "revenue": 450 },
+        { "date": "2025-01-25", "unitsSold": 12, "revenue": 540 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-06", "unitsAdded": 80 },
+        { "date": "2025-01-24", "unitsAdded": 50 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 36,
+        "revenue": 1620,
+        "averageOrderValue": 135
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 144,
+        "revenue": 6050
       }
     },
+
     {
-      "name": "Idly Savory Powder",
+      "id": "POW-000002",
+      "sku": "POW-000002",
+      "category": "powders",
+      "name": "Rasam Powder",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 14, "price": 10 },
-        "500": { "units": 18, "price": 20 },
-        "750": { "units": 9, "price": 25 },
-        "1000": { "units": 6, "price": 30 }
+      "weights": [
+        { "gram": 100, "units": 52, "price": 40 },
+        { "gram": 250, "units": 38, "price": 90 },
+        { "gram": 500, "units": 18, "price": 160 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 11, "revenue": 440 },
+        { "date": "2025-01-22", "unitsSold": 9, "revenue": 360 },
+        { "date": "2025-01-28", "unitsSold": 10, "revenue": 400 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-05", "unitsAdded": 85 },
+        { "date": "2025-01-27", "unitsAdded": 40 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 30,
+        "revenue": 1200,
+        "averageOrderValue": 120
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 126,
+        "revenue": 4800
       }
     },
+
     {
-      "name": "Curry Leaves Savory Powder",
+      "id": "POW-000003",
+      "sku": "POW-000003",
+      "category": "powders",
+      "name": "Masala Chilli Powder",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 16, "price": 10 },
-        "500": { "units": 12, "price": 20 },
-        "750": { "units": 10, "price": 25 },
-        "1000": { "units": 8, "price": 30 }
-      }
-    },
-    {
-      "name": "Peanut Chutney Powder",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 10, "price": 10 },
-        "500": { "units": 10, "price": 20 },
-        "750": { "units": 5, "price": 25 },
-        "1000": { "units": 4, "price": 30 }
-      }
-    },
-    {
-      "name": "Flax Seeds Savory Powder",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 10 },
-        "500": { "units": 22, "price": 20 },
-        "750": { "units": 14, "price": 25 },
-        "1000": { "units": 9, "price": 30 }
+      "weights": [
+        { "gram": 100, "units": 48, "price": 55 },
+        { "gram": 250, "units": 32, "price": 120 },
+        { "gram": 500, "units": 20, "price": 210 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 13, "revenue": 715 },
+        { "date": "2025-01-23", "unitsSold": 7, "revenue": 385 },
+        { "date": "2025-01-30", "unitsSold": 12, "revenue": 660 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-03", "unitsAdded": 70 },
+        { "date": "2025-01-22", "unitsAdded": 55 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 32,
+        "revenue": 1760,
+        "averageOrderValue": 147
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 132,
+        "revenue": 7300
       }
     }
   ]

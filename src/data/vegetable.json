@@ -1,94 +1,96 @@
 {
-  "title": "Veg Pickles",
+  "title": "Veg Pickels",
   "items": [
     {
+      "id": "VEG-000001",
+      "sku": "VEG-000001",
+      "category": "vegetable",
       "name": "Tomato Pickle",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 20, "price": 0 },
-        "500": { "units": 24, "price": 0 },
-        "750": { "units": 15, "price": 0 },
-        "1000": { "units": 10, "price": 0 }
+      "weights": [
+        { "gram": 250, "units": 40, "price": 120 },
+        { "gram": 500, "units": 26, "price": 220 },
+        { "gram": 1000, "units": 18, "price": 380 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 10, "revenue": 1200 },
+        { "date": "2025-01-22", "unitsSold": 8, "revenue": 960 },
+        { "date": "2025-01-25", "unitsSold": 12, "revenue": 1440 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-10", "unitsAdded": 70 },
+        { "date": "2025-01-27", "unitsAdded": 40 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 32,
+        "revenue": 4500,
+        "averageOrderValue": 141
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 140,
+        "revenue": 19200
       }
     },
+
     {
-      "name": "Mango Pickle",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 14, "price": 0 },
-        "500": { "units": 18, "price": 0 },
-        "750": { "units": 9, "price": 0 },
-        "1000": { "units": 6, "price": 0 }
-      }
-    },
-    {
-      "name": "Red Chilli Pickle",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 16, "price": 0 },
-        "500": { "units": 12, "price": 0 },
-        "750": { "units": 10, "price": 0 },
-        "1000": { "units": 8, "price": 0 }
-      }
-    },
-    {
-      "name": "Lemon Pickle",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 10, "price": 0 },
-        "500": { "units": 10, "price": 0 },
-        "750": { "units": 5, "price": 0 },
-        "1000": { "units": 4, "price": 0 }
-      }
-    },
-    {
+      "id": "VEG-000002",
+      "sku": "VEG-000002",
+      "category": "vegetable",
       "name": "Ginger Pickle",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 14, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
+      "weights": [
+        { "gram": 250, "units": 32, "price": 150 },
+        { "gram": 500, "units": 22, "price": 260 },
+        { "gram": 1000, "units": 14, "price": 450 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 6, "revenue": 900 },
+        { "date": "2025-01-22", "unitsSold": 9, "revenue": 1350 },
+        { "date": "2025-01-26", "unitsSold": 7, "revenue": 1050 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-05", "unitsAdded": 50 },
+        { "date": "2025-01-25", "unitsAdded": 30 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 22,
+        "revenue": 3300,
+        "averageOrderValue": 150
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 96,
+        "revenue": 14400
       }
     },
+
     {
-      "name": "Gongura Pickle",
+      "id": "VEG-000003",
+      "sku": "VEG-000003",
+      "category": "vegetable",
+      "name": "Lemon Pickle",
       "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 8, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 4, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
-      }
-    },
-    {
-      "name": "Bitter Gourd Pickle",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 2, "price": 0 },
-        "750": { "units": 4, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
-      }
-    },
-    {
-      "name": "Citron Pickle",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 2, "price": 0 },
-        "750": { "units": 4, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
-      }
-    },
-    {
-      "name": "Gongura Chilli Pickle",
-      "bgColor": "#ffffff",
-      "weights": {
-        "250": { "units": 18, "price": 0 },
-        "500": { "units": 22, "price": 0 },
-        "750": { "units": 4, "price": 0 },
-        "1000": { "units": 9, "price": 0 }
+      "weights": [
+        { "gram": 250, "units": 36, "price": 110 },
+        { "gram": 500, "units": 24, "price": 200 },
+        { "gram": 1000, "units": 16, "price": 340 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-21", "unitsSold": 9, "revenue": 990 },
+        { "date": "2025-01-23", "unitsSold": 7, "revenue": 770 },
+        { "date": "2025-01-29", "unitsSold": 11, "revenue": 1210 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-07", "unitsAdded": 60 },
+        { "date": "2025-01-20", "unitsAdded": 50 }
+      ],
+      "weeklySummary": {
+        "totalUnitsSold": 27,
+        "revenue": 3380,
+        "averageOrderValue": 125
+      },
+      "monthlySummary": {
+        "totalUnitsSold": 118,
+        "revenue": 15200
       }
     }
   ]

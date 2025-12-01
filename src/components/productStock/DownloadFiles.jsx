@@ -238,24 +238,33 @@ export default function DownloadFiles({
         position: "absolute",
         top: "100%",
         right: 0,
-        mt: 1,
-        bgcolor: "white",
-        borderRadius: 2,
+        mt: 1.5,
+        bgcolor: "rgba(255,255,255,0.92)",
+        backdropFilter: "blur(18px)",
+        borderRadius: 3,
         overflow: "hidden",
-        border: "1px solid #e2e8f0",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+        border: "1px solid rgba(148,163,184,0.4)",
+        boxShadow: "0 22px 55px rgba(15,23,42,0.28)",
         zIndex: 50,
-        minWidth: 180,
+        minWidth: 200,
       }}>
       {/* PDF */}
       <Box
         sx={{
           px: 3,
-          py: 2.5,
+          py: 2.4,
           cursor: "pointer",
-          "&:hover": { bgcolor: "#fef3c7" },
           fontWeight: 600,
-          color: "#92400e",
+          color: "#0f172a",
+          fontSize: "0.95rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          transition: "background 0.18s ease, transform 0.1s ease",
+          "&:hover": {
+            bgcolor: "rgba(250,250,250,0.95)",
+          },
+          "&:active": { transform: "scale(0.99)" },
         }}
         onClick={handleDownloadPDF}>
         Download PDF
@@ -265,12 +274,20 @@ export default function DownloadFiles({
       <Box
         sx={{
           px: 3,
-          py: 2.5,
+          py: 2.4,
           cursor: "pointer",
-          borderTop: "1px solid #e2e8f0",
-          "&:hover": { bgcolor: "#ecfdf5" },
+          borderTop: "1px solid rgba(226,232,240,0.7)",
           fontWeight: 600,
-          color: "#166534",
+          color: "#0f172a",
+          fontSize: "0.95rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          transition: "background 0.18s ease, transform 0.1s ease",
+          "&:hover": {
+            bgcolor: "rgba(239,246,255,0.9)",
+          },
+          "&:active": { transform: "scale(0.99)" },
         }}
         onClick={handleDownloadExcel}>
         Download Excel

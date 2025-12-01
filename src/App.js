@@ -1,32 +1,29 @@
-// src/App.js
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProductCards from "./components/productCards/ProductCards";
-import StockCategoryPage from "./pages/StockCategoryPage";
 
 import Navbar from "./components/navbar/Navbar";
-import GraphView from "./components/graphs/GraphView";
-
+import ProductCards from "./components/productCards/ProductCards";
+import StockCategoryPage from "./pages/StockCategoryPage";
+import GraphsDashboardPage from "./pages/GraphDashboardpage";
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
 
       <Routes>
+        {/* HOME PAGE → Category cards + Analytics */}
         <Route
           path="/"
           element={
             <>
               <ProductCards />
-              <GraphView />
+              <GraphsDashboardPage />
             </>
           }
         />
 
-        {/* single dynamic category route used for all categories */}
+        {/* CATEGORY PAGE → Stock details */}
         <Route path="/category/:type" element={<StockCategoryPage />} />
-
-        {/* keep existing other routes if you want (optional) */}
       </Routes>
     </BrowserRouter>
   );
