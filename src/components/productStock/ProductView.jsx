@@ -40,17 +40,30 @@ export default function ProductView({
               onClick={onAdd}
               sx={{
                 width: "240px",
-                minHeight: "180px",
-                border: "2px dashed #c7c7c7",
+                minHeight: "235px",
                 borderRadius: "18px",
+                border: "1px dashed rgba(148,163,184,0.8)",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
+                background: "rgba(255,255,255,0.9)",
+                backdropFilter: "blur(16px)",
+                boxShadow: "0 16px 34px rgba(15,23,42,0.14)",
+                transition:
+                  "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease",
+                "&:hover": {
+                  borderColor: "#0f172a",
+                  background: "rgba(255,255,255,0.98)",
+                  boxShadow: "0 22px 50px rgba(15,23,42,0.24)",
+                  transform: "translateY(-3px)",
+                },
               }}>
               <Typography fontSize={40}>+</Typography>
-              <Typography>Add New</Typography>
+              <Typography fontWeight={600} color="text.secondary">
+                Add New
+              </Typography>
             </Box>
           </Grid>
         </Grid>
@@ -80,18 +93,30 @@ export default function ProductView({
             sx={{
               mt: 2,
               borderRadius: "18px",
-              border: "2px dashed #c7c7c7",
+              border: "1px dashed rgba(148,163,184,0.8)",
               padding: 3,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              background: "rgba(255,255,255,0.6)",
+              background: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(16px)",
+              boxShadow: "0 16px 34px rgba(15,23,42,0.14)",
+              transition:
+                "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease",
+              "&:hover": {
+                borderColor: "#0f172a",
+                background: "rgba(255,255,255,0.98)",
+                boxShadow: "0 22px 50px rgba(15,23,42,0.24)",
+                transform: "translateY(-3px)",
+              },
             }}>
             <Typography fontSize={28} mr={1}>
               +
             </Typography>
-            <Typography fontWeight={600}>Add New Product</Typography>
+            <Typography fontWeight={600} color="text.secondary">
+              Add New
+            </Typography>
           </Box>
         </Box>
       )}

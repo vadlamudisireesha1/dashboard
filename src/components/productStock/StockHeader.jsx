@@ -74,8 +74,15 @@ export default function StockHeader({
               {productCount} Products
             </Typography>
 
-            <Typography variant="h6" color="#16a34a" fontWeight={800}>
+            <Typography variant="h6" color="#ee8f3bff" fontWeight={800}>
               {totalUnits} Units
+            </Typography>
+            <Typography variant="h6" fontWeight={800} sx={{ color: "#16a34a" }}>
+              ₹
+              {pickles
+                .reduce((sum, item) => sum + getTotalValue(item.weights), 0)
+                .toLocaleString("en-IN")}{" "}
+              Total Value
             </Typography>
           </Box>
         </Box>

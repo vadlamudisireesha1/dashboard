@@ -78,7 +78,7 @@ export default function CategoryTrendGraph({ items }) {
 
         {/* Date Range Filters */}
         <div style={{ display: "flex", gap: 8 }}>
-          {["all", "30", "60", "90"].map((r) => (
+          {["all", "7", "30", "60", "90"].map((r) => (
             <button
               key={r}
               onClick={() => setRange(r)}

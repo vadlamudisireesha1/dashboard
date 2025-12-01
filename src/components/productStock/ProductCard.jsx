@@ -24,41 +24,53 @@ export default function ProductCard({
         onClick={onToggle}
         sx={{
           height: "100%",
-          border: "2px dashed #cbd5e1",
-          borderRadius: 3,
-          bgcolor: "#f8fafc",
+          borderRadius: 4,
+          border: "1px dashed rgba(148,163,184,0.7)",
+          bgcolor: "rgba(255,255,255,0.85)",
+          backdropFilter: "blur(16px)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          transition: "0.25s",
+          transition:
+            "border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease",
+          boxShadow: "0 14px 30px rgba(15,23,42,0.08)",
           "&:hover": {
-            borderColor: "primary.main",
-            bgcolor: "#f1f5f9",
+            borderColor: "#0f172a",
+            bgcolor: "rgba(255,255,255,0.95)",
+            boxShadow: "0 20px 40px rgba(15,23,42,0.16)",
+            transform: "translateY(-3px)",
           },
         }}>
         <PlusCircle size={44} color="#64748b" />
         <Typography mt={1} fontWeight={600} color="text.secondary">
-          Add New Product
+          Add New
         </Typography>
       </Box>
     );
   }
 
   const cardBase = {
-    borderRadius: 3,
-    bgcolor: "white",
-    border: "1px solid #e2e8f0",
+    borderRadius: 4,
+    bgcolor: "rgba(255,255,255,0.88)",
+    border: "1px solid rgba(226,232,240,0.9)",
     overflow: "visible",
     position: "relative",
-    transition: "0.25s",
+    backdropFilter: "blur(18px)",
+    transition:
+      "box-shadow 0.22s ease, transform 0.22s ease, border-color 0.22s ease, background 0.22s ease",
+    boxShadow: "0 16px 36px rgba(15,23,42,0.12)",
     "&:hover": {
-      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.16)",
+      boxShadow: "0 22px 50px rgba(15,23,42,0.2)",
+      transform: "translateY(-4px)",
+      borderColor: "rgba(148,163,184,0.9)",
+      background: "rgba(255,255,255,0.96)",
     },
     ...(opened && {
       zIndex: 50,
-      boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
+      boxShadow: "0 26px 60px rgba(15,23,42,0.35)",
+      borderColor: "rgba(15,23,42,0.9)",
     }),
   };
 
@@ -71,8 +83,11 @@ export default function ProductCard({
           sx={{
             p: 2,
             pb: 1.5,
-            borderBottom: "1px solid #f1f5f9",
-            background: "linear-gradient(90deg,#f8fafc,#eef2ff)",
+            borderBottom: "1px solid rgba(241,245,249,1)",
+            background:
+              "linear-gradient(135deg, rgba(248,250,252,0.95), rgba(239,246,255,0.95))",
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
           }}>
           <Box
             sx={{
@@ -88,27 +103,32 @@ export default function ProductCard({
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
-                  color: "#1e293b",
+                  color: "#0f172a",
+                  letterSpacing: "-0.01em",
                 }}>
                 {item.name}
               </Typography>
               {item.sku && (
                 <Typography
                   variant="caption"
-                  sx={{ color: "#64748b", display: "block", mt: 0.3 }}>
+                  sx={{
+                    color: "#64748b",
+                    display: "block",
+                    mt: 0.3,
+                  }}>
                   SKU: {item.sku}
                 </Typography>
               )}
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.1 }}>
               <Box
                 sx={{
                   width: 10,
                   height: 10,
-                  borderRadius: "50%",
+                  borderRadius: "999px",
                   bgcolor: dotColorValue,
-                  boxShadow: `0 0 6px ${dotColorValue}`,
+                  boxShadow: `0 0 8px ${dotColorValue}`,
                 }}
               />
               <IconButton
@@ -116,15 +136,26 @@ export default function ProductCard({
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit(index);
+                }}
+                sx={{
+                  bgcolor: "rgba(15,23,42,0.02)",
+                  "&:hover": {
+                    bgcolor: "rgba(15,23,42,0.06)",
+                  },
                 }}>
-                <Edit size={15} />
+                <Edit size={16} />
               </IconButton>
             </Box>
           </Box>
         </Box>
 
         {/* TOTAL UNITS */}
-        <Box sx={{ textAlign: "center", py: 2.5, bgcolor: "#f8fafc" }}>
+        <Box
+          sx={{
+            textAlign: "center",
+            py: 2.6,
+            bgcolor: "rgba(248,250,252,0.9)",
+          }}>
           <Typography variant="h3" fontWeight={900} color={dotColorValue}>
             {totalUnits}
           </Typography>
@@ -137,13 +168,15 @@ export default function ProductCard({
         <Box
           sx={{
             p: 2,
-            pt: 1,
-            pb: 1,
+            pt: 1.1,
+            pb: 1.2,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             cursor: "pointer",
-            "&:hover": { bgcolor: "#f8fafc" },
+            "&:hover": {
+              bgcolor: "rgba(248,250,252,0.95)",
+            },
           }}
           onClick={onToggle}>
           <Typography fontWeight={600} color="text.secondary">
@@ -151,9 +184,11 @@ export default function ProductCard({
           </Typography>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography fontWeight={900}>₹{formattedValue}</Typography>
+            <Typography fontWeight={900} sx={{ color: "#0f172a" }}>
+              ₹{formattedValue}
+            </Typography>
 
-            <IconButton size="small" sx={{ p: 0 }}>
+            <IconButton size="small" sx={{ p: 0.4 }}>
               {opened ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </IconButton>
           </Box>
@@ -168,11 +203,12 @@ export default function ProductCard({
               left: 0,
               width: "100%",
               mt: 1,
-              borderRadius: 2,
-              bgcolor: "white",
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+              borderRadius: 3,
+              bgcolor: "rgba(255,255,255,0.98)",
+              border: "1px solid rgba(226,232,240,0.95)",
+              boxShadow: "0 22px 55px rgba(15,23,42,0.4)",
               zIndex: 40,
+              backdropFilter: "blur(18px)",
             }}>
             {/* TITLE */}
             <Box
@@ -180,10 +216,10 @@ export default function ProductCard({
                 p: 1.4,
                 px: 2,
                 fontWeight: 700,
-                borderBottom: "1px solid #e2e8f0",
-                bgcolor: "#f8fafc",
+                borderBottom: "1px solid rgba(226,232,240,0.95)",
+                bgcolor: "rgba(248,250,252,0.96)",
                 fontSize: "1rem",
-                color: "#1e293b",
+                color: "#0f172a",
               }}>
               {item.name}
               {item.sku && (
@@ -201,10 +237,13 @@ export default function ProductCard({
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr",
                 p: 1.2,
-                bgcolor: "#f8fafc",
-                borderBottom: "1px solid #e2e8f0",
+                bgcolor: "rgba(248,250,252,0.95)",
+                borderBottom: "1px solid rgba(226,232,240,0.95)",
                 fontWeight: 700,
                 fontSize: "0.85rem",
+                color: "#6b7280",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
               }}>
               <span>Weight</span>
               <span>Units</span>
@@ -220,7 +259,7 @@ export default function ProductCard({
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr 1fr 1fr",
                   p: 1.2,
-                  borderBottom: "1px dashed #e2e8f0",
+                  borderBottom: "1px dashed rgba(226,232,240,0.9)",
                   fontSize: "0.9rem",
                 }}>
                 <span>{gram}g</span>
@@ -238,7 +277,7 @@ export default function ProductCard({
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr",
                 p: 1.2,
-                bgcolor: "#1e293b",
+                bgcolor: "#020617",
                 color: "white",
                 fontWeight: 700,
               }}>
@@ -264,7 +303,7 @@ export default function ProductCard({
   /* LIST VIEW (no name inside dropdown) */
   if (view === "list") {
     return (
-      <Box sx={{ ...cardBase, mb: 2, p: 2 }}>
+      <Box sx={{ ...cardBase, mb: 2, p: 2.1 }}>
         {/* TOP ROW */}
         <Box
           onClick={onToggle}
@@ -284,6 +323,7 @@ export default function ProductCard({
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
+                color: "#0f172a",
               }}>
               {item.name}
             </Typography>
@@ -312,6 +352,7 @@ export default function ProductCard({
               flex: 1.5,
               textAlign: "right",
               fontWeight: 700,
+              color: "#0f172a",
             }}>
             ₹{formattedValue}
           </Typography>
@@ -330,11 +371,17 @@ export default function ProductCard({
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(index);
+              }}
+              sx={{
+                bgcolor: "rgba(15,23,42,0.02)",
+                "&:hover": {
+                  bgcolor: "rgba(15,23,42,0.06)",
+                },
               }}>
               <Edit size={16} />
             </IconButton>
 
-            <IconButton size="small" sx={{ p: 0 }}>
+            <IconButton size="small" sx={{ p: 0.4 }}>
               {opened ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
             </IconButton>
           </Box>
@@ -345,10 +392,11 @@ export default function ProductCard({
           <Box
             sx={{
               mt: 1,
-              borderRadius: 2,
+              borderRadius: 3,
               overflow: "hidden",
-              border: "1px solid #e2e8f0",
-              bgcolor: "white",
+              border: "1px solid rgba(226,232,240,0.96)",
+              bgcolor: "rgba(255,255,255,0.98)",
+              backdropFilter: "blur(16px)",
             }}>
             {/* HEADER ROW (no name here) */}
             <Box
@@ -356,10 +404,13 @@ export default function ProductCard({
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr",
                 p: 1.2,
-                bgcolor: "#eef2ff",
-                borderBottom: "1px solid #e2e8f0",
+                bgcolor: "rgba(238,242,255,0.96)",
+                borderBottom: "1px solid rgba(226,232,240,0.96)",
                 fontWeight: 600,
                 fontSize: "0.85rem",
+                color: "#6b7280",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
               }}>
               <span>Weight</span>
               <span>Units</span>
@@ -375,7 +426,7 @@ export default function ProductCard({
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr 1fr 1fr",
                   p: 1.2,
-                  borderBottom: "1px dashed #e2e8f0",
+                  borderBottom: "1px dashed rgba(226,232,240,0.9)",
                   fontSize: "0.9rem",
                 }}>
                 <span>{gram}g</span>
@@ -393,7 +444,7 @@ export default function ProductCard({
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr 1fr 1fr",
                 p: 1.2,
-                bgcolor: "#1e293b",
+                bgcolor: "#020617",
                 color: "white",
                 fontWeight: 700,
               }}>

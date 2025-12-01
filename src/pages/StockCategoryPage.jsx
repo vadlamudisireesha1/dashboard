@@ -152,7 +152,18 @@ export default function ProductCategory() {
   /* ========= RENDER ========= */
 
   return (
-    <Box sx={{ p: 4, background: "#fffbf5ff", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        p: 4,
+        minHeight: "100vh",
+
+        background:
+          "linear-gradient(135deg, #f4f7fb 0%, #ffffff 60%, #eef2f7 100%)",
+
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+      }}>
       <StockHeader
         title={data.title}
         productCount={pickles.length}

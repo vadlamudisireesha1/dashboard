@@ -120,10 +120,46 @@ const HistoryModal = forwardRef(function HistoryModal(
   /* ---------- UI RENDER ---------- */
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Edit History</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="md"
+      PaperProps={{
+        sx: {
+          borderRadius: "24px",
+          background:
+            "radial-gradient(circle at top, rgba(255,255,255,0.98), rgba(248,250,252,0.94))",
+          backdropFilter: "blur(22px)",
+          border: "1px solid rgba(148,163,184,0.4)",
+          boxShadow: "0 26px 70px rgba(15,23,42,0.45)",
+        },
+      }}>
+      <DialogTitle
+        sx={{
+          fontWeight: 800,
+          fontSize: "1.4rem",
+          pb: 1.5,
+          borderBottom: "1px solid rgba(226,232,240,0.9)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}>
+        Edit History
+        <Typography
+          variant="caption"
+          sx={{ color: "#6b7280", fontWeight: 500 }}>
+          {history.length} entr{history.length === 1 ? "y" : "ies"}
+        </Typography>
+      </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent
+        dividers
+        sx={{
+          px: 3.5,
+          py: 2.5,
+          background: "transparent",
+        }}>
         {history.length === 0 && (
           <Typography color="text.secondary">No edits recorded yet.</Typography>
         )}
@@ -135,20 +171,32 @@ const HistoryModal = forwardRef(function HistoryModal(
               key={idx}
               sx={{
                 mb: 2.5,
-                pb: 1.5,
-                borderBottom: "1px solid #e5e7eb",
+                p: 1.8,
+                borderRadius: 3,
+                border: "1px solid rgba(226,232,240,0.9)",
+                background: "rgba(255,255,255,0.9)",
+                boxShadow: "0 12px 30px rgba(15,23,42,0.12)",
+                transition:
+                  "box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease",
+                "&:hover": {
+                  boxShadow: "0 18px 40px rgba(15,23,42,0.18)",
+                  transform: "translateY(-2px)",
+                  borderColor: "rgba(148,163,184,0.9)",
+                },
               }}>
-              <Typography fontWeight={700}>
+              <Typography fontWeight={700} sx={{ color: "#0f172a" }}>
                 {entry.productName || "Unnamed Product"}
               </Typography>
 
               {entry.sku && (
-                <Typography variant="caption" sx={{ color: "#64748b" }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: "#64748b", display: "block", mt: 0.3 }}>
                   SKU: {entry.sku}
                 </Typography>
               )}
 
-              <Typography variant="body2" sx={{ mt: 0.5, color: "#6b7280" }}>
+              <Typography variant="body2" sx={{ mt: 0.8, color: "#6b7280" }}>
                 Action:{" "}
                 <strong style={{ textTransform: "capitalize" }}>
                   {entry.action}
@@ -179,12 +227,16 @@ const HistoryModal = forwardRef(function HistoryModal(
         })}
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions sx={{ px: 3, py: 1.8 }}>
         <Button
-          onClick={() => {
-            // optional clear history button (can remove if not needed)
-            // persistHistory([]);
-            onClose();
+          onClick={onClose}
+          sx={{
+            ml: "auto",
+            textTransform: "none",
+            borderRadius: "999px",
+            px: 3,
+            py: 0.8,
+            color: "#6b7280",
           }}>
           Close
         </Button>
