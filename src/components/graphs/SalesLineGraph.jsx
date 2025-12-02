@@ -1,4 +1,8 @@
+// SalesLineGraph.jsx
 import React, { useState, useMemo } from "react";
+import Avatar from "@mui/material/Avatar";
+import { alpha } from "@mui/material/styles";
+
 import {
   Box,
   Paper,
@@ -22,91 +26,127 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { Calendar, TrendingUp, ListFilter } from "lucide-react";
-
 import {
   CATEGORY_KEYS,
   CATEGORY_LABELS,
   CATEGORY_COLORS,
   filterItemsByCategory,
   buildFullDateSpan,
+  buildLastNDaysSpan,
+  filterItemsByDateRange,
+  getAvailableDates,
+  dateKey,
 } from "./graphUtils";
-
-const HIGHLIGHT_BLUE = "#0098FF";
+import { Calendar, TrendingUp } from "lucide-react";
 
 export default function SalesLineGraph({ items }) {
   const [category, setCategory] = useState("all");
-  const [range, setRange] = useState("all");
+  const [range, setRange] = useState("30");
   const [customOpen, setCustomOpen] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
 
-  // ---------- DATA BUILD ----------
-  const baseData = useMemo(() => {
-    const filtered = filterItemsByCategory(items, category);
-    if (!filtered?.length) return [];
+  const [tmpMode, setTmpMode] = useState("range");
+  const [tmpFrom, setTmpFrom] = useState("");
+  const [tmpTo, setTmpTo] = useState("");
+  const [tmpDate, setTmpDate] = useState("");
+  const [committedCustom, setCommittedCustom] = useState(null);
 
-    const dates = buildFullDateSpan(filtered);
+  const availableDates = useMemo(() => getAvailableDates(items), [items]);
+  const minAvailable = availableDates[0] || "";
+  const maxAvailable = availableDates[availableDates.length - 1] || "";
+
+  const categoryFilteredItems = useMemo(
+    () => filterItemsByCategory(items || [], category),
+    [items, category]
+  );
+
+  const trimmedItems = useMemo(() => {
+    if (range === "custom" && committedCustom) {
+      if (committedCustom.mode === "single") {
+        return filterItemsByDateRange(categoryFilteredItems, {
+          date: committedCustom.date,
+        });
+      } else {
+        return filterItemsByDateRange(categoryFilteredItems, {
+          from: committedCustom.from,
+          to: committedCustom.to,
+        });
+      }
+    }
+    return categoryFilteredItems;
+  }, [range, committedCustom, categoryFilteredItems]);
+
+  const buildDates = (trimmed) => {
+    if (range === "custom" && committedCustom) {
+      if (committedCustom.mode === "single" && committedCustom.date)
+        return [committedCustom.date];
+      if (
+        committedCustom.mode === "range" &&
+        committedCustom.from &&
+        committedCustom.to
+      ) {
+        const span = buildFullDateSpan(trimmed || []);
+        return span.filter(
+          (d) => d >= committedCustom.from && d <= committedCustom.to
+        );
+      }
+    }
+    if (range === "all") return buildFullDateSpan(categoryFilteredItems);
+    if (["7", "15", "30", "90"].includes(range))
+      return buildLastNDaysSpan(categoryFilteredItems, Number(range));
+    return buildFullDateSpan(categoryFilteredItems);
+  };
+
+  const data = useMemo(() => {
+    const dates = buildDates(trimmedItems);
+    if (!dates || !dates.length) return [];
     return dates.map((date) => {
-      const units = filtered.reduce((sum, item) => {
-        const entry = item.salesHistory?.find((s) => s.date === date);
+      const units = (trimmedItems || []).reduce((sum, item) => {
+        const entry = (item.salesHistory || []).find(
+          (s) => dateKey(s?.date) === date
+        );
         return sum + Number(entry?.unitsSold || 0);
       }, 0);
-
       return { date, units };
     });
-  }, [items, category]);
-
-  const filteredData = useMemo(() => {
-    if (!baseData.length) return [];
-
-    if (range === "all") return baseData;
-
-    if (["7", "15", "30"].includes(range)) {
-      const n = Number(range);
-      return baseData.slice(-n);
-    }
-
-    if (range === "custom" && fromDate && toDate) {
-      const from = new Date(fromDate);
-      const to = new Date(toDate);
-      return baseData.filter((d) => {
-        const date = new Date(d.date);
-        return date >= from && date <= to;
-      });
-    }
-
-    return baseData;
-  }, [baseData, range, fromDate, toDate]);
+  }, [trimmedItems, range, committedCustom, categoryFilteredItems]);
 
   const applyCustomRange = () => {
-    if (fromDate && toDate) {
-      setRange("custom");
+    if (tmpMode === "single" && tmpDate) {
+      setCommittedCustom({ mode: "single", date: tmpDate });
+      setCustomOpen(false);
+      return;
+    }
+    if (tmpMode === "range" && tmpFrom && tmpTo) {
+      setCommittedCustom({ mode: "range", from: tmpFrom, to: tmpTo });
       setCustomOpen(false);
     }
   };
 
   const cancelCustom = () => {
-    setFromDate("");
-    setToDate("");
+    setTmpFrom("");
+    setTmpTo("");
+    setTmpDate("");
+    setTmpMode("range");
     setCustomOpen(false);
   };
 
-  const currentColor =
-    category === "all" ? HIGHLIGHT_BLUE : CATEGORY_COLORS[category];
+  const currentColor = category === "all" ? "#0098FF" : CATEGORY_COLORS[category];
+
+  if (!data || data.length === 0) {
+    return (
+      <Paper elevation={0} sx={{ p: 4, borderRadius: 4 }}>
+        <Typography variant="h6" sx={{ mb: 1 }}>
+          No daily sales data for the selected filters
+        </Typography>
+        <Typography variant="body2">
+          Try a broader date range or a different category.
+        </Typography>
+      </Paper>
+    );
+  }
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        p: 4,
-        borderRadius: 4,
-        background: "linear-gradient(180deg,#ffffff,#f8fbff)",
-        boxShadow: "0 20px 40px rgba(0,0,0,0.05)",
-        position: "relative",
-        border: "1px solid #eef3f8",
-      }}>
-      {/* HEADER */}
+    <Paper elevation={0} sx={{ p: 4, borderRadius: 4, position: "relative" }}>
       <Box
         sx={{
           display: "flex",
@@ -114,8 +154,8 @@ export default function SalesLineGraph({ items }) {
           flexWrap: "wrap",
           alignItems: "center",
           mb: 2.5,
-          gap: 2,
-        }}>
+        }}
+      >
         <Box>
           <Typography
             variant="h6"
@@ -125,51 +165,29 @@ export default function SalesLineGraph({ items }) {
               display: "flex",
               alignItems: "center",
               gap: 1,
-              letterSpacing: "-0.5px",
-            }}>
-            <TrendingUp size={22} />
-            Daily Sales Trend
+            }}
+          >
+            <TrendingUp size={22} /> Daily Sales Trend
           </Typography>
-
           <Typography sx={{ color: "#64748b", fontSize: 14 }}>
             Visualize sales movement over selected days.
           </Typography>
         </Box>
 
-        {/* SELECTED CATEGORY WITH DROPDOWN */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            background: "rgba(0,152,255,0.08)",
-            px: 1.5,
-            py: 1,
-            borderRadius: "14px",
-            border: "1px solid rgba(0,152,255,0.2)",
-          }}>
-          <Typography sx={{ fontSize: 16, fontWeight: 600, color: "#475569" }}>
-            Selected:
-          </Typography>
-
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <FormControl size="small">
             <Select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               sx={{
                 minWidth: 140,
-                borderRadius: "10px",
-                background: "#ffffff",
-                ".MuiOutlinedInput-notchedOutline": {
-                  borderColor: "transparent",
+                "& .MuiSelect-select": {
+                  transition: "transform 0.12s ease",
                 },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#cbd5e1",
-                },
-                fontSize: 14,
-                fontWeight: 500,
-                px: 0.5,
-              }}>
+                "&:hover": { transform: "translateY(-2px)" },
+                "&:active": { transform: "scale(0.99)" },
+              }}
+            >
               <MenuItem value="all">All Categories</MenuItem>
               {CATEGORY_KEYS.map((key) => (
                 <MenuItem key={key} value={key}>
@@ -178,78 +196,57 @@ export default function SalesLineGraph({ items }) {
               ))}
             </Select>
           </FormControl>
+
+         <Box sx={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap", marginLeft: "auto" }}>
+  <ToggleButtonGroup
+    exclusive
+    value={range}
+    onChange={(_, v) => {
+      if (!v) return;
+      setRange(v);
+      if (v === "custom") {
+        setCustomOpen(true);
+        setCommittedCustom(null);
+      } else {
+        setCustomOpen(false);
+        setCommittedCustom(null);
+      }
+    }}
+    onClick={(e) => e.stopPropagation()}
+    sx={{
+      display: "flex",
+      gap: 1.25,
+      "& .MuiToggleButton-root": {
+        borderRadius: "10px",
+        px: 1.6,
+        py: 0.6,
+        minWidth: 56,
+        textTransform: "none",
+        fontWeight: 600,
+        transition: "background 180ms ease, transform 140ms ease, color 140ms",
+        "&:hover": { transform: "translateY(-3px)" },
+        "&.Mui-selected": {
+          // selected toggle style (soft blue glow + slightly darker bg)
+          background: "linear-gradient(180deg, rgba(94,166,238,0.14), rgba(94,166,238,0.10))",
+          color: "rgb(13,60,97)",
+          boxShadow: "0 4px 12px rgba(94,166,238,0.12)",
+        },
+        "&:active": { transform: "scale(0.985)" },
+      },
+    }}
+  >
+    <ToggleButton value="all">All</ToggleButton>
+    <ToggleButton value="7">7d</ToggleButton>
+    <ToggleButton value="15">15d</ToggleButton>
+    <ToggleButton value="30">30d</ToggleButton>
+    <ToggleButton value="custom"><Calendar size={16} />&nbsp;Custom</ToggleButton>
+  </ToggleButtonGroup>
+</Box>
+
         </Box>
       </Box>
 
-      {/* FILTER CONTROLS */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: 2,
-          mb: 2,
-        }}>
-        {/* RANGE BUTTONS */}
-        <Box
-          sx={{
-            display: "flex",
-            gap: 1.5,
-            alignItems: "center",
-            flexWrap: "wrap",
-            ml: "auto",
-          }}>
-          <ToggleButtonGroup
-            exclusive
-            value={range}
-            onChange={(_, v) => v && (setRange(v), setCustomOpen(false))}
-            sx={{
-              display: "flex",
-              gap: "10px",
-              "& .MuiToggleButton-root": {
-                height: 34,
-                px: 1.2,
-                borderRadius: "999px",
-                border: "1px solid #d5e0ec !important",
-                background: "white",
-                textTransform: "none",
-                fontSize: 13,
-                "&.Mui-selected": {
-                  background: HIGHLIGHT_BLUE + " !important",
-                  color: "white",
-                  borderColor: HIGHLIGHT_BLUE + " !important",
-                },
-              },
-            }}>
-            <ToggleButton value="all">All</ToggleButton>
-            <ToggleButton value="7">Last 7 days</ToggleButton>
-            <ToggleButton value="15">Last 15 days</ToggleButton>
-            <ToggleButton value="30">Last 30 days</ToggleButton>
-          </ToggleButtonGroup>
-
-          <Button
-            onClick={() => setCustomOpen((p) => !p)}
-            sx={{
-              height: 34,
-              px: 2,
-              display: "flex",
-              gap: "4px",
-              borderRadius: "999px",
-              border: "1px solid #d5e0ec",
-              background: range === "custom" ? HIGHLIGHT_BLUE : "white",
-              color: range === "custom" ? "white" : "#0f172a",
-              fontSize: 13,
-              "&:hover": {
-                background: range === "custom" ? "#0284c7" : "#f1f5f9",
-              },
-            }}>
-            <Calendar size={16} />
-            Custom
-          </Button>
-        </Box>
-      </Box>
-
-      {/* CUSTOM DATE POPUP */}
+      {/* Custom popup: stopPropagation on root so clicks don't bubble up to header */}
       <Fade in={customOpen}>
         <Paper
           elevation={4}
@@ -259,86 +256,95 @@ export default function SalesLineGraph({ items }) {
             top: 120,
             p: 2.5,
             borderRadius: 3,
-            width: 290,
-            boxShadow: "0 18px 45px rgba(15,23,42,0.18)",
-            border: "1px solid #e2e8f0",
-            background: "white",
-            backdropFilter: "blur(10px)",
-            zIndex: 30,
-          }}>
+            width: 320,
+            zIndex: 9999,
+            pointerEvents: "auto",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
           <Typography sx={{ fontSize: 15, fontWeight: 700, mb: 2 }}>
-            Custom Date Range
+            <Calendar size={16}  />
+            Custom Date
           </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              label="From"
-              type="date"
-              size="small"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
+          <ToggleButtonGroup
+            value={tmpMode}
+            exclusive
+            onChange={(_, v) => v && setTmpMode(v)}
+            size="small"
+            onClick={(e) => e.stopPropagation()}
+            sx={{ mb: 2 }}
+          >
+            <ToggleButton value="range">Range</ToggleButton>
+            <ToggleButton value="single">Specific Date</ToggleButton>
+          </ToggleButtonGroup>
 
+          {tmpMode === "range" ? (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <TextField
+                type="date"
+                label="From"
+                size="small"
+                value={tmpFrom}
+                onChange={(e) => setTmpFrom(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                inputProps={minAvailable ? { min: minAvailable } : {}}
+                sx={{ flex: 1 }}
+              />
+              <TextField
+                type="date"
+                label="To"
+                size="small"
+                value={tmpTo}
+                onChange={(e) => setTmpTo(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                inputProps={maxAvailable ? { max: maxAvailable } : {}}
+                sx={{ flex: 1 }}
+              />
+            </Box>
+          ) : (
             <TextField
-              label="To"
+              fullWidth
               type="date"
+              label="Date"
               size="small"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
+              value={tmpDate}
+              onChange={(e) => setTmpDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
+              inputProps={
+                availableDates.length
+                  ? { min: availableDates[0], max: availableDates[availableDates.length - 1] }
+                  : {}
+              }
             />
-          </Box>
+          )}
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mt: 3,
-            }}>
-            <Button
-              variant="outlined"
-              onClick={cancelCustom}
-              sx={{ borderRadius: 2, fontSize: 13 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+            <Button variant="outlined" onClick={cancelCustom} onMouseDown={(e)=>e.stopPropagation()}>
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              onClick={applyCustomRange}
-              sx={{
-                borderRadius: 2,
-                background: HIGHLIGHT_BLUE,
-                fontSize: 13,
-                "&:hover": { background: "#0284c7" },
-              }}>
+            <Button variant="contained" onClick={applyCustomRange} onMouseDown={(e)=>e.stopPropagation()}>
               Apply
             </Button>
           </Box>
         </Paper>
       </Fade>
 
-      {/* CHART */}
       <Box sx={{ width: "100%", height: 380, mt: 2 }}>
         <ResponsiveContainer>
-          <LineChart data={filteredData}>
+          <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
             <XAxis dataKey="date" tick={{ fontSize: 12 }} />
             <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip
-              contentStyle={{
-                borderRadius: 10,
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 8px 25px rgba(0,0,0,0.08)",
-              }}
-            />
-            <Legend wrapperStyle={{ fontSize: 13 }} />
+            <Tooltip />
+            <Legend />
             <Line
               type="monotone"
               dataKey="units"
               name="Units Sold"
               stroke={currentColor}
               strokeWidth={3}
-              dot={false}
+              dot={true}
               activeDot={{ r: 6 }}
             />
           </LineChart>

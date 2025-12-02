@@ -17,21 +17,10 @@
         { "date": "2025-01-21", "unitsSold": 10, "revenue": 450 },
         { "date": "2025-01-25", "unitsSold": 12, "revenue": 540 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-06", "unitsAdded": 80 },
-        { "date": "2025-01-24", "unitsAdded": 50 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 36,
-        "revenue": 1620,
-        "averageOrderValue": 135
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 144,
-        "revenue": 6050
-      }
+      "restockHistory": [{ "date": "2025-01-06", "unitsAdded": 80 }, { "date": "2025-01-24", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 36, "revenue": 1620, "averageOrderValue": 135 },
+      "monthlySummary": { "totalUnitsSold": 144, "revenue": 6050 }
     },
-
     {
       "id": "POW-000002",
       "sku": "POW-000002",
@@ -48,21 +37,10 @@
         { "date": "2025-01-22", "unitsSold": 9, "revenue": 360 },
         { "date": "2025-01-28", "unitsSold": 10, "revenue": 400 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-05", "unitsAdded": 85 },
-        { "date": "2025-01-27", "unitsAdded": 40 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 30,
-        "revenue": 1200,
-        "averageOrderValue": 120
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 126,
-        "revenue": 4800
-      }
+      "restockHistory": [{ "date": "2025-01-05", "unitsAdded": 85 }, { "date": "2025-01-27", "unitsAdded": 40 }],
+      "weeklySummary": { "totalUnitsSold": 30, "revenue": 1200, "averageOrderValue": 120 },
+      "monthlySummary": { "totalUnitsSold": 126, "revenue": 4800 }
     },
-
     {
       "id": "POW-000003",
       "sku": "POW-000003",
@@ -79,19 +57,69 @@
         { "date": "2025-01-23", "unitsSold": 7, "revenue": 385 },
         { "date": "2025-01-30", "unitsSold": 12, "revenue": 660 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-03", "unitsAdded": 70 },
-        { "date": "2025-01-22", "unitsAdded": 55 }
+      "restockHistory": [{ "date": "2025-01-03", "unitsAdded": 70 }, { "date": "2025-01-22", "unitsAdded": 55 }],
+      "weeklySummary": { "totalUnitsSold": 32, "revenue": 1760, "averageOrderValue": 147 },
+      "monthlySummary": { "totalUnitsSold": 132, "revenue": 7300 }
+    },
+    {
+      "id": "POW-000004",
+      "sku": "POW-000004",
+      "category": "powders",
+      "name": "Curry Powder",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 100, "units": 54, "price": 50 },
+        { "gram": 250, "units": 40, "price": 102 },
+        { "gram": 500, "units": 22, "price": 185 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 32,
-        "revenue": 1760,
-        "averageOrderValue": 147
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 132,
-        "revenue": 7300
-      }
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 10, "revenue": 500 },
+        { "date": "2025-01-24", "unitsSold": 9, "revenue": 459 },
+        { "date": "2025-01-29", "unitsSold": 11, "revenue": 561 }
+      ],
+      "restockHistory": [{ "date": "2025-01-07", "unitsAdded": 80 }, { "date": "2025-01-25", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 30, "revenue": 1520, "averageOrderValue": 127 },
+      "monthlySummary": { "totalUnitsSold": 120, "revenue": 6080 }
+    },
+    {
+      "id": "POW-000005",
+      "sku": "POW-000005",
+      "category": "powders",
+      "name": "Tikka Masala Powder",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 100, "units": 46, "price": 58 },
+        { "gram": 250, "units": 34, "price": 110 },
+        { "gram": 500, "units": 18, "price": 200 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 8, "revenue": 464 },
+        { "date": "2025-01-22", "unitsSold": 12, "revenue": 1320 },
+        { "date": "2025-01-27", "unitsSold": 9, "revenue": 810 }
+      ],
+      "restockHistory": [{ "date": "2025-01-04", "unitsAdded": 60 }, { "date": "2025-01-26", "unitsAdded": 45 }],
+      "weeklySummary": { "totalUnitsSold": 29, "revenue": 2594, "averageOrderValue": 135 },
+      "monthlySummary": { "totalUnitsSold": 116, "revenue": 10384 }
+    },
+    {
+      "id": "POW-000006",
+      "sku": "POW-000006",
+      "category": "powders",
+      "name": "Chaat Masala",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 100, "units": 50, "price": 48 },
+        { "gram": 250, "units": 36, "price": 95 },
+        { "gram": 500, "units": 22, "price": 175 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 11, "revenue": 528 },
+        { "date": "2025-01-23", "unitsSold": 9, "revenue": 855 },
+        { "date": "2025-01-30", "unitsSold": 10, "revenue": 950 }
+      ],
+      "restockHistory": [{ "date": "2025-01-02", "unitsAdded": 75 }, { "date": "2025-01-21", "unitsAdded": 60 }],
+      "weeklySummary": { "totalUnitsSold": 30, "revenue": 2333, "averageOrderValue": 120 },
+      "monthlySummary": { "totalUnitsSold": 120, "revenue": 9320 }
     }
   ]
 }

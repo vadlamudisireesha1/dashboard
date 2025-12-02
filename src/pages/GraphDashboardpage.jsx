@@ -1,3 +1,4 @@
+// src/pages/GraphDashboardpage.jsx
 import React, { useState } from "react";
 import { Box, Grid } from "@mui/material";
 
@@ -8,10 +9,7 @@ import PieChartGraph from "../components/graphs/PieChartGraph";
 import StockSpeedometerGraph from "../components/graphs/SpeedometerGraph";
 import StockVsSalesBarChart from "../components/graphs/StockVsSalesGraph";
 
-import {
-  mergeAllCategories,
-  filterItemsByCategory,
-} from "../components/graphs/graphUtils";
+import { mergeAllCategories, filterItemsByCategory } from "../components/graphs/graphUtils";
 
 // JSON files
 import nonveg from "../data/nonveg.json";
@@ -22,6 +20,7 @@ import readytoeat from "../data/readytoeat.json";
 import organic from "../data/organic.json";
 
 export default function GraphDashboardpage() {
+  // full merged dataset (used by header for its local calculations)
   const allItems = mergeAllCategories(
     vegetable,
     nonveg,
@@ -31,9 +30,11 @@ export default function GraphDashboardpage() {
     organic
   );
 
+  // global category/date states are left for legacy usage but are NOT changed by header now
   const [globalCategory, setGlobalCategory] = useState("all");
   const [date, setDate] = useState("");
 
+  // items passed to graphs (this is the existing workflow)
   const filteredItems = filterItemsByCategory(allItems, globalCategory);
 
   return (
@@ -47,9 +48,11 @@ export default function GraphDashboardpage() {
           "linear-gradient(180deg, #f9fafb 0%, #eef2ff 35%, #e0f2fe 100%)",
       }}>
       <Box sx={{ maxWidth: "1400px", mx: "auto" }}>
-        {/* CLEAN TOP HEADER */}
+        {/* pass both allItems (for header's local calculations) and filteredItems for graphs */}
         <GraphsHeader
-          items={filteredItems}
+          allItems={allItems}       
+          items={filteredItems}  
+ 
           category={globalCategory}
           setCategory={setGlobalCategory}
           date={date}

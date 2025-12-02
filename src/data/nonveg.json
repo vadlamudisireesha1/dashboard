@@ -17,21 +17,10 @@
         { "date": "2025-01-22", "unitsSold": 9, "revenue": 1350 },
         { "date": "2025-01-27", "unitsSold": 6, "revenue": 900 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-10", "unitsAdded": 40 },
-        { "date": "2025-01-25", "unitsAdded": 60 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 28,
-        "revenue": 4300,
-        "averageOrderValue": 153
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 112,
-        "revenue": 16850
-      }
+      "restockHistory": [{ "date": "2025-01-10", "unitsAdded": 40 }, { "date": "2025-01-25", "unitsAdded": 60 }],
+      "weeklySummary": { "totalUnitsSold": 28, "revenue": 4300, "averageOrderValue": 153 },
+      "monthlySummary": { "totalUnitsSold": 112, "revenue": 16850 }
     },
-
     {
       "id": "NON-000002",
       "sku": "NON-000002",
@@ -48,21 +37,10 @@
         { "date": "2025-01-23", "unitsSold": 8, "revenue": 1120 },
         { "date": "2025-01-29", "unitsSold": 3, "revenue": 420 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-08", "unitsAdded": 50 },
-        { "date": "2025-01-19", "unitsAdded": 30 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 21,
-        "revenue": 3200,
-        "averageOrderValue": 152
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 89,
-        "revenue": 13200
-      }
+      "restockHistory": [{ "date": "2025-01-08", "unitsAdded": 50 }, { "date": "2025-01-19", "unitsAdded": 30 }],
+      "weeklySummary": { "totalUnitsSold": 21, "revenue": 3200, "averageOrderValue": 152 },
+      "monthlySummary": { "totalUnitsSold": 89, "revenue": 13200 }
     },
-
     {
       "id": "NON-000003",
       "sku": "NON-000003",
@@ -79,19 +57,69 @@
         { "date": "2025-01-24", "unitsSold": 7, "revenue": 1260 },
         { "date": "2025-01-28", "unitsSold": 6, "revenue": 1080 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-12", "unitsAdded": 35 },
-        { "date": "2025-01-26", "unitsAdded": 45 }
+      "restockHistory": [{ "date": "2025-01-12", "unitsAdded": 35 }, { "date": "2025-01-26", "unitsAdded": 45 }],
+      "weeklySummary": { "totalUnitsSold": 25, "revenue": 4060, "averageOrderValue": 162 },
+      "monthlySummary": { "totalUnitsSold": 95, "revenue": 14880 }
+    },
+    {
+      "id": "NON-000004",
+      "sku": "NON-000004",
+      "category": "nonveg",
+      "name": "Lamb Pickle",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 250, "units": 22, "price": 170 },
+        { "gram": 500, "units": 16, "price": 300 },
+        { "gram": 1000, "units": 10, "price": 520 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 25,
-        "revenue": 4060,
-        "averageOrderValue": 162
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 95,
-        "revenue": 14880
-      }
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 6, "revenue": 1020 },
+        { "date": "2025-01-23", "unitsSold": 8, "revenue": 1360 },
+        { "date": "2025-01-27", "unitsSold": 5, "revenue": 850 }
+      ],
+      "restockHistory": [{ "date": "2025-01-06", "unitsAdded": 45 }, { "date": "2025-01-21", "unitsAdded": 35 }],
+      "weeklySummary": { "totalUnitsSold": 19, "revenue": 3230, "averageOrderValue": 170 },
+      "monthlySummary": { "totalUnitsSold": 76, "revenue": 12920 }
+    },
+    {
+      "id": "NON-000005",
+      "sku": "NON-000005",
+      "category": "nonveg",
+      "name": "Mutton Pickle",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 250, "units": 18, "price": 185 },
+        { "gram": 500, "units": 12, "price": 340 },
+        { "gram": 1000, "units": 8, "price": 620 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 9, "revenue": 1665 },
+        { "date": "2025-01-22", "unitsSold": 6, "revenue": 1110 },
+        { "date": "2025-01-30", "unitsSold": 4, "revenue": 740 }
+      ],
+      "restockHistory": [{ "date": "2025-01-09", "unitsAdded": 40 }, { "date": "2025-01-24", "unitsAdded": 30 }],
+      "weeklySummary": { "totalUnitsSold": 19, "revenue": 3515, "averageOrderValue": 185 },
+      "monthlySummary": { "totalUnitsSold": 76, "revenue": 14060 }
+    },
+    {
+      "id": "NON-000006",
+      "sku": "NON-000006",
+      "category": "nonveg",
+      "name": "Smoked Fish Pickle",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 250, "units": 24, "price": 160 },
+        { "gram": 500, "units": 18, "price": 290 },
+        { "gram": 1000, "units": 12, "price": 510 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 7, "revenue": 1120 },
+        { "date": "2025-01-24", "unitsSold": 5, "revenue": 850 },
+        { "date": "2025-01-28", "unitsSold": 6, "revenue": 960 }
+      ],
+      "restockHistory": [{ "date": "2025-01-11", "unitsAdded": 50 }, { "date": "2025-01-26", "unitsAdded": 40 }],
+      "weeklySummary": { "totalUnitsSold": 18, "revenue": 2930, "averageOrderValue": 162 },
+      "monthlySummary": { "totalUnitsSold": 72, "revenue": 11760 }
     }
   ]
 }

@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+// CategoryTrendGraph.jsx
+import React, { useState, useMemo } from "react";
+import {  Calendar } from "lucide-react";
+ 
+import Avatar from "@mui/material/Avatar";
+import { alpha } from "@mui/material/styles";
+
+
 import {
   Box,
   Paper,
   Typography,
-  ToggleButton,
   ToggleButtonGroup,
+  ToggleButton,
   Button,
   TextField,
   Fade,
@@ -20,194 +27,217 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { LineChart as LineChartIcon, Calendar } from "lucide-react";
 import {
   CATEGORY_KEYS,
   CATEGORY_LABELS,
   CATEGORY_COLORS,
   getCategorySalesTrend,
+  filterItemsByDateRange,
+  getAvailableDates,
+  buildFullDateSpan,
 } from "./graphUtils";
 
-const HIGHLIGHT_BLUE = "#0098FF";
-
 export default function CategoryTrendGraph({ items }) {
-  const [selected, setSelected] = useState(new Set(CATEGORY_KEYS));
+  const [selectedSet, setSelectedSet] = useState(new Set(CATEGORY_KEYS));
   const [range, setRange] = useState("all");
   const [customOpen, setCustomOpen] = useState(false);
 
-  // Custom date state
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [tmpMode, setTmpMode] = useState("range");
+  const [tmpFrom, setTmpFrom] = useState("");
+  const [tmpTo, setTmpTo] = useState("");
+  const [tmpDate, setTmpDate] = useState("");
+  const [committedCustom, setCommittedCustom] = useState(null);
 
-  const data = getCategorySalesTrend(items);
+  const availableDates = useMemo(() => getAvailableDates(items), [items]);
+  const minAvailable = availableDates[0] || "";
+  const maxAvailable = availableDates[availableDates.length - 1] || "";
 
-  // -------------------------------
-  //     FILTERING LOGIC
-  // -------------------------------
-  const applyCustomRange = () => {
-    if (!fromDate || !toDate) return;
-    setRange("custom");
-    setCustomOpen(false);
-  };
-
-  const cancelCustom = () => {
-    setFromDate("");
-    setToDate("");
-    setCustomOpen(false);
-  };
-
-  const getDisplayedData = () => {
-    if (range === "all") return data;
-
-    // pre-set ranges
-    if (["7", "15", "30"].includes(range)) {
-      const n = Number(range);
-      if (!data || data.length <= n) return data;
-      return data.slice(data.length - n);
-    }
-
-    // custom range filtering
-    if (range === "custom" && fromDate && toDate) {
-      const from = new Date(fromDate);
-      const to = new Date(toDate);
-
-      return data.filter((entry) => {
-        const entryDate = new Date(entry.date);
-        return entryDate >= from && entryDate <= to;
-      });
-    }
-
-    return data;
-  };
-
-  const displayedData = getDisplayedData();
-
-  // -------------------------------
-  //   TOGGLE CATEGORY CHIP
-  // -------------------------------
   const toggleCategory = (key) => {
-    setSelected((prev) => {
+    setSelectedSet((prev) => {
       const next = new Set(prev);
       next.has(key) ? next.delete(key) : next.add(key);
       return next;
     });
   };
 
+  const trimmedItems = useMemo(() => {
+    if (range === "custom" && committedCustom) {
+      if (committedCustom.mode === "single")
+        return filterItemsByDateRange(items || [], { date: committedCustom.date });
+      return filterItemsByDateRange(items || [], { from: committedCustom.from, to: committedCustom.to });
+    }
+    return items;
+  }, [items, range, committedCustom]);
+
+  const raw = useMemo(() => getCategorySalesTrend(trimmedItems || []), [trimmedItems]);
+
+  const displayedData = useMemo(() => {
+    if (!raw || raw.length === 0) return [];
+    if (range === "all") return raw;
+    if (["7", "15", "30"].includes(range)) {
+      const n = Number(range);
+      return raw.length <= n ? raw : raw.slice(raw.length - n);
+    }
+    if (range === "custom" && committedCustom) {
+      if (committedCustom.mode === "single" && committedCustom.date) {
+        return raw.filter((r) => r.date === committedCustom.date);
+      }
+      if (committedCustom.mode === "range" && committedCustom.from && committedCustom.to) {
+        const from = new Date(committedCustom.from);
+        const to = new Date(committedCustom.to);
+        return raw.filter((r) => {
+          const d = new Date(r.date);
+          return d >= from && d <= to;
+        });
+      }
+    }
+    return raw;
+  }, [raw, range, committedCustom]);
+
+  const applyCustomRange = () => {
+    if (tmpMode === "single" && tmpDate) {
+      setCommittedCustom({ mode: "single", date: tmpDate });
+      setCustomOpen(false);
+      return;
+    }
+    if (tmpMode === "range" && tmpFrom && tmpTo) {
+      setCommittedCustom({ mode: "range", from: tmpFrom, to: tmpTo });
+      setCustomOpen(false);
+    }
+  };
+
+  const cancelCustom = () => {
+    setTmpFrom("");
+    setTmpTo("");
+    setTmpDate("");
+    setTmpMode("range");
+    setCustomOpen(false);
+  };
+
+  if (!displayedData || displayedData.length === 0) {
+    return (
+      <Paper elevation={0} sx={{ p: 4, borderRadius: 4 }}>
+        <Typography variant="h6" sx={{ mb: 1 }}>
+          No category sales data for the selected filters
+        </Typography>
+        <Typography variant="body2">Try changing the date range or category selection.</Typography>
+      </Paper>
+    );
+  }
+
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        background: "white",
-        borderRadius: 4,
-        p: 3.5,
-        boxShadow: "0 12px 40px rgba(0,0,0,0.06)",
-        position: "relative",
-      }}>
-      {/* Header */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mb: 2,
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 2,
-        }}>
-        <Box>
-          <Typography
-            variant="h6"
-            sx={{
-              m: 0,
-              fontSize: 22,
-              fontWeight: 800,
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}>
-            <LineChartIcon size={18} strokeWidth={2.2} />
+    <Paper elevation={3} sx={{ p: 3.5, borderRadius: 4, position: "relative" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, alignItems: "center", flexWrap: "wrap", gap: 4 }}>
+        <Box >
+          <Typography variant="h4" sx={{  fontWeight: 800, display: "flex", alignItems: "center", gap: 1 }}>
             Multi-Category Sales Comparison
           </Typography>
-          <Typography sx={{ m: 0, color: "#64748b", fontSize: 13, mt: 0.5 }}>
-            Compare trends across all product groups.
-          </Typography>
+          <Typography sx={{ color: "#64748b", fontSize: 13 }}>Compare trends across all product groups.</Typography>
         </Box>
+{/* dates */}
+        <Box sx={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap", marginLeft: "auto" }}>
+  <ToggleButtonGroup
+    exclusive
+    value={range}
+    onChange={(_, v) => {
+      if (!v) return;
+      setRange(v);
+      if (v === "custom") {
+        setCustomOpen(true);
+        setCommittedCustom(null);
+      } else {
+        setCustomOpen(false);
+        setCommittedCustom(null);
+      }
+    }}
+    onClick={(e) => e.stopPropagation()}
+    sx={{
+      display: "flex",
+      gap: 1.25,
+      "& .MuiToggleButton-root": {
+        borderRadius: "10px",
+        px: 1.6,
+        py: 0.6,
+        minWidth: 56,
+        textTransform: "none",
+        fontWeight: 600,
+        transition: "background 180ms ease, transform 140ms ease, color 140ms",
+        "&:hover": { transform: "translateY(-3px)" },
+        "&.Mui-selected": {
+          // selected toggle style (soft blue glow + slightly darker bg)
+          background: "linear-gradient(180deg, rgba(94,166,238,0.14), rgba(94,166,238,0.10))",
+          color: "rgb(13,60,97)",
+          boxShadow: "0 4px 12px rgba(94,166,238,0.12)",
+        },
+        "&:active": { transform: "scale(0.985)" },
+      },
+    }}
+  >
+    <ToggleButton value="all">All</ToggleButton>
+    <ToggleButton value="7">7d</ToggleButton>
+    <ToggleButton value="15">15d</ToggleButton>
+    <ToggleButton value="30">30d</ToggleButton>
+    <ToggleButton value="custom"><Calendar size={16} />&nbsp;Custom</ToggleButton>
+  </ToggleButtonGroup>
+</Box>
 
-        {/* FILTER BUTTONS ROW */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-            ml: "auto",
-            flexWrap: "wrap",
-          }}>
-          {/* RANGE BUTTONS */}
-          <ToggleButtonGroup
-            exclusive
-            value={range}
-            onChange={(_, v) => {
-              if (v) {
-                setRange(v);
-                setCustomOpen(false);
-              }
-            }}
-            sx={{
-              display: "flex",
-              gap: "8px",
-              "& .MuiToggleButton-root": {
-                height: 32,
-                px: 1.5,
-                borderRadius: "50px !important",
-                border: "1px solid #dce1e8 !important",
-                backgroundColor: "white",
-                textTransform: "none",
-                fontSize: "13px",
-                color: "#0f172a",
-                "&.Mui-selected": {
-                  backgroundColor: `${HIGHLIGHT_BLUE} !important`,
-                  color: "white !important",
-                  borderColor: `${HIGHLIGHT_BLUE} !important`,
-                },
-                "&:hover": {
-                  backgroundColor: "#f1f5f9",
-                },
-              },
-            }}>
-            <ToggleButton value="all">All</ToggleButton>
-            <ToggleButton value="7">Last 7 days</ToggleButton>
-            <ToggleButton value="15">Last 15 days</ToggleButton>
-            <ToggleButton value="30">Last 30 days</ToggleButton>
-          </ToggleButtonGroup>
-
-          {/* CUSTOM BUTTON */}
-          <Button
-            onClick={() => {
-              setCustomOpen((p) => !p);
-              setRange("custom");
-            }}
-            sx={{
-              height: 32,
-              px: 1.5,
-              borderRadius: "50px",
-              border: "1px solid #dce1e8",
-              backgroundColor: range === "custom" ? HIGHLIGHT_BLUE : "white",
-              color: range === "custom" ? "white" : "#0f172a",
-              fontSize: "13px",
-              textTransform: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              "&:hover": {
-                backgroundColor: range === "custom" ? "#0078d1" : "#f1f5f9",
-              },
-            }}>
-            <Calendar size={16} />
-            Custom
-          </Button>
-        </Box>
       </Box>
+{/* data category display */}
+      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
+  {CATEGORY_KEYS.map((key) => {
+    const selected = selectedSet.has(key);
+    const color = CATEGORY_COLORS[key] || "#999";
+    return (
+      
+           <Chip
+  key={key}
+  clickable
+  onClick={(e) => {
+    e.stopPropagation();
+    toggleCategory(key);
+  }}
+  label={CATEGORY_LABELS[key]}
+  variant="filled"
+  avatar={
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        borderRadius: "50%",
+        backgroundColor: color,
+      }}
+    />
+  }
+  sx={{
+    borderRadius: "999px",
+    px: 1.5,
+    py: 0.25,
+    backgroundColor: selected ? alpha(color, 0.10) : "#e5f3ff",
+    color: selected ? color : "inherit",
+    fontSize: 15,
+    fontWeight: 600,
 
-      {/* CUSTOM RANGE POPUP */}
+     
+    "& .MuiChip-avatar": {
+      width: 10,             
+      height: 10,
+      marginLeft: 0,
+      marginRight: 0.8,
+      borderRadius: "50%",
+      boxShadow: 1,
+      backgroundColor: color,
+    },
+
+    transition: "transform 0.12s ease, background 0.12s ease, color 0.12s ease",
+    "&:hover": { transform: "translateY(-3px)" },
+    "&:active": { transform: "scale(0.98)", backgroundColor: selected ? alpha(color, 0.18) : "#dbeeff" },
+    border: selected ? `1px solid ${alpha(color, 0.35)}` : "none",
+  }}
+/>
+ 
+    );
+  })}
+</Box>
       <Fade in={customOpen}>
         <Paper
           elevation={4}
@@ -217,136 +247,79 @@ export default function CategoryTrendGraph({ items }) {
             top: 90,
             p: 2.5,
             borderRadius: 3,
-            backgroundColor: "rgba(255,255,255,0.98)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(230,230,230,0.7)",
-            boxShadow: "0 12px 30px rgba(0,0,0,0.12)",
-            width: 280,
-            zIndex: 30,
-          }}>
+            width: 320,
+            zIndex: 9999,
+            pointerEvents: "auto",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
           <Typography sx={{ fontSize: 14, fontWeight: 600, mb: 1.5 }}>
-            Select Date Range
+            Select Date Range / Single
           </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-            {/* From Date */}
-            <TextField
-              label="From"
-              type="date"
-              size="small"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                  backgroundColor: "#f8fafc",
-                },
-              }}
-            />
+          <ToggleButtonGroup
+            value={tmpMode}
+            exclusive
+            onChange={(_, v) => v && setTmpMode(v)}
+            size="small"
+            sx={{ mb: 2 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ToggleButton value="range">Range</ToggleButton>
+            <ToggleButton value="single">Specific Date</ToggleButton>
+          </ToggleButtonGroup>
 
-            {/* To Date */}
+          {tmpMode === "range" ? (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <TextField
+                type="date"
+                label="From"
+                size="small"
+                value={tmpFrom}
+                onChange={(e) => setTmpFrom(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                inputProps={minAvailable ? { min: minAvailable } : {}}
+                sx={{ flex: 1 }}
+              />
+              <TextField
+                type="date"
+                label="To"
+                size="small"
+                value={tmpTo}
+                onChange={(e) => setTmpTo(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                inputProps={maxAvailable ? { max: maxAvailable } : {}}
+                sx={{ flex: 1 }}
+              />
+            </Box>
+          ) : (
             <TextField
-              label="To"
+              fullWidth
               type="date"
+              label="Date"
               size="small"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
+              value={tmpDate}
+              onChange={(e) => setTmpDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 2,
-                  backgroundColor: "#f8fafc",
-                },
-              }}
+              inputProps={
+                availableDates.length
+                  ? { min: availableDates[0], max: availableDates[availableDates.length - 1] }
+                  : {}
+              }
             />
-          </Box>
+          )}
 
-          {/* Buttons */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mt: 2,
-            }}>
-            <Button
-              variant="outlined"
-              onClick={cancelCustom}
-              sx={{
-                borderRadius: 2,
-                textTransform: "none",
-                fontSize: 13,
-              }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+            <Button variant="outlined" onClick={cancelCustom} onMouseDown={(e)=>e.stopPropagation()}>
               Cancel
             </Button>
-
-            <Button
-              variant="contained"
-              onClick={applyCustomRange}
-              sx={{
-                borderRadius: 2,
-                textTransform: "none",
-                fontSize: 13,
-                backgroundColor: HIGHLIGHT_BLUE,
-                "&:hover": { backgroundColor: "#0078d1" },
-              }}>
+            <Button variant="contained" onClick={applyCustomRange} onMouseDown={(e)=>e.stopPropagation()}>
               Apply
             </Button>
           </Box>
         </Paper>
       </Fade>
 
-      {/* Category Chips */}
-      <Box
-        sx={{
-          display: "flex",
-          gap: 1,
-          flexWrap: "wrap",
-          mb: 2,
-          mt: 1,
-        }}>
-        {CATEGORY_KEYS.map((key) => (
-          <Chip
-            key={key}
-            clickable
-            onClick={() => toggleCategory(key)}
-            label={CATEGORY_LABELS[key]}
-            variant="filled"
-            sx={{
-              borderRadius: "999px",
-              px: 1.5,
-              py: 0.25,
-              backgroundColor: "#e5f3ff",
-              color: "#0f172a",
-              fontSize: 13,
-              "&:hover": {
-                backgroundColor: "#d7ecff",
-              },
-              display: "flex",
-              alignItems: "center",
-              gap: 0.75,
-              ".MuiChip-label": {
-                display: "flex",
-                alignItems: "center",
-                gap: 0.75,
-              },
-            }}
-            icon={
-              <Box
-                component="span"
-                sx={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  backgroundColor: CATEGORY_COLORS[key],
-                }}
-              />
-            }
-          />
-        ))}
-      </Box>
-
-      {/* Graph */}
       <Box sx={{ width: "100%", height: 360 }}>
         <ResponsiveContainer>
           <LineChart data={displayedData}>
@@ -355,8 +328,7 @@ export default function CategoryTrendGraph({ items }) {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
             <Legend />
-
-            {CATEGORY_KEYS.filter((k) => selected.has(k)).map((key) => (
+            {CATEGORY_KEYS.filter((k) => selectedSet.has(k)).map((key) => (
               <Line
                 key={key}
                 type="monotone"
@@ -366,7 +338,6 @@ export default function CategoryTrendGraph({ items }) {
                 strokeWidth={2.5}
                 dot={false}
                 activeDot={{ r: 5 }}
-                animationDuration={1200}
               />
             ))}
           </LineChart>

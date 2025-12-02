@@ -1,221 +1,153 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Paper,
-  Typography,
-  ToggleButtonGroup,
-  ToggleButton,
-  Button,
-  TextField,
-  Fade,
-} from "@mui/material";
-import {
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Bar,
-  ResponsiveContainer,
-} from "recharts";
-import { BarChart3, Calendar } from "lucide-react";
-import { getStockVsSalesByCategory } from "./graphUtils";
+// StockVsSalesGraph.jsx
+import React, { useState, useMemo } from "react";
 
-const HIGHLIGHT_BLUE = "#0098FF";
+import { Box, Paper, Typography, ToggleButtonGroup, ToggleButton, Button, TextField, Fade } from "@mui/material";
+import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, ResponsiveContainer } from "recharts";
+import { BarChart3, Calendar } from "lucide-react";
+import { getStockVsSalesByCategory, filterItemsByDateRange, getAvailableDates } from "./graphUtils";
 
 export default function StockVsSalesGraph({ items }) {
   const [range, setRange] = useState("all");
   const [customOpen, setCustomOpen] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
 
-  // NOTE: no date in this data, so range does NOT change numbers.
-  const baseData = getStockVsSalesByCategory(items);
+  const [tmpMode, setTmpMode] = useState("range");
+  const [tmpFrom, setTmpFrom] = useState("");
+  const [tmpTo, setTmpTo] = useState("");
+  const [tmpDate, setTmpDate] = useState("");
+  const [committedCustom, setCommittedCustom] = useState(null);
+
+  const availableDates = useMemo(() => getAvailableDates(items), [items]);
+  const minAvailable = availableDates[0] || "";
+  const maxAvailable = availableDates[availableDates.length - 1] || "";
+
+  const trimmedItems = useMemo(() => {
+    if (range === "custom" && committedCustom) {
+      if (committedCustom.mode === "single") {
+        return filterItemsByDateRange(items || [], { date: committedCustom.date });
+      } else {
+        return filterItemsByDateRange(items || [], { from: committedCustom.from, to: committedCustom.to });
+      }
+    }
+    return items;
+  }, [range, committedCustom, items]);
+
+  const baseData = useMemo(() => getStockVsSalesByCategory(trimmedItems || []), [trimmedItems]);
   const filteredData = baseData || [];
 
   const applyCustomRange = () => {
-    if (!fromDate || !toDate) return;
-    setRange("custom");
-    setCustomOpen(false);
+    if (tmpMode === "single" && tmpDate) {
+      setCommittedCustom({ mode: "single", date: tmpDate });
+      setCustomOpen(false);
+      return;
+    }
+    if (tmpMode === "range" && tmpFrom && tmpTo) {
+      setCommittedCustom({ mode: "range", from: tmpFrom, to: tmpTo });
+      setCustomOpen(false);
+    }
   };
 
   const cancelCustom = () => {
-    setFromDate("");
-    setToDate("");
+    setTmpFrom("");
+    setTmpTo("");
+    setTmpDate("");
+    setTmpMode("range");
     setCustomOpen(false);
   };
 
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        p: 3.5,
-        borderRadius: 4,
-        background: "white",
-        boxShadow: "0 12px 40px rgba(0,0,0,0.06)",
-        position: "relative",
-      }}>
-      {/* HEADER */}
-      <Typography
-        variant="h6"
-        sx={{
-          fontSize: 22,
-          fontWeight: 800,
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-        }}>
-        <BarChart3 size={20} />
-        Stock vs Sales Comparison
+    <Paper elevation={3} sx={{ p: 3.5, borderRadius: 4, background: "white", boxShadow: "0 12px 40px rgba(0,0,0,0.06)", position: "relative" }}>
+      <Typography variant="h6" sx={{ fontSize: 22, fontWeight: 800, display: "flex", alignItems: "center", gap: 1 }}>
+        <BarChart3 size={20} /> Stock vs Sales Comparison
       </Typography>
-      <Typography sx={{ color: "#64748b", fontSize: 13, mb: 1 }}>
-        Compare total stock units vs total units sold for each category.
-      </Typography>
+      <Typography sx={{ color: "#64748b", fontSize: 13, mb: 1 }}>Compare total stock units vs total units sold for each category.</Typography>
 
-      {/* FILTER ROW (UI ONLY, same style as other graphs) */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          gap: 1.5,
-          flexWrap: "wrap",
-          mt: 1,
-          mb: 2,
-        }}>
-        <ToggleButtonGroup
-          exclusive
-          value={range}
-          onChange={(_, v) => {
-            if (v) {
-              setRange(v);
-              setCustomOpen(false);
-            }
-          }}
-          sx={{
-            display: "flex",
-            gap: "11px",
-            "& .MuiToggleButton-root": {
-              height: 32,
-              px: 1.2,
-              borderRadius: "999px",
-              border: "1px solid #dce1e8 !important",
-              background: "white",
-              textTransform: "none",
-              fontSize: "13px",
-              color: "#0f172a",
-              "&.Mui-selected": {
-                background: HIGHLIGHT_BLUE + " !important",
-                color: "white !important",
-                borderColor: HIGHLIGHT_BLUE + " !important",
-              },
-              "&:hover": {
-                background: "#f1f5f9",
-              },
-            },
-          }}>
-          <ToggleButton value="all">All</ToggleButton>
-          <ToggleButton value="7">Last 7 days</ToggleButton>
-          <ToggleButton value="15">Last 15 days</ToggleButton>
-          <ToggleButton value="30">Last 30 days</ToggleButton>
-        </ToggleButtonGroup>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1.5, flexWrap: "wrap", mt: 1, mb: 2 }}>
+        <Box sx={{ display: "flex", gap: 4, alignItems: "center", flexWrap: "wrap", marginLeft: "auto" }}>
+  <ToggleButtonGroup
+    exclusive
+    value={range}
+    onChange={(_, v) => {
+      if (!v) return;
+      setRange(v);
+      if (v === "custom") {
+        setCustomOpen(true);
+        setCommittedCustom(null);
+      } else {
+        setCustomOpen(false);
+        setCommittedCustom(null);
+      }
+    }}
+    onClick={(e) => e.stopPropagation()}
+    sx={{
+      display: "flex",
+      gap: 1.25,
+      "& .MuiToggleButton-root": {
+        borderRadius: "10px",
+        px: 1.6,
+        py: 0.6,
+        minWidth: 56,
+        textTransform: "none",
+        fontWeight: 600,
+        transition: "background 180ms ease, transform 140ms ease, color 140ms",
+        "&:hover": { transform: "translateY(-3px)" },
+        "&.Mui-selected": {
+          // selected toggle style (soft blue glow + slightly darker bg)
+          background: "linear-gradient(180deg, rgba(94,166,238,0.14), rgba(94,166,238,0.10))",
+          color: "rgb(13,60,97)",
+          boxShadow: "0 4px 12px rgba(94,166,238,0.12)",
+        },
+        "&:active": { transform: "scale(0.985)" },
+      },
+    }}
+  >
+    <ToggleButton value="all">All</ToggleButton>
+    <ToggleButton value="7">7d</ToggleButton>
+    <ToggleButton value="15">15d</ToggleButton>
+    <ToggleButton value="30">30d</ToggleButton>
+    <ToggleButton value="custom"><Calendar size={16} />&nbsp;Custom</ToggleButton>
+  </ToggleButtonGroup>
+</Box>
 
-        <Button
-          onClick={() => setCustomOpen((p) => !p)}
-          sx={{
-            height: 32,
-            px: 2,
-            borderRadius: "999px",
-            border: "1px solid #dce1e8",
-            background: range === "custom" ? HIGHLIGHT_BLUE : "white",
-            color: range === "custom" ? "white" : "#0f172a",
-            fontSize: "13px",
-            textTransform: "none",
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            "&:hover": {
-              background: range === "custom" ? "#0284c7" : "#f1f5f9",
-            },
-          }}>
-          <Calendar size={16} />
-          Custom
-        </Button>
+
+         
       </Box>
 
       <Fade in={customOpen}>
         <Paper
           elevation={4}
-          sx={{
-            position: "absolute",
-            right: 28,
-            top: 110,
-            p: 2.2,
-            borderRadius: 3,
-            width: 280,
-            boxShadow: "0 16px 40px rgba(15,23,42,0.18)",
-            border: "1px solid #e2e8f0",
-            background: "rgba(255,255,255,0.98)",
-            backdropFilter: "blur(10px)",
-            zIndex: 20,
-          }}>
-          <Typography
-            sx={{ fontSize: 14, fontWeight: 600, mb: 1.5, color: "#0f172a" }}>
-            Custom Date Range
-          </Typography>
+          sx={{ position: "absolute", right: 28, top: 110, p: 2.2, borderRadius: 3, width: 320, zIndex: 9999, pointerEvents: "auto" }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Typography sx={{ fontSize: 14, fontWeight: 600, mb: 1.5 }}>Custom Date</Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-            <TextField
-              label="From"
-              type="date"
-              size="small"
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              label="To"
-              type="date"
-              size="small"
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Box>
+          <ToggleButtonGroup
+            value={tmpMode}
+            exclusive
+            onChange={(_, v) => v && setTmpMode(v)}
+            size="small"
+            onClick={(e) => e.stopPropagation()}
+            sx={{ mb: 2 }}
+          >
+            <ToggleButton value="range">Range</ToggleButton>
+            <ToggleButton value="single">Specific Date</ToggleButton>
+          </ToggleButtonGroup>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mt: 2,
-            }}>
-            <Button
-              variant="outlined"
-              onClick={cancelCustom}
-              sx={{
-                borderRadius: 2,
-                textTransform: "none",
-                fontSize: 13,
-              }}>
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={applyCustomRange}
-              sx={{
-                borderRadius: 2,
-                textTransform: "none",
-                fontSize: 13,
-                background: HIGHLIGHT_BLUE,
-                "&:hover": { background: "#0284c7" },
-              }}>
-              Apply
-            </Button>
+          {tmpMode === "range" ? (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <TextField type="date" label="From" size="small" value={tmpFrom} onChange={(e) => setTmpFrom(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={minAvailable ? { min: minAvailable } : {}} sx={{ flex: 1 }} />
+              <TextField type="date" label="To" size="small" value={tmpTo} onChange={(e) => setTmpTo(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={maxAvailable ? { max: maxAvailable } : {}} sx={{ flex: 1 }} />
+            </Box>
+          ) : (
+            <TextField fullWidth type="date" label="Date" size="small" value={tmpDate} onChange={(e) => setTmpDate(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={availableDates.length ? { min: availableDates[0], max: availableDates[availableDates.length - 1] } : {}} />
+          )}
+
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+            <Button variant="outlined" onClick={cancelCustom} onMouseDown={(e)=>e.stopPropagation()}>Cancel</Button>
+            <Button variant="contained" onClick={applyCustomRange} onMouseDown={(e)=>e.stopPropagation()}>Apply</Button>
           </Box>
         </Paper>
       </Fade>
 
-      {/* CHART */}
       <Box sx={{ width: "100%", height: 320, mt: 1 }}>
         <ResponsiveContainer>
           <BarChart data={filteredData}>
@@ -224,18 +156,8 @@ export default function StockVsSalesGraph({ items }) {
             <YAxis tick={{ fontSize: 11 }} />
             <Tooltip />
             <Legend wrapperStyle={{ fontSize: 12 }} />
-            <Bar
-              dataKey="stock"
-              name="Stock Units"
-              fill="#0ea5e9"
-              radius={[6, 6, 0, 0]}
-            />
-            <Bar
-              dataKey="sold"
-              name="Sold Units"
-              fill="#6366f1"
-              radius={[6, 6, 0, 0]}
-            />
+            <Bar dataKey="stock" name="Stock Units" fill="#0ea5e9" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="sold" name="Sold Units" fill="#6366f1" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Box>
