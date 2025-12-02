@@ -7,7 +7,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { Download, Grid3X3, List, History as HistoryIcon } from "lucide-react";
+import { Download, Grid3X3, List, History as HistoryIcon, Plus } from "lucide-react";
 
 import DownloadFiles from "./DownloadFiles";
 
@@ -23,6 +23,7 @@ export default function StockHeader({
   getTotalUnits,
   getTotalValue,
   onOpenHistory,
+  onAdd, // <-- added prop
 }) {
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
@@ -128,8 +129,30 @@ export default function StockHeader({
           </Box>
         </Box>
 
-        {/* Right — History + Download + Layout Toggle */}
+        {/* Right — Add + History + Download + Layout Toggle */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Add Button (same style as History) */}
+          <Button
+            variant="outlined"
+            startIcon={<Plus size={20} />}
+            onClick={onAdd}
+            sx={{
+              borderRadius: 3,
+              fontWeight: 600,
+              minWidth: "auto",
+              padding: "8px 12px",
+              border: "1.5px solid #cbd5e1",
+              color: "#475569",
+              "& .MuiButton-startIcon": {
+                margin: 0,
+              },
+              "&:hover": {
+                borderColor: "#0f766e",
+                bgcolor: "#f0fdfa",
+              },
+            }}
+          />
+
           {/* History Button */}
           <Button
             variant="outlined"
