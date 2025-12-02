@@ -113,40 +113,91 @@ export default function StockVsSalesGraph({ items }) {
       </Box>
 
       <Fade in={customOpen}>
-        <Paper
-          elevation={4}
-          sx={{ position: "absolute", right: 28, top: 110, p: 2.2, borderRadius: 3, width: 320, zIndex: 9999, pointerEvents: "auto" }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Typography sx={{ fontSize: 14, fontWeight: 600, mb: 1.5 }}>Custom Date</Typography>
+  <Paper
+    elevation={4}
+    sx={{
+      position: "absolute",
+      right: 28,
+      top: 110,
+      p: 2.2,
+      borderRadius: 3,
+      width: 320,
+      zIndex: 9999,
+      pointerEvents: "auto",
+    }}
+    onClick={(e) => e.stopPropagation()}
+  >
+    <Typography sx={{ fontSize: 14, fontWeight: 600, mb: 1.5 }}>
+      Custom Date
+    </Typography>
 
-          <ToggleButtonGroup
-            value={tmpMode}
-            exclusive
-            onChange={(_, v) => v && setTmpMode(v)}
-            size="small"
-            onClick={(e) => e.stopPropagation()}
-            sx={{ mb: 2 }}
-          >
-            <ToggleButton value="range">Range</ToggleButton>
-            <ToggleButton value="single">Specific Date</ToggleButton>
-          </ToggleButtonGroup>
+    {/* RANGE ONLY (single-date and toggle removed) */}
+    <Box sx={{ display: "flex", gap: 1 }}>
+      <TextField
+        type="date"
+        label="From"
+        size="small"
+        value={tmpFrom}
+        onChange={(e) => setTmpFrom(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        inputProps={
+          availableDates.length
+            ? { min: availableDates[0], max: availableDates[availableDates.length - 1] }
+            : {}
+        }
+        sx={{ flex: 1 }}
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+      />
 
-          {tmpMode === "range" ? (
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <TextField type="date" label="From" size="small" value={tmpFrom} onChange={(e) => setTmpFrom(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={minAvailable ? { min: minAvailable } : {}} sx={{ flex: 1 }} />
-              <TextField type="date" label="To" size="small" value={tmpTo} onChange={(e) => setTmpTo(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={maxAvailable ? { max: maxAvailable } : {}} sx={{ flex: 1 }} />
-            </Box>
-          ) : (
-            <TextField fullWidth type="date" label="Date" size="small" value={tmpDate} onChange={(e) => setTmpDate(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={availableDates.length ? { min: availableDates[0], max: availableDates[availableDates.length - 1] } : {}} />
-          )}
+      <TextField
+        type="date"
+        label="To"
+        size="small"
+        value={tmpTo}
+        onChange={(e) => setTmpTo(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        inputProps={
+          availableDates.length
+            ? { min: availableDates[0], max: availableDates[availableDates.length - 1] }
+            : {}
+        }
+        sx={{ flex: 1 }}
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+      />
+    </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-            <Button variant="outlined" onClick={cancelCustom} onMouseDown={(e)=>e.stopPropagation()}>Cancel</Button>
-            <Button variant="contained" onClick={applyCustomRange} onMouseDown={(e)=>e.stopPropagation()}>Apply</Button>
-          </Box>
-        </Paper>
-      </Fade>
+    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+      <Button
+        variant="outlined"
+        onClick={(e) => { e.stopPropagation(); cancelCustom(); }}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        Cancel
+      </Button>
+
+      <Button
+        variant="contained"
+        onClick={(e) => { e.stopPropagation(); applyCustomRange(); }}
+        onMouseDown={(e) => e.stopPropagation()}
+        disabled={
+          !(
+            tmpFrom &&
+            tmpTo &&
+            tmpFrom <= tmpTo &&
+            availableDates.length &&
+            tmpFrom >= availableDates[0] &&
+            tmpTo <= availableDates[availableDates.length - 1]
+          )
+        }
+      >
+        Apply
+      </Button>
+    </Box>
+  </Paper>
+</Fade>
+
 
       <Box sx={{ width: "100%", height: 320, mt: 1 }}>
         <ResponsiveContainer>

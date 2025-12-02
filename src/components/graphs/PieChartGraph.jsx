@@ -251,99 +251,101 @@ export default function PieChartGraph({ items }) {
       </Box>
 
       {/* Popup (absolute) */}
-      <Fade in={customOpen}>
-        <Paper
-          elevation={6}
-          sx={{
-            position: "absolute",
-            right: 28,
-            top: 70,
-            width: 340,
-            p: 2,
-            zIndex: 99999,
-            pointerEvents: "auto",
-            borderRadius: 2,
-          }}
-          onClick={stop}
-          onMouseDown={stop}
-        >
-          <Typography sx={{ fontSize: 15, fontWeight: 700, mb: 1 }}>Custom Date</Typography>
+     <Fade in={customOpen}>
+  <Paper
+    elevation={6}
+    sx={{
+      position: "absolute",
+      right: 28,
+      top: 0,
+      width: 340,
+      p: 2,
+      zIndex: 99999,
+      pointerEvents: "auto",
+      borderRadius: 2,
+    }}
+    onClick={stop}
+    onMouseDown={stop}
+  >
+    <Typography sx={{ fontSize: 15, fontWeight: 700, mb: 1 }}>
+      Custom Date
+    </Typography>
 
-          <ToggleButtonGroup
-            value={tmpMode}
-            exclusive
-            onChange={(_, v) => v && setTmpMode(v)}
-            size="small"
-            sx={{
-              mb: 1,
-              display: "flex",
-              gap: 1,
-              "& .MuiToggleButton-root": {
-                borderRadius: 1.5,
-                px: 1.25,
-                py: 0.5,
-                minWidth: 80,
-                textTransform: "none",
-                fontWeight: 600,
-                transition: "background 180ms ease, transform 140ms ease, color 140ms",
-                "&:hover": { transform: "translateY(-2px)" },
-                "&.Mui-selected": {
-                  background: "linear-gradient(180deg, rgba(94,166,238,0.14), rgba(94,166,238,0.10))",
-                  color: "rgb(13,60,97)",
-                  boxShadow: "0 6px 14px rgba(94,166,238,0.12)",
-                },
-                "&:active": { transform: "scale(0.985)" },
-              },
-            }}
-            onClick={stop}
-          >
-            <ToggleButton value="range">Range</ToggleButton>
-            <ToggleButton value="single">Specific Date</ToggleButton>
-          </ToggleButtonGroup>
+    {/* RANGE ONLY - WITH AVAILABLE DATES RESTRICTIONS */}
+    <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
+      <TextField
+        type="date"
+        label="From"
+        size="small"
+        value={tmpFrom}
+        onChange={(e) => setTmpFrom(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        inputProps={
+          availableDates.length
+            ? { min: availableDates[0], max: availableDates[availableDates.length - 1] }
+            : {}
+        }
+        sx={{ flex: 1 }}
+        onClick={stop}
+        onMouseDown={stop}
+      />
 
-          {tmpMode === "range" ? (
-            <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-              <TextField
-                type="date"
-                label="From"
-                size="small"
-                value={tmpFrom}
-                onChange={(e) => setTmpFrom(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                inputProps={minAvailable ? { min: minAvailable } : {}}
-                sx={{ flex: 1 }}
-              />
-              <TextField
-                type="date"
-                label="To"
-                size="small"
-                value={tmpTo}
-                onChange={(e) => setTmpTo(e.target.value)}
-                InputLabelProps={{ shrink: true }}
-                inputProps={maxAvailable ? { max: maxAvailable } : {}}
-                sx={{ flex: 1 }}
-              />
-            </Box>
-          ) : (
-            <TextField
-              type="date"
-              label="Date"
-              size="small"
-              fullWidth
-              value={tmpDate}
-              onChange={(e) => setTmpDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              inputProps={availableDates.length ? { min: availableDates[0], max: availableDates[availableDates.length - 1] } : {}}
-              sx={{ mb: 1 }}
-            />
-          )}
+      <TextField
+        type="date"
+        label="To"
+        size="small"
+        value={tmpTo}
+        onChange={(e) => setTmpTo(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        inputProps={
+          availableDates.length
+            ? { min: availableDates[0], max: availableDates[availableDates.length - 1] }
+            : {}
+        }
+        sx={{ flex: 1 }}
+        onClick={stop}
+        onMouseDown={stop}
+      />
+    </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
-            <Button variant="outlined" onClick={(e) => { stop(e); cancelCustom(); }} fullWidth>Cancel</Button>
-            <Button variant="contained" onClick={(e) => { stop(e); applyCustom(); }} fullWidth>Apply</Button>
-          </Box>
-        </Paper>
-      </Fade>
+    <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}>
+      <Button
+        variant="outlined"
+        onClick={(e) => {
+          stop(e);
+          cancelCustom();
+        }}
+        fullWidth
+        onMouseDown={stop}
+      >
+        Cancel
+      </Button>
+
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={(e) => {
+          stop(e);
+          applyCustom();
+        }}
+        onMouseDown={stop}
+        disabled={
+          !(
+            tmpFrom &&
+            tmpTo &&
+            tmpFrom <= tmpTo &&
+            availableDates.length &&
+            tmpFrom >= availableDates[0] &&
+            tmpTo <= availableDates[availableDates.length - 1]
+          )
+        }
+      >
+        Apply
+      </Button>
+    </Box>
+  </Paper>
+</Fade>
+
     </Paper>
   );
 }

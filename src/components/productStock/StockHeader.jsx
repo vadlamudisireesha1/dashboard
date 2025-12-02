@@ -36,13 +36,13 @@ export default function StockHeader({
         sx={{
           mb: 2,
           fontWeight: 600,
-          backgroundColor: "#ec2727ff",
+          backgroundColor: "#429519",
           color: "white",
-          "&:hover": {
-            backgroundColor: "#d8491dff",
-          },
+          // "&:hover": {
+          //   backgroundColor: "#d8491dff",
+          // },
         }}>
-        ← HOME
+        ← Back
       </Button>
 
       {/* Main Header */}
