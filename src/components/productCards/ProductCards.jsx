@@ -254,7 +254,7 @@ export default function ProductCards() {
             <Box
               onClick={() => setOpenModal(true)}
               sx={{
-                width: "170px",
+                width: "210px",
                 minHeight: "130px",
                 background: "#f0f0f0",
                 borderRadius: "18px",

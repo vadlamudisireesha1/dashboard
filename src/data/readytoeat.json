@@ -21,17 +21,9 @@
         { "date": "2025-01-08", "unitsAdded": 90 },
         { "date": "2025-01-27", "unitsAdded": 60 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 45,
-        "revenue": 1350,
-        "averageOrderValue": 100
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 180,
-        "revenue": 5400
-      }
+      "weeklySummary": { "totalUnitsSold": 45, "revenue": 1350, "averageOrderValue": 100 },
+      "monthlySummary": { "totalUnitsSold": 180, "revenue": 5400 }
     },
-
     {
       "id": "RTE-000002",
       "sku": "RTE-000002",
@@ -52,17 +44,9 @@
         { "date": "2025-01-10", "unitsAdded": 85 },
         { "date": "2025-01-26", "unitsAdded": 55 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 35,
-        "revenue": 980,
-        "averageOrderValue": 89
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 156,
-        "revenue": 4320
-      }
+      "weeklySummary": { "totalUnitsSold": 35, "revenue": 980, "averageOrderValue": 89 },
+      "monthlySummary": { "totalUnitsSold": 156, "revenue": 4320 }
     },
-
     {
       "id": "RTE-000003",
       "sku": "RTE-000003",
@@ -83,15 +67,77 @@
         { "date": "2025-01-06", "unitsAdded": 92 },
         { "date": "2025-01-24", "unitsAdded": 63 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 43,
-        "revenue": 1376,
-        "averageOrderValue": 91
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 170,
-        "revenue": 5440
-      }
+      "weeklySummary": { "totalUnitsSold": 43, "revenue": 1376, "averageOrderValue": 91 },
+      "monthlySummary": { "totalUnitsSold": 170, "revenue": 5440 }
+    },
+    {
+      "id": "RTE-000004",
+      "sku": "RTE-000004",
+      "category": "readytoeat",
+      "name": "Idli Rava Mix",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 80, "units": 46, "price": 34 },
+        { "gram": 150, "units": 28, "price": 54 },
+        { "gram": 300, "units": 24, "price": 98 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 10, "revenue": 340 },
+        { "date": "2025-01-24", "unitsSold": 14, "revenue": 756 },
+        { "date": "2025-01-30", "unitsSold": 8, "revenue": 272 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-04", "unitsAdded": 80 },
+        { "date": "2025-01-20", "unitsAdded": 50 }
+      ],
+      "weeklySummary": { "totalUnitsSold": 32, "revenue": 1368, "averageOrderValue": 85 },
+      "monthlySummary": { "totalUnitsSold": 132, "revenue": 5580 }
+    },
+    {
+      "id": "RTE-000005",
+      "sku": "RTE-000005",
+      "category": "readytoeat",
+      "name": "Semolina Upma Mix",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 80, "units": 52, "price": 31 },
+        { "gram": 150, "units": 40, "price": 51 },
+        { "gram": 300, "units": 25, "price": 92 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 13, "revenue": 403 },
+        { "date": "2025-01-21", "unitsSold": 11, "revenue": 341 },
+        { "date": "2025-01-27", "unitsSold": 12, "revenue": 552 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-11", "unitsAdded": 70 },
+        { "date": "2025-01-26", "unitsAdded": 55 }
+      ],
+      "weeklySummary": { "totalUnitsSold": 36, "revenue": 1296, "averageOrderValue": 90 },
+      "monthlySummary": { "totalUnitsSold": 144, "revenue": 5180 }
+    },
+    {
+      "id": "RTE-000006",
+      "sku": "RTE-000006",
+      "category": "readytoeat",
+      "name": "Poha Masala Mix",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 80, "units": 50, "price": 29 },
+        { "gram": 150, "units": 36, "price": 49 },
+        { "gram": 300, "units": 20, "price": 88 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 9, "revenue": 261 },
+        { "date": "2025-01-23", "unitsSold": 10, "revenue": 490 },
+        { "date": "2025-01-29", "unitsSold": 7, "revenue": 203 }
+      ],
+      "restockHistory": [
+        { "date": "2025-01-02", "unitsAdded": 100 },
+        { "date": "2025-01-18", "unitsAdded": 60 }
+      ],
+      "weeklySummary": { "totalUnitsSold": 26, "revenue": 954, "averageOrderValue": 78 },
+      "monthlySummary": { "totalUnitsSold": 104, "revenue": 3810 }
     }
   ]
 }

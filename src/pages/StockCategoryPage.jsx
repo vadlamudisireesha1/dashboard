@@ -171,6 +171,7 @@ export default function ProductCategory() {
         view={view}
         onChangeView={setView}
         onBack={() => navigate(-1)}
+        onAdd={handleAdd}
         pickles={pickles}
         data={data}
         getTotalUnits={getTotalUnits}

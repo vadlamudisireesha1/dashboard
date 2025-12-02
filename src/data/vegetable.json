@@ -1,5 +1,5 @@
 {
-  "title": "Veg Pickels",
+  "title": "Veg Pickles",
   "items": [
     {
       "id": "VEG-000001",
@@ -17,21 +17,10 @@
         { "date": "2025-01-22", "unitsSold": 8, "revenue": 960 },
         { "date": "2025-01-25", "unitsSold": 12, "revenue": 1440 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-10", "unitsAdded": 70 },
-        { "date": "2025-01-27", "unitsAdded": 40 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 32,
-        "revenue": 4500,
-        "averageOrderValue": 141
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 140,
-        "revenue": 19200
-      }
+      "restockHistory": [{ "date": "2025-01-10", "unitsAdded": 70 }, { "date": "2025-01-27", "unitsAdded": 40 }],
+      "weeklySummary": { "totalUnitsSold": 32, "revenue": 4500, "averageOrderValue": 141 },
+      "monthlySummary": { "totalUnitsSold": 140, "revenue": 19200 }
     },
-
     {
       "id": "VEG-000002",
       "sku": "VEG-000002",
@@ -48,21 +37,10 @@
         { "date": "2025-01-22", "unitsSold": 9, "revenue": 1350 },
         { "date": "2025-01-26", "unitsSold": 7, "revenue": 1050 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-05", "unitsAdded": 50 },
-        { "date": "2025-01-25", "unitsAdded": 30 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 22,
-        "revenue": 3300,
-        "averageOrderValue": 150
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 96,
-        "revenue": 14400
-      }
+      "restockHistory": [{ "date": "2025-01-05", "unitsAdded": 50 }, { "date": "2025-01-25", "unitsAdded": 30 }],
+      "weeklySummary": { "totalUnitsSold": 22, "revenue": 3300, "averageOrderValue": 150 },
+      "monthlySummary": { "totalUnitsSold": 96, "revenue": 14400 }
     },
-
     {
       "id": "VEG-000003",
       "sku": "VEG-000003",
@@ -79,19 +57,69 @@
         { "date": "2025-01-23", "unitsSold": 7, "revenue": 770 },
         { "date": "2025-01-29", "unitsSold": 11, "revenue": 1210 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-07", "unitsAdded": 60 },
-        { "date": "2025-01-20", "unitsAdded": 50 }
+      "restockHistory": [{ "date": "2025-01-07", "unitsAdded": 60 }, { "date": "2025-01-20", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 27, "revenue": 3380, "averageOrderValue": 125 },
+      "monthlySummary": { "totalUnitsSold": 118, "revenue": 15200 }
+    },
+    {
+      "id": "VEG-000004",
+      "sku": "VEG-000004",
+      "category": "vegetable",
+      "name": "Mixed Vegetable Pickle",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 250, "units": 38, "price": 125 },
+        { "gram": 500, "units": 28, "price": 235 },
+        { "gram": 1000, "units": 20, "price": 400 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 27,
-        "revenue": 3380,
-        "averageOrderValue": 125
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 118,
-        "revenue": 15200
-      }
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 8, "revenue": 1000 },
+        { "date": "2025-01-24", "unitsSold": 13, "revenue": 1625 },
+        { "date": "2025-01-28", "unitsSold": 10, "revenue": 1250 }
+      ],
+      "restockHistory": [{ "date": "2025-01-03", "unitsAdded": 60 }, { "date": "2025-01-22", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 31, "revenue": 3875, "averageOrderValue": 125 },
+      "monthlySummary": { "totalUnitsSold": 124, "revenue": 15500 }
+    },
+    {
+      "id": "VEG-000005",
+      "sku": "VEG-000005",
+      "category": "vegetable",
+      "name": "Garlic Pickle",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 250, "units": 34, "price": 135 },
+        { "gram": 500, "units": 26, "price": 255 },
+        { "gram": 1000, "units": 18, "price": 420 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 12, "revenue": 1620 },
+        { "date": "2025-01-22", "unitsSold": 7, "revenue": 945 },
+        { "date": "2025-01-26", "unitsSold": 9, "revenue": 1215 }
+      ],
+      "restockHistory": [{ "date": "2025-01-08", "unitsAdded": 70 }, { "date": "2025-01-24", "unitsAdded": 40 }],
+      "weeklySummary": { "totalUnitsSold": 28, "revenue": 3780, "averageOrderValue": 135 },
+      "monthlySummary": { "totalUnitsSold": 112, "revenue": 15120 }
+    },
+    {
+      "id": "VEG-000006",
+      "sku": "VEG-000006",
+      "category": "vegetable",
+      "name": "Mustard Pickle",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 250, "units": 30, "price": 115 },
+        { "gram": 500, "units": 22, "price": 210 },
+        { "gram": 1000, "units": 14, "price": 380 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 5, "revenue": 575 },
+        { "date": "2025-01-23", "unitsSold": 10, "revenue": 1150 },
+        { "date": "2025-01-29", "unitsSold": 6, "revenue": 690 }
+      ],
+      "restockHistory": [{ "date": "2025-01-06", "unitsAdded": 60 }, { "date": "2025-01-21", "unitsAdded": 40 }],
+      "weeklySummary": { "totalUnitsSold": 21, "revenue": 2415, "averageOrderValue": 115 },
+      "monthlySummary": { "totalUnitsSold": 84, "revenue": 9660 }
     }
   ]
 }

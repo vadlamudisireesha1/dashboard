@@ -17,21 +17,10 @@
         { "date": "2025-01-22", "unitsSold": 14, "revenue": 840 },
         { "date": "2025-01-26", "unitsSold": 9, "revenue": 540 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-07", "unitsAdded": 90 },
-        { "date": "2025-01-23", "unitsAdded": 70 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 35,
-        "revenue": 2100,
-        "averageOrderValue": 140
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 145,
-        "revenue": 8700
-      }
+      "restockHistory": [{ "date": "2025-01-07", "unitsAdded": 90 }, { "date": "2025-01-23", "unitsAdded": 70 }],
+      "weeklySummary": { "totalUnitsSold": 35, "revenue": 2100, "averageOrderValue": 140 },
+      "monthlySummary": { "totalUnitsSold": 145, "revenue": 8700 }
     },
-
     {
       "id": "MLT-000002",
       "sku": "MLT-000002",
@@ -48,21 +37,10 @@
         { "date": "2025-01-21", "unitsSold": 13, "revenue": 715 },
         { "date": "2025-01-30", "unitsSold": 10, "revenue": 550 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-10", "unitsAdded": 80 },
-        { "date": "2025-01-28", "unitsAdded": 50 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 34,
-        "revenue": 1870,
-        "averageOrderValue": 131
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 138,
-        "revenue": 7600
-      }
+      "restockHistory": [{ "date": "2025-01-10", "unitsAdded": 80 }, { "date": "2025-01-28", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 34, "revenue": 1870, "averageOrderValue": 131 },
+      "monthlySummary": { "totalUnitsSold": 138, "revenue": 7600 }
     },
-
     {
       "id": "MLT-000003",
       "sku": "MLT-000003",
@@ -79,19 +57,69 @@
         { "date": "2025-01-24", "unitsSold": 12, "revenue": 696 },
         { "date": "2025-01-29", "unitsSold": 8, "revenue": 464 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-09", "unitsAdded": 85 },
-        { "date": "2025-01-26", "unitsAdded": 60 }
+      "restockHistory": [{ "date": "2025-01-09", "unitsAdded": 85 }, { "date": "2025-01-26", "unitsAdded": 60 }],
+      "weeklySummary": { "totalUnitsSold": 29, "revenue": 1680, "averageOrderValue": 108 },
+      "monthlySummary": { "totalUnitsSold": 124, "revenue": 7024 }
+    },
+    {
+      "id": "MLT-000004",
+      "sku": "MLT-000004",
+      "category": "millets",
+      "name": "Kodo Millet",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 500, "units": 38, "price": 62 },
+        { "gram": 1000, "units": 28, "price": 115 },
+        { "gram": 2000, "units": 16, "price": 205 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 29,
-        "revenue": 1680,
-        "averageOrderValue": 108
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 124,
-        "revenue": 7024
-      }
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 10, "revenue": 620 },
+        { "date": "2025-01-23", "unitsSold": 11, "revenue": 715 },
+        { "date": "2025-01-27", "unitsSold": 7, "revenue": 455 }
+      ],
+      "restockHistory": [{ "date": "2025-01-04", "unitsAdded": 75 }, { "date": "2025-01-21", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 28, "revenue": 1790, "averageOrderValue": 130 },
+      "monthlySummary": { "totalUnitsSold": 112, "revenue": 7160 }
+    },
+    {
+      "id": "MLT-000005",
+      "sku": "MLT-000005",
+      "category": "millets",
+      "name": "Proso Millet",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 500, "units": 34, "price": 54 },
+        { "gram": 1000, "units": 24, "price": 105 },
+        { "gram": 2000, "units": 14, "price": 195 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 12, "revenue": 648 },
+        { "date": "2025-01-22", "unitsSold": 9, "revenue": 486 },
+        { "date": "2025-01-28", "unitsSold": 11, "revenue": 577 }
+      ],
+      "restockHistory": [{ "date": "2025-01-11", "unitsAdded": 70 }, { "date": "2025-01-25", "unitsAdded": 45 }],
+      "weeklySummary": { "totalUnitsSold": 32, "revenue": 1711, "averageOrderValue": 120 },
+      "monthlySummary": { "totalUnitsSold": 128, "revenue": 6840 }
+    },
+    {
+      "id": "MLT-000006",
+      "sku": "MLT-000006",
+      "category": "millets",
+      "name": "Little Foxtail Mix",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 500, "units": 36, "price": 59 },
+        { "gram": 1000, "units": 26, "price": 112 },
+        { "gram": 2000, "units": 18, "price": 202 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 8, "revenue": 472 },
+        { "date": "2025-01-24", "unitsSold": 10, "revenue": 590 },
+        { "date": "2025-01-30", "unitsSold": 9, "revenue": 504 }
+      ],
+      "restockHistory": [{ "date": "2025-01-09", "unitsAdded": 65 }, { "date": "2025-01-26", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 27, "revenue": 1566, "averageOrderValue": 116 },
+      "monthlySummary": { "totalUnitsSold": 108, "revenue": 6260 }
     }
   ]
 }

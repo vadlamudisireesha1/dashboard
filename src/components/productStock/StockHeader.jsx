@@ -7,7 +7,7 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { Download, Grid3X3, List, History as HistoryIcon } from "lucide-react";
+import { Download, Grid3X3, List, History as HistoryIcon, Plus } from "lucide-react";
 
 import DownloadFiles from "./DownloadFiles";
 
@@ -23,6 +23,7 @@ export default function StockHeader({
   getTotalUnits,
   getTotalValue,
   onOpenHistory,
+  onAdd, // <-- required for Add button
 }) {
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
@@ -35,13 +36,13 @@ export default function StockHeader({
         sx={{
           mb: 2,
           fontWeight: 600,
-          backgroundColor: "#ec2727ff",
+          backgroundColor: "#429519",
           color: "white",
-          "&:hover": {
-            backgroundColor: "#d8491dff",
-          },
+          // "&:hover": {
+          //   backgroundColor: "#d8491dff",
+          // },
         }}>
-        ← HOME
+        ← Back
       </Button>
 
       {/* Main Header */}
@@ -53,7 +54,8 @@ export default function StockHeader({
           flexDirection: { xs: "column", md: "row" },
           gap: 3,
         }}>
-        {/* Left — Title + Stats */}
+        
+        {/* LEFT SECTION */}
         <Box>
           <Typography
             variant="h3"
@@ -70,17 +72,10 @@ export default function StockHeader({
               mt: 1.5,
               flexWrap: "wrap",
             }}>
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              fontWeight={700}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}>
-              Products :{" "}
+            <Typography variant="h6" color="text.secondary" fontWeight={700}>
+              Products :
               <Typography
+                component="span"
                 fontWeight={700}
                 variant="h5"
                 sx={{ paddingLeft: "6px", color: "blue" }}>
@@ -88,49 +83,60 @@ export default function StockHeader({
               </Typography>
             </Typography>
 
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              fontWeight={800}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}>
+            <Typography variant="h6" color="text.secondary" fontWeight={800}>
               Units :
               <Typography
+                component="span"
                 fontWeight={700}
                 variant="h5"
                 sx={{ paddingLeft: "6px", color: "#ee8f3bff" }}>
                 {totalUnits}
               </Typography>
             </Typography>
+
             <Typography
               variant="h6"
               fontWeight={800}
-              color="text.secondary"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}>
+              color="text.secondary">
               Total Value :
               <Typography
+                component="span"
                 variant="h6"
                 fontWeight={800}
                 sx={{ color: "#16a34a", paddingLeft: "8px" }}>
                 ₹{" "}
                 {pickles
                   .reduce((sum, item) => sum + getTotalValue(item.weights), 0)
-                  .toLocaleString("en-IN")}{" "}
+                  .toLocaleString("en-IN")}
               </Typography>
             </Typography>
           </Box>
         </Box>
 
-        {/* Right — History + Download + Layout Toggle */}
+        {/* RIGHT SECTION — Add + History + Download + View */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          {/* History Button */}
+          
+          {/* ADD BUTTON */}
+          <Button
+            variant="outlined"
+            startIcon={<Plus size={20} />}
+            onClick={onAdd} // <-- SAME as Add New card
+            sx={{
+              borderRadius: 3,
+              fontWeight: 600,
+              minWidth: "auto",
+              padding: "8px 12px",
+              border: "1.5px solid #cbd5e1",
+              color: "#475569",
+              "& .MuiButton-startIcon": { margin: 0 },
+              "&:hover": {
+                borderColor: "#0f766e",
+                bgcolor: "#f0fdfa",
+              },
+            }}
+          />
+
+          {/* HISTORY BUTTON */}
           <Button
             variant="outlined"
             startIcon={<HistoryIcon size={20} />}
@@ -142,9 +148,7 @@ export default function StockHeader({
               padding: "8px 12px",
               border: "1.5px solid #cbd5e1",
               color: "#475569",
-              "& .MuiButton-startIcon": {
-                margin: 0,
-              },
+              "& .MuiButton-startIcon": { margin: 0 },
               "&:hover": {
                 borderColor: "#0f766e",
                 bgcolor: "#f0fdfa",
@@ -152,7 +156,7 @@ export default function StockHeader({
             }}
           />
 
-          {/* Download Button + Dropdown */}
+          {/* DOWNLOAD */}
           <Box sx={{ position: "relative" }}>
             <Button
               variant="outlined"
@@ -184,7 +188,7 @@ export default function StockHeader({
             )}
           </Box>
 
-          {/* View Toggle */}
+          {/* GRID / LIST SWITCH */}
           <ToggleButtonGroup
             value={view}
             exclusive
@@ -201,7 +205,6 @@ export default function StockHeader({
                 "&.Mui-selected": {
                   bgcolor: "#42961A",
                   color: "white",
-                  border: "none",
                   "&:hover": { bgcolor: "#42961A" },
                 },
               },
@@ -213,6 +216,7 @@ export default function StockHeader({
               <List size={20} />
             </ToggleButton>
           </ToggleButtonGroup>
+
         </Box>
       </Box>
     </Box>
