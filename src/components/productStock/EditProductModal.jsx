@@ -12,6 +12,7 @@ import {
   alpha,
 } from "@mui/material";
 import { Trash2 } from "lucide-react";
+import { hover } from "@testing-library/user-event/dist/hover";
 
 export default function EditProductModal({
   open,
@@ -288,7 +289,11 @@ export default function EditProductModal({
             borderRadius: "999px",
             px: 3,
             py: 0.8,
-            color: "#6b7280",
+            color: "#f04b2eff",
+            "&:hover": {
+              borderColor: "#b91c1c",
+              backgroundColor: "rgba(254,226,226,1)",
+            },
           }}>
           Cancel
         </Button>
@@ -309,7 +314,7 @@ export default function EditProductModal({
             opacity: isFormValid ? 1 : 0.6,
             cursor: isFormValid ? "pointer" : "not-allowed",
             "&:hover": {
-              background: "linear-gradient(135deg,#020617,#0b1120,#020617)",
+              background: "linear-gradient(135deg,#010617,#0b1120,#020617)",
             },
           }}>
           Save Changes

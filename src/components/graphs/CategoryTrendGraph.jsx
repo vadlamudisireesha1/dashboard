@@ -1,5 +1,16 @@
 import React, { useState } from "react";
 import {
+  Box,
+  Paper,
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup,
+  Button,
+  TextField,
+  Fade,
+  Chip,
+} from "@mui/material";
+import {
   LineChart,
   Line,
   XAxis,
@@ -9,7 +20,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { LineChart as LineChartIcon } from "lucide-react";
+import { LineChart as LineChartIcon, Calendar } from "lucide-react";
 import {
   CATEGORY_KEYS,
   CATEGORY_LABELS,
@@ -17,21 +28,63 @@ import {
   getCategorySalesTrend,
 } from "./graphUtils";
 
+const HIGHLIGHT_BLUE = "#0098FF";
+
 export default function CategoryTrendGraph({ items }) {
   const [selected, setSelected] = useState(new Set(CATEGORY_KEYS));
   const [range, setRange] = useState("all");
+  const [customOpen, setCustomOpen] = useState(false);
+
+  // Custom date state
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   const data = getCategorySalesTrend(items);
 
+  // -------------------------------
+  //     FILTERING LOGIC
+  // -------------------------------
+  const applyCustomRange = () => {
+    if (!fromDate || !toDate) return;
+    setRange("custom");
+    setCustomOpen(false);
+  };
+
+  const cancelCustom = () => {
+    setFromDate("");
+    setToDate("");
+    setCustomOpen(false);
+  };
+
   const getDisplayedData = () => {
     if (range === "all") return data;
-    const n = Number(range);
-    if (!data || data.length <= n) return data;
-    return data.slice(data.length - n);
+
+    // pre-set ranges
+    if (["7", "15", "30"].includes(range)) {
+      const n = Number(range);
+      if (!data || data.length <= n) return data;
+      return data.slice(data.length - n);
+    }
+
+    // custom range filtering
+    if (range === "custom" && fromDate && toDate) {
+      const from = new Date(fromDate);
+      const to = new Date(toDate);
+
+      return data.filter((entry) => {
+        const entryDate = new Date(entry.date);
+        return entryDate >= from && entryDate <= to;
+      });
+    }
+
+    return data;
   };
 
   const displayedData = getDisplayedData();
 
+  // -------------------------------
+  //   TOGGLE CATEGORY CHIP
+  // -------------------------------
   const toggleCategory = (key) => {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -41,100 +94,260 @@ export default function CategoryTrendGraph({ items }) {
   };
 
   return (
-    <div
-      style={{
+    <Paper
+      elevation={3}
+      sx={{
         background: "white",
-        borderRadius: 28,
-        padding: 28,
-        boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
+        borderRadius: 4,
+        p: 3.5,
+        boxShadow: "0 12px 40px rgba(0,0,0,0.06)",
+        position: "relative",
       }}>
       {/* Header */}
-      <div
-        style={{
+      <Box
+        sx={{
           display: "flex",
           justifyContent: "space-between",
-          marginBottom: 16,
+          mb: 2,
           alignItems: "center",
           flexWrap: "wrap",
-          gap: 12,
+          gap: 2,
         }}>
-        <div>
-          <h2
-            style={{
-              margin: 0,
+        <Box>
+          <Typography
+            variant="h6"
+            sx={{
+              m: 0,
               fontSize: 22,
               fontWeight: 800,
               display: "flex",
               alignItems: "center",
-              gap: 8,
+              gap: 1,
             }}>
             <LineChartIcon size={18} strokeWidth={2.2} />
-            <span>Multi-Category Sales Comparison</span>
-          </h2>
-          <p style={{ margin: 0, color: "#64748b", fontSize: 13 }}>
+            Multi-Category Sales Comparison
+          </Typography>
+          <Typography sx={{ m: 0, color: "#64748b", fontSize: 13, mt: 0.5 }}>
             Compare trends across all product groups.
-          </p>
-        </div>
+          </Typography>
+        </Box>
 
-        {/* Date Range Filters */}
-        <div style={{ display: "flex", gap: 8 }}>
-          {["all", "7", "30", "60", "90"].map((r) => (
-            <button
-              key={r}
-              onClick={() => setRange(r)}
-              style={{
-                padding: "6px 14px",
-                borderRadius: 50,
-                border: "1px solid #e2e8f0",
-                cursor: "pointer",
-                background: range === r ? "#0ea5e9" : "#f1f5f9",
-                color: range === r ? "white" : "#0f172a",
-                fontSize: 12,
-              }}>
-              {r === "all" ? "All" : `Last ${r} days`}
-            </button>
-          ))}
-        </div>
-      </div>
+        {/* FILTER BUTTONS ROW */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            ml: "auto",
+            flexWrap: "wrap",
+          }}>
+          {/* RANGE BUTTONS */}
+          <ToggleButtonGroup
+            exclusive
+            value={range}
+            onChange={(_, v) => {
+              if (v) {
+                setRange(v);
+                setCustomOpen(false);
+              }
+            }}
+            sx={{
+              display: "flex",
+              gap: "8px",
+              "& .MuiToggleButton-root": {
+                height: 32,
+                px: 1.5,
+                borderRadius: "50px !important",
+                border: "1px solid #dce1e8 !important",
+                backgroundColor: "white",
+                textTransform: "none",
+                fontSize: "13px",
+                color: "#0f172a",
+                "&.Mui-selected": {
+                  backgroundColor: `${HIGHLIGHT_BLUE} !important`,
+                  color: "white !important",
+                  borderColor: `${HIGHLIGHT_BLUE} !important`,
+                },
+                "&:hover": {
+                  backgroundColor: "#f1f5f9",
+                },
+              },
+            }}>
+            <ToggleButton value="all">All</ToggleButton>
+            <ToggleButton value="7">Last 7 days</ToggleButton>
+            <ToggleButton value="15">Last 15 days</ToggleButton>
+            <ToggleButton value="30">Last 30 days</ToggleButton>
+          </ToggleButtonGroup>
 
-      {/* Category Chips */}
-      <div
-        style={{
-          display: "flex",
-          gap: 10,
-          flexWrap: "wrap",
-          marginBottom: 14,
-        }}>
-        {CATEGORY_KEYS.map((key) => (
-          <div
-            key={key}
-            onClick={() => toggleCategory(key)}
-            style={{
-              padding: "6px 12px",
-              borderRadius: 50,
-              cursor: "pointer",
+          {/* CUSTOM BUTTON */}
+          <Button
+            onClick={() => {
+              setCustomOpen((p) => !p);
+              setRange("custom");
+            }}
+            sx={{
+              height: 32,
+              px: 1.5,
+              borderRadius: "50px",
+              border: "1px solid #dce1e8",
+              backgroundColor: range === "custom" ? HIGHLIGHT_BLUE : "white",
+              color: range === "custom" ? "white" : "#0f172a",
+              fontSize: "13px",
+              textTransform: "none",
               display: "flex",
               alignItems: "center",
-              gap: 6,
-              background: selected.has(key) ? "#e0f2fe" : "#f8fafc",
-              border: "1px solid #e2e8f0",
-              fontSize: 12,
+              gap: 1,
+              "&:hover": {
+                backgroundColor: range === "custom" ? "#0078d1" : "#f1f5f9",
+              },
             }}>
-            <span
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 99,
-                background: CATEGORY_COLORS[key],
+            <Calendar size={16} />
+            Custom
+          </Button>
+        </Box>
+      </Box>
+
+      {/* CUSTOM RANGE POPUP */}
+      <Fade in={customOpen}>
+        <Paper
+          elevation={4}
+          sx={{
+            position: "absolute",
+            right: 32,
+            top: 90,
+            p: 2.5,
+            borderRadius: 3,
+            backgroundColor: "rgba(255,255,255,0.98)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(230,230,230,0.7)",
+            boxShadow: "0 12px 30px rgba(0,0,0,0.12)",
+            width: 280,
+            zIndex: 30,
+          }}>
+          <Typography sx={{ fontSize: 14, fontWeight: 600, mb: 1.5 }}>
+            Select Date Range
+          </Typography>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+            {/* From Date */}
+            <TextField
+              label="From"
+              type="date"
+              size="small"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  backgroundColor: "#f8fafc",
+                },
               }}
             />
-            {CATEGORY_LABELS[key]}
-          </div>
+
+            {/* To Date */}
+            <TextField
+              label="To"
+              type="date"
+              size="small"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 2,
+                  backgroundColor: "#f8fafc",
+                },
+              }}
+            />
+          </Box>
+
+          {/* Buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mt: 2,
+            }}>
+            <Button
+              variant="outlined"
+              onClick={cancelCustom}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontSize: 13,
+              }}>
+              Cancel
+            </Button>
+
+            <Button
+              variant="contained"
+              onClick={applyCustomRange}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontSize: 13,
+                backgroundColor: HIGHLIGHT_BLUE,
+                "&:hover": { backgroundColor: "#0078d1" },
+              }}>
+              Apply
+            </Button>
+          </Box>
+        </Paper>
+      </Fade>
+
+      {/* Category Chips */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: 1,
+          flexWrap: "wrap",
+          mb: 2,
+          mt: 1,
+        }}>
+        {CATEGORY_KEYS.map((key) => (
+          <Chip
+            key={key}
+            clickable
+            onClick={() => toggleCategory(key)}
+            label={CATEGORY_LABELS[key]}
+            variant="filled"
+            sx={{
+              borderRadius: "999px",
+              px: 1.5,
+              py: 0.25,
+              backgroundColor: "#e5f3ff",
+              color: "#0f172a",
+              fontSize: 13,
+              "&:hover": {
+                backgroundColor: "#d7ecff",
+              },
+              display: "flex",
+              alignItems: "center",
+              gap: 0.75,
+              ".MuiChip-label": {
+                display: "flex",
+                alignItems: "center",
+                gap: 0.75,
+              },
+            }}
+            icon={
+              <Box
+                component="span"
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  backgroundColor: CATEGORY_COLORS[key],
+                }}
+              />
+            }
+          />
         ))}
-      </div>
+      </Box>
 
       {/* Graph */}
-      <div style={{ width: "100%", height: 360 }}>
+      <Box sx={{ width: "100%", height: 360 }}>
         <ResponsiveContainer>
           <LineChart data={displayedData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
@@ -158,7 +371,7 @@ export default function CategoryTrendGraph({ items }) {
             ))}
           </LineChart>
         </ResponsiveContainer>
-      </div>
-    </div>
+      </Box>
+    </Paper>
   );
 }
