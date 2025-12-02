@@ -22,7 +22,7 @@ function Navbar() {
         sx={{
           px: { xs: 2, sm: 4 },
           py: 2,
-          maxWidth: "1400px",
+          maxWidth: "1460px",
           mx: "auto",
         }}>
         {/* Logo + Brand Name */}
@@ -46,7 +46,7 @@ function Navbar() {
               fontWeight: 800,
               color: "#1a3a1a",
               letterSpacing: "0.3px",
-              display: { xs: "none", md: "block" }, // Hide text on very small screens
+              display: { xs: "none", md: "block" },
             }}>
             The Pickls
           </Typography>
@@ -54,7 +54,7 @@ function Navbar() {
 
         {/* Center Title - Only visible on larger screens */}
         <Typography
-          variant="h6"
+          variant="h4"
           sx={{
             position: "absolute",
             left: 50,
@@ -63,7 +63,7 @@ function Navbar() {
             fontWeight: 600,
             color: "#1e3a1e",
             pointerEvents: "none",
-            display: { xs: "none", lg: "block" }, // Only show on large screens
+            display: { xs: "none", lg: "block" },
           }}>
           Stock Inventory Management
         </Typography>

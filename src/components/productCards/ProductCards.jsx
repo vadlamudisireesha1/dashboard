@@ -129,7 +129,7 @@ export default function ProductCards() {
               style={{ textDecoration: "none", color: "inherit" }}>
               <Box
                 sx={{
-                  width: "177px",
+                  width: "213px",
                   minHeight: "130px",
                   background: cat.bg,
                   borderRadius: "18px",
@@ -277,7 +277,7 @@ export default function ProductCards() {
       </Collapse>
 
       {/* FINAL SEPARATOR */}
-      <Box sx={{ width: "100%", position: "relative", mt: 1, mb: 4 }}>
+      <Box sx={{ width: "100%", position: "relative", mt: 1, mb: 0 }}>
         <Box sx={{ width: "100%", height: "1.5px", backgroundColor: "#ddd" }} />
 
         <Box

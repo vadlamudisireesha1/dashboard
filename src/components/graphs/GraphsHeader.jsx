@@ -6,6 +6,19 @@ import {
   Filter,
   BarChart3,
 } from "lucide-react";
+
+import {
+  Box,
+  Paper,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  TextField,
+  Fade,
+} from "@mui/material";
+
 import {
   calculateStockValue,
   getTotalUnits,
@@ -13,59 +26,73 @@ import {
   CATEGORY_LABELS,
 } from "./graphUtils";
 
+// ==========================================================
+// GLOSSY CARD COMPONENT
+// ==========================================================
 function StatCard({ label, value, accent, Icon }) {
-  const [hovered, setHovered] = useState(false);
+  const [hover, setHover] = useState(false);
 
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
+    <Paper
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      elevation={0}
+      sx={{
         flex: 1,
         minWidth: 220,
-        borderRadius: 24,
-        padding: 20,
+        p: 2.5,
+        borderRadius: 4,
+        position: "relative",
         background: accent.background,
-        border: "1px solid rgba(255,255,255,0.7)",
-        boxShadow: hovered
-          ? "0 24px 40px rgba(15,23,42,0.25)"
-          : "0 14px 30px rgba(15,23,42,0.14)",
-        transform: hovered ? "translateY(-2px)" : "translateY(0px)",
-        transition: "all 0.2s ease",
-        zIndex: 1, // prevents overlap above dropdown
+        transition: "0.25s ease",
+        transform: hover ? "translateY(-4px)" : "translateY(0px)",
+        boxShadow: hover
+          ? "0 18px 28px rgba(0,0,0,0.16)"
+          : "0 10px 20px rgba(0,0,0,0.10)",
+        border: "1px solid rgba(255,255,255,0.6)",
+        // ❌ no zIndex here – cards must stay under the header popup
       }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div>
-          <div
-            style={{
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box>
+          <Typography
+            sx={{
               fontSize: 12,
               color: accent.labelColor,
+              fontWeight: 600,
               letterSpacing: ".05em",
             }}>
             {label}
-          </div>
-          <div
-            style={{ fontSize: 28, fontWeight: 800, color: accent.valueColor }}>
-            {value}
-          </div>
-        </div>
+          </Typography>
 
-        <div
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 999,
+          <Typography
+            sx={{
+              mt: 0.5,
+              fontSize: 28,
+              fontWeight: 800,
+              color: accent.valueColor,
+            }}>
+            {value}
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
             background: accent.iconBg,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <Icon size={18} color={accent.iconColor} strokeWidth={2.2} />
-        </div>
-      </div>
-    </div>
+          <Icon size={20} color={accent.iconColor} strokeWidth={2.2} />
+        </Box>
+      </Box>
+    </Paper>
   );
 }
+
+// MAIN HEADER COMPONENT
 
 export default function GraphsHeader({
   items,
@@ -80,18 +107,15 @@ export default function GraphsHeader({
 
   const [open, setOpen] = useState(false);
 
-  // local temporary values
   const [tmpCategory, setTmpCategory] = useState(category);
   const [tmpDate, setTmpDate] = useState(date);
 
-  // APPLY FILTER
   const applyFilter = () => {
     setCategory(tmpCategory);
     setDate(tmpDate);
     setOpen(false);
   };
 
-  // CANCEL FILTER
   const cancelFilter = () => {
     setTmpCategory(category);
     setTmpDate(date);
@@ -99,223 +123,186 @@ export default function GraphsHeader({
   };
 
   return (
-    <div>
-      {/* HEADER BAR */}
-      <div
-        style={{
-          padding: 20,
-          borderRadius: 18,
+    <Box>
+      {/* ========================================================
+                         HEADER BAR
+      ======================================================== */}
+      <Paper
+        elevation={3}
+        sx={{
+          p: 2.5,
+          borderRadius: 4,
           background: "rgba(255,255,255,0.65)",
           backdropFilter: "blur(12px)",
           border: "1px solid rgba(255,255,255,0.45)",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+          position: "relative",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          boxShadow: "0 8px 24px rgba(15,23,42,.15)",
-          marginBottom: 20,
-          position: "relative",
-          zIndex: 10,
+          flexWrap: "wrap",
+          mb: 3,
+          gap: 2,
+          zIndex: 50,
         }}>
-        {/* LEFT TITLE */}
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 12 }}>
-          <div
-            style={{
+        {/* ---------------- LEFT: Title ---------------- */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box
+            sx={{
               width: 60,
               height: 60,
-              borderRadius: 14,
-              background: "linear-gradient(135deg,#4f46e5,#22c55e,#0ea5e9)",
+              borderRadius: 3,
+              background: "linear-gradient(135deg, #4f46e5, #22c55e, #0ea5e9)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 12px 28px rgba(15,23,42,.28)",
+              boxShadow: "0 8px 18px rgba(0,0,0,0.2)",
             }}>
-            <BarChart3 size={22} color="#fff" />
-          </div>
+            <BarChart3 size={26} color="#fff" />
+          </Box>
 
-          <div>
-            <h1 style={{ margin: 0, fontSize: 30, fontWeight: 900 }}>
+          <Box>
+            <Typography
+              sx={{ fontSize: 30, fontWeight: 900, color: "#0f172a" }}>
               Stock Analytics Dashboard
-            </h1>
-            <p style={{ margin: 0, color: "#6b7280", marginTop: 4 }}>
+            </Typography>
+
+            <Typography sx={{ color: "#6b7280", fontSize: 14 }}>
               Track stock, sales and category performance in one clean view.
-            </p>
-          </div>
-        </div>
+            </Typography>
+          </Box>
+        </Box>
 
-        {/* RIGHT FILTER BUTTON */}
-        <div style={{ position: "relative" }}>
-          <div
+        {/* ---------------- RIGHT: Filter Button ---------------- */}
+        <Box sx={{ position: "relative" }}>
+          <Button
             onClick={() => setOpen(!open)}
-            style={{
+            variant="outlined"
+            sx={{
+              color: "gray",
+              px: 2.5,
+              py: 1,
+              borderRadius: "999px",
+              fontWeight: 700,
               background: "rgba(255,255,255,0.95)",
-              padding: "10px 16px",
-              borderRadius: 999,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              cursor: "pointer",
-              border: "1px solid rgba(255,255,255,.75)",
-              fontWeight: 600,
-              transition: ".25s",
-              boxShadow: "0 6px 18px rgba(15,23,42,.12)",
-            }}>
-            <Filter size={16} />
-            Filter
-          </div>
+              borderColor: "rgba(200,200,200,0.8)",
+              boxShadow: "0 6px 18px rgba(0,0,0,0.10)",
+            }}
+            startIcon={<Filter size={16} />}>
+            <Typography fontWeight={700}>Filter</Typography>
+          </Button>
 
-          {/* DROPDOWN */}
-          {open && (
-            <div
-              style={{
+          {/* filter popUp */}
+          <Fade in={open}>
+            <Paper
+              elevation={6}
+              sx={{
                 position: "absolute",
                 right: 0,
-                top: 52,
-                width: 320,
-                padding: 18,
-                background: "rgba(255,255,255,0.98)",
-                backdropFilter: "blur(14px)",
-                borderRadius: 16,
-                border: "1px solid rgba(255,255,255,.7)",
-                boxShadow: "0 12px 32px rgba(15,23,42,.15)",
-                zIndex: 999,
+                top: 55,
+                width: 300,
+                p: 2,
+                borderRadius: 3,
+                background: "white",
+                boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
+                border: "1px solid #e2e8f0",
+                zIndex: 2000, // ✅ inside header's stacking context, still above everything in it
               }}>
-              {/* FILTER GRID */}
-              <div
-                style={{
+              <Typography sx={{ fontSize: 14, fontWeight: 700, mb: 1 }}>
+                Filter Options
+              </Typography>
+
+              <Box
+                sx={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
-                  columnGap: 12,
-                  marginBottom: 12,
+                  gap: 2,
+                  mb: 2,
                 }}>
                 {/* DATE */}
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <label
-                    style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    value={tmpDate}
-                    onChange={(e) => setTmpDate(e.target.value)}
-                    style={{
-                      padding: "9px 12px",
-                      borderRadius: 8,
-                      border: "1px solid #d4d4d8",
-                      background: "#f8fafc",
-                    }}
-                  />
-                </div>
+                <TextField
+                  type="date"
+                  label="Date"
+                  size="small"
+                  value={tmpDate}
+                  onChange={(e) => setTmpDate(e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                />
 
                 {/* CATEGORY */}
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <label
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 600,
-                      marginBottom: 4,
-                    }}>
-                    Category
-                  </label>
-                  <select
+                <FormControl size="small">
+                  <Select
                     value={tmpCategory}
-                    onChange={(e) => setTmpCategory(e.target.value)}
-                    style={{
-                      padding: "9px 12px",
-                      borderRadius: 8,
-                      border: "1px solid #d4d4d8",
-                      background: "#f8fafc",
-                    }}>
-                    <option value="all">All</option>
-                    {CATEGORY_KEYS.map((key) => (
-                      <option key={key} value={key}>
-                        {CATEGORY_LABELS[key]}
-                      </option>
+                    onChange={(e) => setTmpCategory(e.target.value)}>
+                    <MenuItem value="all">All Categories</MenuItem>
+                    {CATEGORY_KEYS.map((k) => (
+                      <MenuItem key={k} value={k}>
+                        {CATEGORY_LABELS[k]}
+                      </MenuItem>
                     ))}
-                  </select>
-                </div>
-              </div>
+                  </Select>
+                </FormControl>
+              </Box>
 
-              {/* BUTTONS */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 10,
-                  marginTop: 8,
-                }}>
-                <button
-                  onClick={cancelFilter}
-                  style={{
-                    padding: "8px 16px",
-                    borderRadius: 8,
-                    border: "1px solid #d4d4d8",
-                    background: "#ffffff",
-                    cursor: "pointer",
-                  }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Button variant="outlined" onClick={cancelFilter}>
                   Cancel
-                </button>
-
-                <button
-                  onClick={applyFilter}
-                  style={{
-                    padding: "8px 18px",
-                    borderRadius: 8,
-                    background: "#2563eb",
-                    border: "none",
-                    color: "white",
-                    cursor: "pointer",
-                  }}>
+                </Button>
+                <Button variant="contained" onClick={applyFilter}>
                   Apply
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* SUMMARY CARDS */}
-      {/* SUMMARY CARDS */}
-      <div
-        style={{ display: "flex", gap: 18, flexWrap: "wrap", marginTop: 20 }}>
+                </Button>
+              </Box>
+            </Paper>
+          </Fade>
+        </Box>
+      </Paper>
+      {/* // SUMMARY CARDS */}
+      <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+        {/* PRODUCTS */}
         <StatCard
           label="Products"
           value={totalProducts}
           Icon={Package}
           accent={{
-            background: "linear-gradient(135deg,#eff6ff,#dbeafe,#e0f2fe)",
-            labelColor: "#1d4ed8",
-            valueColor: "#0f172a",
-            iconBg: "rgba(59,130,246,.15)",
-            iconColor: "#1d4ed8",
+            background:
+              "linear-gradient(135deg, #E4ECFF 0%, #C3D4FF 40%, #9AB7FF 100%)",
+            labelColor: "#2347C5",
+            valueColor: "#0A1A3B",
+            iconBg: "rgba(35,71,197,0.22)",
+            iconColor: "#2347C5",
           }}
         />
 
+        {/* TOTAL UNITS */}
         <StatCard
           label="Total Units"
           value={totalUnits}
           Icon={Boxes}
           accent={{
-            background: "linear-gradient(135deg,#ecfdf5,#bbf7d0,#dcfce7)",
-            labelColor: "#047857",
-            valueColor: "#022c22",
-            iconBg: "rgba(16,185,129,.18)",
-            iconColor: "#047857",
+            background:
+              "linear-gradient(135deg, #D9FFE8 0%, #B9F5DA 40%, #9AE6C7 100%)",
+            labelColor: "#0B815A",
+            valueColor: "#073B2A",
+            iconBg: "rgba(11,129,90,0.22)",
+            iconColor: "#0B815A",
           }}
         />
 
+        {/* STOCK VALUE */}
         <StatCard
           label="Stock Value"
           value={`₹ ${totalValue.toLocaleString("en-IN")}`}
           Icon={CircleDollarSign}
           accent={{
-            background: "linear-gradient(135deg,#fff7ed,#fed7aa,#ffedd5)",
-            labelColor: "#c2410c",
-            valueColor: "#431407",
-            iconBg: "rgba(249,115,22,.18)",
-            iconColor: "#c2410c",
+            background:
+              "linear-gradient(135deg, #FFEBD6 0%, #FFD3A8 40%, #FFC48D 100%)",
+            labelColor: "#C05621",
+            valueColor: "#7A3410",
+            iconBg: "rgba(192,86,33,0.22)",
+            iconColor: "#C05621",
           }}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

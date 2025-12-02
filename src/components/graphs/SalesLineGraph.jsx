@@ -1,4 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import {
+  Box,
+  Paper,
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+  Button,
+  TextField,
+  Fade,
+  Select,
+  MenuItem,
+  FormControl,
+} from "@mui/material";
 import {
   LineChart,
   Line,
@@ -7,186 +20,330 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
-import { LineChart as LineChartIcon } from "lucide-react";
+import { Calendar, TrendingUp, ListFilter } from "lucide-react";
+
 import {
   CATEGORY_KEYS,
   CATEGORY_LABELS,
   CATEGORY_COLORS,
   filterItemsByCategory,
-  getSalesTrend,
+  buildFullDateSpan,
 } from "./graphUtils";
 
-export default function SalesLineGraph({ items }) {
-  const [openFilters, setOpenFilters] = useState(true);
-  const [category, setCategory] = useState("all");
-  const [range, setRange] = useState(30);
-  const [smooth, setSmooth] = useState(true);
+const HIGHLIGHT_BLUE = "#0098FF";
 
-  const filtered = filterItemsByCategory(items, category);
-  const data = getSalesTrend(filtered, range);
+export default function SalesLineGraph({ items }) {
+  const [category, setCategory] = useState("all");
+  const [range, setRange] = useState("all");
+  const [customOpen, setCustomOpen] = useState(false);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  // ---------- DATA BUILD ----------
+  const baseData = useMemo(() => {
+    const filtered = filterItemsByCategory(items, category);
+    if (!filtered?.length) return [];
+
+    const dates = buildFullDateSpan(filtered);
+    return dates.map((date) => {
+      const units = filtered.reduce((sum, item) => {
+        const entry = item.salesHistory?.find((s) => s.date === date);
+        return sum + Number(entry?.unitsSold || 0);
+      }, 0);
+
+      return { date, units };
+    });
+  }, [items, category]);
+
+  const filteredData = useMemo(() => {
+    if (!baseData.length) return [];
+
+    if (range === "all") return baseData;
+
+    if (["7", "15", "30"].includes(range)) {
+      const n = Number(range);
+      return baseData.slice(-n);
+    }
+
+    if (range === "custom" && fromDate && toDate) {
+      const from = new Date(fromDate);
+      const to = new Date(toDate);
+      return baseData.filter((d) => {
+        const date = new Date(d.date);
+        return date >= from && date <= to;
+      });
+    }
+
+    return baseData;
+  }, [baseData, range, fromDate, toDate]);
+
+  const applyCustomRange = () => {
+    if (fromDate && toDate) {
+      setRange("custom");
+      setCustomOpen(false);
+    }
+  };
+
+  const cancelCustom = () => {
+    setFromDate("");
+    setToDate("");
+    setCustomOpen(false);
+  };
+
+  const currentColor =
+    category === "all" ? HIGHLIGHT_BLUE : CATEGORY_COLORS[category];
 
   return (
-    <div
-      style={{
-        background: "white",
-        borderRadius: 28,
-        padding: 28,
-        boxShadow: "0 12px 40px rgba(0,0,0,0.08)",
+    <Paper
+      elevation={0}
+      sx={{
+        p: 4,
+        borderRadius: 4,
+        background: "linear-gradient(180deg,#ffffff,#f8fbff)",
+        boxShadow: "0 20px 40px rgba(0,0,0,0.05)",
+        position: "relative",
+        border: "1px solid #eef3f8",
       }}>
-      {/* Header */}
-      <div
-        style={{
+      {/* HEADER */}
+      <Box
+        sx={{
           display: "flex",
           justifyContent: "space-between",
-          marginBottom: 16,
-          alignItems: "center",
           flexWrap: "wrap",
-          gap: 12,
+          alignItems: "center",
+          mb: 2.5,
+          gap: 2,
         }}>
-        <h2
-          style={{
-            margin: 0,
-            fontSize: 22,
-            fontWeight: 800,
+        <Box>
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: 24,
+              fontWeight: 900,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              letterSpacing: "-0.5px",
+            }}>
+            <TrendingUp size={22} />
+            Daily Sales Trend
+          </Typography>
+
+          <Typography sx={{ color: "#64748b", fontSize: 14 }}>
+            Visualize sales movement over selected days.
+          </Typography>
+        </Box>
+
+        {/* SELECTED CATEGORY WITH DROPDOWN */}
+        <Box
+          sx={{
             display: "flex",
             alignItems: "center",
-            gap: 8,
+            gap: 1,
+            background: "rgba(0,152,255,0.08)",
+            px: 1.5,
+            py: 1,
+            borderRadius: "14px",
+            border: "1px solid rgba(0,152,255,0.2)",
           }}>
-          <LineChartIcon size={18} strokeWidth={2.2} />
-          <span>Sales Trend</span>
+          <Typography sx={{ fontSize: 16, fontWeight: 600, color: "#475569" }}>
+            Selected:
+          </Typography>
 
-          {/* Active Category Label */}
-          <span
-            style={{
-              fontSize: 12,
-              background: "#e2e8f0",
-              padding: "4px 10px",
-              borderRadius: 50,
-              marginLeft: 10,
-              color: "#334155",
-            }}>
-            {category === "all" ? "All Categories" : CATEGORY_LABELS[category]}
-          </span>
-        </h2>
-
-        <button
-          onClick={() => setOpenFilters((p) => !p)}
-          style={{
-            padding: "6px 12px",
-            background: "#f1f5f9",
-            borderRadius: 50,
-            border: "1px solid #e2e8f0",
-            cursor: "pointer",
-            fontSize: 12,
-          }}>
-          {openFilters ? "Hide Filters ▲" : "Show Filters ▼"}
-        </button>
-      </div>
-
-      {openFilters && (
-        <div
-          style={{
-            display: "flex",
-            gap: 18,
-            flexWrap: "wrap",
-            marginBottom: 16,
-          }}>
-          {/* Category */}
-          <div>
-            <div style={{ fontSize: 12, color: "#6b7280" }}>Category</div>
-            <select
+          <FormControl size="small">
+            <Select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              style={{
-                padding: "8px 14px",
-                borderRadius: 50,
-                border: "1px solid #e2e8f0",
+              sx={{
+                minWidth: 140,
+                borderRadius: "10px",
+                background: "#ffffff",
+                ".MuiOutlinedInput-notchedOutline": {
+                  borderColor: "transparent",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#cbd5e1",
+                },
+                fontSize: 14,
+                fontWeight: 500,
+                px: 0.5,
               }}>
-              <option value="all">All</option>
+              <MenuItem value="all">All Categories</MenuItem>
               {CATEGORY_KEYS.map((key) => (
-                <option key={key} value={key}>
+                <MenuItem key={key} value={key}>
                   {CATEGORY_LABELS[key]}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </div>
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
 
-          {/* Range */}
-          <div>
-            <div style={{ fontSize: 12, color: "#6b7280" }}>Date Range</div>
-            <div style={{ display: "flex", gap: 6 }}>
-              {[7, 30, 90].map((r) => (
-                <button
-                  key={r}
-                  onClick={() => setRange(r)}
-                  style={{
-                    padding: "6px 10px",
-                    borderRadius: 50,
-                    border: "1px solid #e2e8f0",
-                    background: range === r ? "#0ea5e9" : "#f1f5f9",
-                    color: range === r ? "white" : "#0f172a",
-                    fontSize: 12,
-                  }}>
-                  {r} days
-                </button>
-              ))}
-            </div>
-          </div>
+      {/* FILTER CONTROLS */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: 2,
+          mb: 2,
+        }}>
+        {/* RANGE BUTTONS */}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1.5,
+            alignItems: "center",
+            flexWrap: "wrap",
+            ml: "auto",
+          }}>
+          <ToggleButtonGroup
+            exclusive
+            value={range}
+            onChange={(_, v) => v && (setRange(v), setCustomOpen(false))}
+            sx={{
+              display: "flex",
+              gap: "10px",
+              "& .MuiToggleButton-root": {
+                height: 34,
+                px: 1.2,
+                borderRadius: "999px",
+                border: "1px solid #d5e0ec !important",
+                background: "white",
+                textTransform: "none",
+                fontSize: 13,
+                "&.Mui-selected": {
+                  background: HIGHLIGHT_BLUE + " !important",
+                  color: "white",
+                  borderColor: HIGHLIGHT_BLUE + " !important",
+                },
+              },
+            }}>
+            <ToggleButton value="all">All</ToggleButton>
+            <ToggleButton value="7">Last 7 days</ToggleButton>
+            <ToggleButton value="15">Last 15 days</ToggleButton>
+            <ToggleButton value="30">Last 30 days</ToggleButton>
+          </ToggleButtonGroup>
 
-          {/* Line Style */}
-          <div>
-            <div style={{ fontSize: 12, color: "#6b7280" }}>Line Style</div>
-            <div style={{ display: "flex", gap: 6 }}>
-              <button
-                onClick={() => setSmooth(true)}
-                style={{
-                  padding: "6px 10px",
-                  borderRadius: 50,
-                  border: "1px solid #e2e8f0",
-                  background: smooth ? "#0ea5e9" : "#f1f5f9",
-                  color: smooth ? "white" : "#0f172a",
-                  fontSize: 12,
-                }}>
-                Smooth
-              </button>
-              <button
-                onClick={() => setSmooth(false)}
-                style={{
-                  padding: "6px 10px",
-                  borderRadius: 50,
-                  border: "1px solid #e2e8f0",
-                  background: !smooth ? "#0ea5e9" : "#f1f5f9",
-                  color: !smooth ? "white" : "#0f172a",
-                  fontSize: 12,
-                }}>
-                Straight
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          <Button
+            onClick={() => setCustomOpen((p) => !p)}
+            sx={{
+              height: 34,
+              px: 2,
+              display: "flex",
+              gap: "4px",
+              borderRadius: "999px",
+              border: "1px solid #d5e0ec",
+              background: range === "custom" ? HIGHLIGHT_BLUE : "white",
+              color: range === "custom" ? "white" : "#0f172a",
+              fontSize: 13,
+              "&:hover": {
+                background: range === "custom" ? "#0284c7" : "#f1f5f9",
+              },
+            }}>
+            <Calendar size={16} />
+            Custom
+          </Button>
+        </Box>
+      </Box>
 
-      {/* Chart */}
-      <div style={{ width: "100%", height: 320 }}>
+      {/* CUSTOM DATE POPUP */}
+      <Fade in={customOpen}>
+        <Paper
+          elevation={4}
+          sx={{
+            position: "absolute",
+            right: 30,
+            top: 120,
+            p: 2.5,
+            borderRadius: 3,
+            width: 290,
+            boxShadow: "0 18px 45px rgba(15,23,42,0.18)",
+            border: "1px solid #e2e8f0",
+            background: "white",
+            backdropFilter: "blur(10px)",
+            zIndex: 30,
+          }}>
+          <Typography sx={{ fontSize: 15, fontWeight: 700, mb: 2 }}>
+            Custom Date Range
+          </Typography>
+
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              label="From"
+              type="date"
+              size="small"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+
+            <TextField
+              label="To"
+              type="date"
+              size="small"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mt: 3,
+            }}>
+            <Button
+              variant="outlined"
+              onClick={cancelCustom}
+              sx={{ borderRadius: 2, fontSize: 13 }}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={applyCustomRange}
+              sx={{
+                borderRadius: 2,
+                background: HIGHLIGHT_BLUE,
+                fontSize: 13,
+                "&:hover": { background: "#0284c7" },
+              }}>
+              Apply
+            </Button>
+          </Box>
+        </Paper>
+      </Fade>
+
+      {/* CHART */}
+      <Box sx={{ width: "100%", height: 380, mt: 2 }}>
         <ResponsiveContainer>
-          <LineChart data={data}>
+          <LineChart data={filteredData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip />
+            <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+            <YAxis tick={{ fontSize: 12 }} />
+            <Tooltip
+              contentStyle={{
+                borderRadius: 10,
+                border: "1px solid #e2e8f0",
+                boxShadow: "0 8px 25px rgba(0,0,0,0.08)",
+              }}
+            />
+            <Legend wrapperStyle={{ fontSize: 13 }} />
             <Line
-              type={smooth ? "monotone" : "linear"}
+              type="monotone"
               dataKey="units"
-              stroke={CATEGORY_COLORS[category] || "#0ea5e9"}
-              strokeWidth={2.5}
+              name="Units Sold"
+              stroke={currentColor}
+              strokeWidth={3}
               dot={false}
-              activeDot={{ r: 5 }}
-              animationDuration={1100}
+              activeDot={{ r: 6 }}
             />
           </LineChart>
         </ResponsiveContainer>
-      </div>
-    </div>
+      </Box>
+    </Paper>
   );
 }
