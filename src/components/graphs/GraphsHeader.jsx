@@ -50,7 +50,7 @@ function StatCard({ label, value, accent, Icon }) {
           ? "0 18px 28px rgba(0,0,0,0.16)"
           : "0 10px 20px rgba(0,0,0,0.10)",
         border: "1px solid rgba(255,255,255,0.6)",
-        // ❌ no zIndex here – cards must stay under the header popup
+         
       }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box>
