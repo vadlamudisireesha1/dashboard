@@ -16,21 +16,10 @@
         { "date": "2025-01-22", "unitsSold": 10, "revenue": 450 },
         { "date": "2025-01-26", "unitsSold": 12, "revenue": 540 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-05", "unitsAdded": 60 },
-        { "date": "2025-01-23", "unitsAdded": 40 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 36,
-        "revenue": 1620,
-        "averageOrderValue": 135
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 132,
-        "revenue": 5700
-      }
+      "restockHistory": [{ "date": "2025-01-05", "unitsAdded": 60 }, { "date": "2025-01-23", "unitsAdded": 40 }],
+      "weeklySummary": { "totalUnitsSold": 36, "revenue": 1620, "averageOrderValue": 135 },
+      "monthlySummary": { "totalUnitsSold": 132, "revenue": 5700 }
     },
-
     {
       "id": "ORG-000002",
       "sku": "ORG-000002",
@@ -46,21 +35,10 @@
         { "date": "2025-01-21", "unitsSold": 8, "revenue": 440 },
         { "date": "2025-01-25", "unitsSold": 10, "revenue": 550 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-09", "unitsAdded": 75 },
-        { "date": "2025-01-24", "unitsAdded": 50 }
-      ],
-      "weeklySummary": {
-        "totalUnitsSold": 29,
-        "revenue": 1595,
-        "averageOrderValue": 110
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 118,
-        "revenue": 6350
-      }
+      "restockHistory": [{ "date": "2025-01-09", "unitsAdded": 75 }, { "date": "2025-01-24", "unitsAdded": 50 }],
+      "weeklySummary": { "totalUnitsSold": 29, "revenue": 1595, "averageOrderValue": 110 },
+      "monthlySummary": { "totalUnitsSold": 118, "revenue": 6350 }
     },
-
     {
       "id": "ORG-000003",
       "sku": "ORG-000003",
@@ -76,19 +54,66 @@
         { "date": "2025-01-23", "unitsSold": 8, "revenue": 560 },
         { "date": "2025-01-29", "unitsSold": 11, "revenue": 770 }
       ],
-      "restockHistory": [
-        { "date": "2025-01-08", "unitsAdded": 68 },
-        { "date": "2025-01-27", "unitsAdded": 45 }
+      "restockHistory": [{ "date": "2025-01-08", "unitsAdded": 68 }, { "date": "2025-01-27", "unitsAdded": 45 }],
+      "weeklySummary": { "totalUnitsSold": 29, "revenue": 2030, "averageOrderValue": 140 },
+      "monthlySummary": { "totalUnitsSold": 122, "revenue": 7800 }
+    },
+    {
+      "id": "ORG-000004",
+      "sku": "ORG-000004",
+      "category": "organic",
+      "name": "Organic Millet Flour",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 200, "units": 40, "price": 65 },
+        { "gram": 400, "units": 28, "price": 120 }
       ],
-      "weeklySummary": {
-        "totalUnitsSold": 29,
-        "revenue": 2030,
-        "averageOrderValue": 140
-      },
-      "monthlySummary": {
-        "totalUnitsSold": 122,
-        "revenue": 7800
-      }
+      "salesHistory": [
+        { "date": "2025-01-20", "unitsSold": 12, "revenue": 780 },
+        { "date": "2025-01-22", "unitsSold": 9, "revenue": 585 },
+        { "date": "2025-01-26", "unitsSold": 8, "revenue": 520 }
+      ],
+      "restockHistory": [{ "date": "2025-01-03", "unitsAdded": 60 }, { "date": "2025-01-24", "unitsAdded": 45 }],
+      "weeklySummary": { "totalUnitsSold": 29, "revenue": 1885, "averageOrderValue": 130 },
+      "monthlySummary": { "totalUnitsSold": 116, "revenue": 7520 }
+    },
+    {
+      "id": "ORG-000005",
+      "sku": "ORG-000005",
+      "category": "organic",
+      "name": "Organic Flax Seeds",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 200, "units": 36, "price": 85 },
+        { "gram": 400, "units": 24, "price": 160 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-18", "unitsSold": 7, "revenue": 595 },
+        { "date": "2025-01-21", "unitsSold": 11, "revenue": 935 },
+        { "date": "2025-01-29", "unitsSold": 6, "revenue": 510 }
+      ],
+      "restockHistory": [{ "date": "2025-01-07", "unitsAdded": 55 }, { "date": "2025-01-22", "unitsAdded": 40 }],
+      "weeklySummary": { "totalUnitsSold": 24, "revenue": 2040, "averageOrderValue": 120 },
+      "monthlySummary": { "totalUnitsSold": 96, "revenue": 8160 }
+    },
+    {
+      "id": "ORG-000006",
+      "sku": "ORG-000006",
+      "category": "organic",
+      "name": "Organic Hemp Seeds",
+      "bgColor": "#ffffff",
+      "weights": [
+        { "gram": 200, "units": 32, "price": 95 },
+        { "gram": 400, "units": 20, "price": 180 }
+      ],
+      "salesHistory": [
+        { "date": "2025-01-19", "unitsSold": 9, "revenue": 855 },
+        { "date": "2025-01-23", "unitsSold": 7, "revenue": 665 },
+        { "date": "2025-01-28", "unitsSold": 10, "revenue": 950 }
+      ],
+      "restockHistory": [{ "date": "2025-01-02", "unitsAdded": 50 }, { "date": "2025-01-25", "unitsAdded": 45 }],
+      "weeklySummary": { "totalUnitsSold": 26, "revenue": 2470, "averageOrderValue": 95 },
+      "monthlySummary": { "totalUnitsSold": 104, "revenue": 9880 }
     }
   ]
 }
