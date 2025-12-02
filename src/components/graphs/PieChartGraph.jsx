@@ -257,7 +257,7 @@ export default function PieChartGraph({ items }) {
     sx={{
       position: "absolute",
       right: 28,
-      top: 0,
+      top: 70,
       width: 340,
       p: 2,
       zIndex: 99999,

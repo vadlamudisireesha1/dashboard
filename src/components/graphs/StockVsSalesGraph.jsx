@@ -111,7 +111,7 @@ export default function StockVsSalesGraph({ items }) {
 
          
       </Box>
-
+{/* open custom */}
       <Fade in={customOpen}>
   <Paper
     elevation={4}

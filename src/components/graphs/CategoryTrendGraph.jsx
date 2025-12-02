@@ -238,9 +238,8 @@ export default function CategoryTrendGraph({ items }) {
     );
   })}
 </Box>
-       
-
-<Fade in={customOpen}>
+      {/* dropdown filter */}
+      <Fade in={customOpen}>
   <Paper
     elevation={4}
     sx={{
@@ -259,7 +258,7 @@ export default function CategoryTrendGraph({ items }) {
       Select Date Range
     </Typography>
 
-    {/* RANGE ONLY: From / To */}
+    {/* RANGE ONLY — single removed */}
     <Box sx={{ display: "flex", gap: 1 }}>
       <TextField
         type="date"
@@ -268,9 +267,12 @@ export default function CategoryTrendGraph({ items }) {
         value={tmpFrom}
         onChange={(e) => setTmpFrom(e.target.value)}
         InputLabelProps={{ shrink: true }}
-        inputProps={minAvailable ? { min: minAvailable } : {}}
+        inputProps={
+          minAvailable ? { min: minAvailable } : {}
+        }
         sx={{ flex: 1 }}
       />
+
       <TextField
         type="date"
         label="To"
@@ -278,7 +280,9 @@ export default function CategoryTrendGraph({ items }) {
         value={tmpTo}
         onChange={(e) => setTmpTo(e.target.value)}
         InputLabelProps={{ shrink: true }}
-        inputProps={maxAvailable ? { max: maxAvailable } : {}}
+        inputProps={
+          maxAvailable ? { max: maxAvailable } : {}
+        }
         sx={{ flex: 1 }}
       />
     </Box>
@@ -291,6 +295,7 @@ export default function CategoryTrendGraph({ items }) {
       >
         Cancel
       </Button>
+
       <Button
         variant="contained"
         onClick={applyCustomRange}
