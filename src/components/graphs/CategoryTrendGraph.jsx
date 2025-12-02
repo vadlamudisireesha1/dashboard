@@ -177,7 +177,19 @@ export default function CategoryTrendGraph({ items }) {
     <ToggleButton value="7">7d</ToggleButton>
     <ToggleButton value="15">15d</ToggleButton>
     <ToggleButton value="30">30d</ToggleButton>
-    <ToggleButton value="custom"><Calendar size={16} />&nbsp;Custom</ToggleButton>
+    {/* ensure clicking custom toggles popup when already selected */}
+    <ToggleButton
+      value="custom"
+      onClick={(e) => {
+        e.stopPropagation();
+        if (range === "custom") {
+          setCustomOpen((s) => !s);
+        }
+      }}
+    >
+      <Calendar size={16} />
+      &nbsp;Custom
+    </ToggleButton>
   </ToggleButtonGroup>
 </Box>
 
