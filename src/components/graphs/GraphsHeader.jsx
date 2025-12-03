@@ -196,55 +196,86 @@ export default function GraphsHeader({ allItems = [], items = [], category, setC
         </Box>
 
         {/* Filter button */}
-        <Box sx={{ position: "relative" }}>
-          <Button onClick={() => setOpen((p) => !p)} variant="outlined" sx={{ color: "gray", px: 2.5, py: 1, borderRadius: "999px", fontWeight: 700, background: "rgba(255,255,255,0.95)", borderColor: "rgba(200,200,200,0.8)", boxShadow: "0 6px 18px rgba(0,0,0,0.10)" }} startIcon={<Filter size={16} />}>
-            <Typography fontWeight={700}>Filter</Typography>
-          </Button>
+        <Fade in={open}>
+  <Paper
+    elevation={6}
+    sx={{
+      position: "absolute",
+      right: 0,
+      top: 55,
+      width: 360,
+      p: 2.5,
+      borderRadius: 3,
+      background: "white",
+      boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
+      border: "1px solid #e2e8f0",
+      zIndex: 2000,
+    }}
+    onClick={(e) => e.stopPropagation()}
+  >
+    <Typography sx={{ fontSize: 15, fontWeight: 800, mb: 2 }}>
+      Header Filter (local)
+    </Typography>
 
-          <Fade in={open}>
-            <Paper elevation={6} sx={{ position: "absolute", right: 0, top: 55, width: 360, p: 2.5, borderRadius: 3, background: "white", boxShadow: "0 12px 32px rgba(0,0,0,0.18)", border: "1px solid #e2e8f0", zIndex: 2000 }}>
-              <Typography sx={{ fontSize: 15, fontWeight: 800, mb: 2 }}>Header Filter (local)</Typography>
+    {/* CATEGORY FILTER */}
+    <FormControl size="small" fullWidth sx={{ mb: 2 }}>
+      <Typography sx={{ fontSize: 13, mb: 0.5 }}>Category</Typography>
+      <Select
+        value={tmpCategory}
+        onChange={(e) => setTmpCategory(e.target.value)}
+      >
+        <MenuItem value="all">All Categories</MenuItem>
+        {CATEGORY_KEYS.map((k) => (
+          <MenuItem key={k} value={k}>
+            {CATEGORY_LABELS[k]}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
 
-              <FormControl size="small" fullWidth sx={{ mb: 2 }}>
-                <Typography sx={{ fontSize: 13, mb: 0.5 }}>Category</Typography>
-                <Select value={tmpCategory} onChange={(e) => setTmpCategory(e.target.value)}>
-                  <MenuItem value="all">All Categories</MenuItem>
-                  {CATEGORY_KEYS.map((k) => (
-                    <MenuItem key={k} value={k}>{CATEGORY_LABELS[k]}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+    <Divider sx={{ my: 1 }} />
 
-              <Divider sx={{ my: 1 }} />
+    {/* DATE RANGE ONLY — Single Date removed */}
+    <Typography sx={{ fontSize: 13, mb: 1, fontWeight: 700 }}>
+      Date Range
+    </Typography>
 
-              <Typography sx={{ fontSize: 13, mb: 1, fontWeight: 700 }}>Date Mode</Typography>
-              <ToggleButtonGroup value={mode} exclusive onChange={onModeChange} size="small" sx={{ mb: 2 }}>
-                <ToggleButton value="range">Range</ToggleButton>
-                <ToggleButton value="single">Specific Date</ToggleButton>
-              </ToggleButtonGroup>
+    <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+      <TextField
+        type="date"
+        label="From"
+        size="small"
+        value={tmpFrom}
+        onChange={(e) => setTmpFrom(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        inputProps={minAvailable ? { min: minAvailable } : {}}
+      />
 
-              {mode === "range" ? (
-                <>
-                  <Typography sx={{ fontSize: 13, mb: 1, fontWeight: 700 }}>Date Range</Typography>
-                  <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
-                    <TextField type="date" label="From" size="small" value={tmpFrom} onChange={(e) => setTmpFrom(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={minAvailable ? { min: minAvailable } : {}} />
-                    <TextField type="date" label="To" size="small" value={tmpTo} onChange={(e) => setTmpTo(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={maxAvailable ? { max: maxAvailable } : {}} />
-                  </Box>
-                </>
-              ) : (
-                <>
-                  <Typography sx={{ fontSize: 13, mb: 1, fontWeight: 700 }}>Specific Date</Typography>
-                  <TextField fullWidth type="date" size="small" value={tmpDate} onChange={(e) => setTmpDate(e.target.value)} InputLabelProps={{ shrink: true }} inputProps={availableDates.length ? { min: availableDates[0], max: availableDates[availableDates.length - 1] } : {}} />
-                </>
-              )}
+      <TextField
+        type="date"
+        label="To"
+        size="small"
+        value={tmpTo}
+        onChange={(e) => setTmpTo(e.target.value)}
+        InputLabelProps={{ shrink: true }}
+        inputProps={maxAvailable ? { max: maxAvailable } : {}}
+      />
+    </Box>
 
-              <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
-                <Button variant="outlined" onClick={clearAll}>Reset</Button>
-                <Button variant="contained" onClick={applyToHeader}>Apply to header</Button>
-              </Box>
-            </Paper>
-          </Fade>
-        </Box>
+    <Box
+      sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
+    >
+      <Button variant="outlined" onClick={clearAll}>
+        Reset
+      </Button>
+
+      <Button variant="contained" onClick={applyToHeader}>
+        Apply to header
+      </Button>
+    </Box>
+  </Paper>
+</Fade>
+
       </Paper>
 
       {/* Stat cards — styled like original */}

@@ -1,8 +1,31 @@
-import React from "react";
-import { Box, Typography, Button, Stack } from "@mui/material";
+// src/components/navbar/Navbar.jsx
+import React, { useState } from "react";
+import { Box, Typography, Button, Stack, Avatar } from "@mui/material";
 import { UserRoundPen } from "lucide-react";
+import AuthDialog from "../login/login";
 
-function Navbar() {
+ 
+
+export default function Navbar() {
+  const [authOpen, setAuthOpen] = useState(false);
+
+  // Brand text that should change after login (default as in your design)
+  const [brandText, setBrandText] = useState("The Pickls");
+
+  function handleOpenAuth() {
+    setAuthOpen(true);
+  }
+  function handleCloseAuth() {
+    setAuthOpen(false);
+  }
+
+  // onLogin receives a user object { id, username, brandText }
+  function handleLoginSuccess(user) {
+    // If user has brandText, replace the brand with it; else fallback to default
+    setBrandText(user.brandText ? user.brandText : brandText);
+    setAuthOpen(false);
+  }
+
   return (
     <Box
       sx={{
@@ -14,7 +37,8 @@ function Navbar() {
         top: 0,
         zIndex: 1300,
         boxShadow: "0 1px 3px rgba(0, 0, 0, 0.08)",
-      }}>
+      }}
+    >
       <Stack
         direction="row"
         alignItems="center"
@@ -24,7 +48,8 @@ function Navbar() {
           py: 2,
           maxWidth: "1460px",
           mx: "auto",
-        }}>
+        }}
+      >
         {/* Logo + Brand Name */}
         <Stack direction="row" alignItems="center" spacing={2}>
           <Box
@@ -47,8 +72,9 @@ function Navbar() {
               color: "#1a3a1a",
               letterSpacing: "0.3px",
               display: { xs: "none", md: "block" },
-            }}>
-            The Pickls
+            }}
+          >
+            {brandText}
           </Typography>
         </Stack>
 
@@ -64,12 +90,14 @@ function Navbar() {
             color: "#1e3a1e",
             pointerEvents: "none",
             display: { xs: "none", lg: "block" },
-          }}>
+          }}
+        >
           Stock Inventory Management
         </Typography>
 
         {/* Profile Button */}
         <Button
+          onClick={handleOpenAuth}
           variant="contained"
           startIcon={<UserRoundPen size={19} />}
           sx={{
@@ -88,12 +116,17 @@ function Navbar() {
               boxShadow: "0 8px 20px rgba(0, 0, 0, 0.18)",
               transform: "translateY(-2px)",
             },
-          }}>
+          }}
+        >
           Profile
         </Button>
       </Stack>
+
+      <AuthDialog
+        open={authOpen}
+        onClose={handleCloseAuth}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </Box>
   );
 }
-
-export default Navbar;
