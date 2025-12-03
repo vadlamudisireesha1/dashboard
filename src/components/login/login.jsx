@@ -14,12 +14,7 @@ import {
 } from "@mui/material";
 import usersData from "../../data/users.json";
 
-/**
- * Props:
- *  - open (bool)
- *  - onClose (fn)
- *  - onLoginSuccess(user)  -> called with the user object after successful login
- */
+ 
 export default function AuthDialog({ open, onClose, onLoginSuccess }) {
   const [tab, setTab] = useState(0); // 0 login, 1 signup
 
