@@ -239,7 +239,21 @@ export default function SalesLineGraph({ items }) {
     <ToggleButton value="7">7d</ToggleButton>
     <ToggleButton value="15">15d</ToggleButton>
     <ToggleButton value="30">30d</ToggleButton>
-    <ToggleButton value="custom"><Calendar size={16} />&nbsp;Custom</ToggleButton>
+    {/* <-- small change: ensure clicking the Custom toggle toggles popup even when already selected */}
+    <ToggleButton
+      value="custom"
+      onClick={(e) => {
+        e.stopPropagation();
+        // if the toggle is already selected, ToggleButtonGroup won't fire onChange,
+        // so toggle the popup manually
+        if (range === "custom") {
+          setCustomOpen((s) => !s);
+        }
+      }}
+    >
+      <Calendar size={16} />
+      &nbsp;Custom
+    </ToggleButton>
   </ToggleButtonGroup>
 </Box>
 
